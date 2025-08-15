@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Mail, Package, Clock, CheckCircle } from 'lucide-react';
+import { Mail, Package, Clock } from 'lucide-react';
 import { supabase, type ContactInquiry } from '@/lib/supabase';
 
 interface DashboardStats {
