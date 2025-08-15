@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/auth-context';
 
 interface NavItem {
   label: string;
@@ -30,6 +31,8 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, profile, loading, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,6 +42,13 @@ export function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (!error) {
+      router.push('/');
+    }
+  };
 
   return (
     <nav className={`
@@ -83,13 +93,38 @@ export function Navbar() {
             </div>
           </div>
 
-          {/* CTA Button */}
+          {/* Auth Buttons */}
           <div className="hidden md:block">
-            <Button asChild>
-              <Link href="/kontakt">
-                Kontakt
-              </Link>
-            </Button>
+            {loading ? (
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+            ) : user ? (
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/profil" className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    {profile?.first_name || user.email}
+                  </Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Odhlásiť
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/prihlasenie">Prihlásenie</Link>
+                </Button>
+                <Button size="sm" asChild>
+                  <Link href="/registracia">Registrácia</Link>
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -128,12 +163,45 @@ export function Navbar() {
                 {item.label}
               </Link>
             ))}
-            <div className="pt-4">
-              <Button asChild className="w-full">
-                <Link href="/kontakt" onClick={() => setIsOpen(false)}>
-                  Kontakt
-                </Link>
-              </Button>
+            <div className="pt-4 space-y-2">
+              {loading ? (
+                <div className="flex justify-center py-4">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                </div>
+              ) : user ? (
+                <>
+                  <Button asChild className="w-full" onClick={() => setIsOpen(false)}>
+                    <Link href="/profil" className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      {profile?.first_name || user.email}
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      setIsOpen(false);
+                      handleSignOut();
+                    }}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Odhlásiť sa
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="outline" asChild className="w-full">
+                    <Link href="/prihlasenie" onClick={() => setIsOpen(false)}>
+                      Prihlásenie
+                    </Link>
+                  </Button>
+                  <Button asChild className="w-full">
+                    <Link href="/registracia" onClick={() => setIsOpen(false)}>
+                      Registrácia
+                    </Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

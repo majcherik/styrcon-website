@@ -5,6 +5,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { StructuredData } from "@/components/structured-data";
 import { organizationStructuredData, websiteStructuredData } from "@/lib/structured-data";
+import { AuthProvider } from "@/contexts/auth-context";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -44,11 +45,13 @@ export default function RootLayout({
         <StructuredData data={websiteStructuredData} />
       </head>
       <body className="antialiased">
-        <Navbar />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          <main className="min-h-screen">
+            {children}
+          </main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

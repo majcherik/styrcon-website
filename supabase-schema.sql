@@ -30,47 +30,41 @@ CREATE TABLE products (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Admin Users Table
-CREATE TABLE admin_users (
-  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+-- User Profiles Table (extends auth.users)
+CREATE TABLE user_profiles (
+  id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
-  role VARCHAR(20) DEFAULT 'admin' CHECK (role IN ('admin', 'super_admin')),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  first_name VARCHAR(100),
+  last_name VARCHAR(100),
+  company VARCHAR(255),
+  phone VARCHAR(50),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
 -- Create indexes for better performance
 CREATE INDEX idx_contact_inquiries_created_at ON contact_inquiries(created_at DESC);
 CREATE INDEX idx_contact_inquiries_status ON contact_inquiries(status);
 CREATE INDEX idx_products_created_at ON products(created_at DESC);
-CREATE INDEX idx_admin_users_email ON admin_users(email);
+CREATE INDEX idx_user_profiles_email ON user_profiles(email);
 
 -- Row Level Security (RLS) Policies
 
 -- Enable RLS on all tables
 ALTER TABLE contact_inquiries ENABLE ROW LEVEL SECURITY;
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
-ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
 
 -- Contact Inquiries Policies
 -- Anyone can insert (submit contact form)
 CREATE POLICY "Anyone can submit contact inquiries" ON contact_inquiries
   FOR INSERT WITH CHECK (true);
 
--- Only authenticated admin users can read/update contact inquiries
-CREATE POLICY "Admin users can read contact inquiries" ON contact_inquiries
+-- Only authenticated users can read their own contact inquiries
+CREATE POLICY "Users can read own contact inquiries" ON contact_inquiries
   FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM admin_users 
-      WHERE email = auth.jwt() ->> 'email'
-    )
-  );
-
-CREATE POLICY "Admin users can update contact inquiries" ON contact_inquiries
-  FOR UPDATE USING (
-    EXISTS (
-      SELECT 1 FROM admin_users 
-      WHERE email = auth.jwt() ->> 'email'
-    )
+    auth.uid() IS NOT NULL AND
+    email = auth.jwt() ->> 'email'
   );
 
 -- Products Policies
@@ -78,24 +72,16 @@ CREATE POLICY "Admin users can update contact inquiries" ON contact_inquiries
 CREATE POLICY "Anyone can read products" ON products
   FOR SELECT USING (true);
 
--- Only admin users can modify products
-CREATE POLICY "Admin users can manage products" ON products
-  FOR ALL USING (
-    EXISTS (
-      SELECT 1 FROM admin_users 
-      WHERE email = auth.jwt() ->> 'email'
-    )
-  );
+-- User Profiles Policies
+-- Users can read and update their own profile
+CREATE POLICY "Users can view own profile" ON user_profiles
+  FOR SELECT USING (auth.uid() = id);
 
--- Admin Users Policies
--- Only super admin can manage admin users
-CREATE POLICY "Super admin can manage admin users" ON admin_users
-  FOR ALL USING (
-    EXISTS (
-      SELECT 1 FROM admin_users 
-      WHERE email = auth.jwt() ->> 'email' AND role = 'super_admin'
-    )
-  );
+CREATE POLICY "Users can update own profile" ON user_profiles
+  FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "Users can insert own profile" ON user_profiles
+  FOR INSERT WITH CHECK (auth.uid() = id);
 
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -113,8 +99,23 @@ CREATE TRIGGER update_contact_inquiries_updated_at BEFORE UPDATE ON contact_inqu
 CREATE TRIGGER update_products_updated_at BEFORE UPDATE ON products
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- Insert initial admin user (replace with your email)
--- INSERT INTO admin_users (email, role) VALUES ('erik@e-ma-sk.com', 'super_admin');
+CREATE TRIGGER update_user_profiles_updated_at BEFORE UPDATE ON user_profiles
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Function to automatically create user profile when user signs up
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.user_profiles (id, email, first_name, last_name)
+  VALUES (NEW.id, NEW.email, NEW.raw_user_meta_data->>'first_name', NEW.raw_user_meta_data->>'last_name');
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger to automatically create profile when user signs up
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- Insert sample product (STYRCON)
 INSERT INTO products (name, description, technical_specs, images, videos) VALUES (

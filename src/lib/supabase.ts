@@ -33,9 +33,13 @@ export interface Product {
   updated_at: string
 }
 
-export interface AdminUser {
+export interface UserProfile {
   id: string
   email: string
-  role: 'admin' | 'super_admin'
+  first_name: string | null
+  last_name: string | null
+  company: string | null
+  phone: string | null
   created_at: string
+  updated_at: string
 }
