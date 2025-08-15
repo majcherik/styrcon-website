@@ -19,6 +19,7 @@ const navigationItems: NavItem[] = [
     label: 'Produkt', 
     href: '/styrcon-produkt'
   },
+  { label: 'Galéria', href: '/galeria' },
   { label: 'Projekty', href: '/projekty' },
   { label: 'Aktuality', href: '/aktuality' },
   { label: 'Kontakt', href: '/kontakt' }
