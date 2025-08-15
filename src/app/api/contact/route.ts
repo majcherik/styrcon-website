@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as z from 'zod';
+import { supabase } from '@/lib/supabase';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Meno musí obsahovať aspoň 2 znaky'),
@@ -31,26 +32,41 @@ export async function POST(request: NextRequest) {
 
     const { name, email, phone, company, subject, message } = validationResult.data;
 
-    // In a real application, you would:
-    // 1. Save the contact submission to a database
-    // 2. Send an email notification to the company
-    // 3. Send a confirmation email to the user
-    
-    // For now, we'll just log the submission and return success
-    console.log('Contact form submission:', {
+    // Save the contact submission to Supabase
+    const { data: contactData, error: insertError } = await supabase
+      .from('contact_inquiries')
+      .insert({
+        name,
+        email,
+        phone,
+        company,
+        subject,
+        message,
+        status: 'new'
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      console.error('Error saving contact inquiry:', insertError);
+      return NextResponse.json(
+        { 
+          error: 'Nastala chyba pri ukladaní správy. Skúste to prosím znova.' 
+        },
+        { status: 500 }
+      );
+    }
+
+    // Log successful submission
+    console.log('Contact form submission saved:', {
+      id: contactData.id,
       name,
       email,
-      phone,
-      company,
       subject,
-      message,
-      timestamp: new Date().toISOString(),
+      timestamp: contactData.created_at,
     });
 
-    // Simulate some processing time
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // In a real application, implement email sending here:
+    // TODO: Implement email notifications
     // await sendNotificationEmail({
     //   to: process.env.CONTACT_EMAIL!,
     //   subject: `Nová správa z kontaktného formulára: ${subject}`,
