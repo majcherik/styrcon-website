@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ArrowRight, Shield, Thermometer, Flame } from 'lucide-react';
+import { CompactVideoTexture } from '@/components/video-texture/compact-video-texture';
 
 export function Hero() {
   return (
@@ -72,19 +73,12 @@ export function Hero() {
 
           {/* Visual */}
           <div className="relative">
-            <Card className="aspect-square rounded-2xl bg-gradient-to-br from-primary/5 to-secondary/5 p-8 flex items-center justify-center">
-              {/* Placeholder for product image or Lottie animation */}
-              <div className="w-full h-full bg-white/50 rounded-xl flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-6xl mb-4">🏗️</div>
-                  <div className="text-slate-600 font-medium">
-                    STYRCON dosky
-                  </div>
-                  <div className="text-sm text-slate-500">
-                    Tepelná izolácia triedy A1
-                  </div>
-                </div>
-              </div>
+            <Card className="aspect-square rounded-2xl bg-gradient-to-br from-primary/5 to-secondary/5 overflow-hidden">
+              <CompactVideoTexture 
+                videoUrl="10.mp4"
+                fallbackImageUrl="10.jpg"
+                className="w-full h-full"
+              />
             </Card>
             
             {/* Floating Elements */}

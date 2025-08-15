@@ -20,6 +20,7 @@ const navigationItems: NavItem[] = [
     href: '/styrcon-produkt'
   },
   { label: 'Galéria', href: '/galeria' },
+  { label: 'Video Demo', href: '/video-demo' },
   { label: 'Projekty', href: '/projekty' },
   { label: 'Aktuality', href: '/aktuality' },
   { label: 'Kontakt', href: '/kontakt' }
