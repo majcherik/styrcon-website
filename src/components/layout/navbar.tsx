@@ -22,6 +22,7 @@ const navigationItems: NavItem[] = [
   },
   { label: 'Galéria', href: '/galeria' },
   { label: 'Video Demo', href: '/video-demo' },
+  { label: 'Scroll Demo', href: '/scroll-demo' },
   { label: 'Projekty', href: '/projekty' },
   { label: 'Aktuality', href: '/aktuality' },
   { label: 'Kontakt', href: '/kontakt' }
