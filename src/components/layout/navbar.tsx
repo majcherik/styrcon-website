@@ -32,7 +32,7 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { user, profile, loading, signOut } = useAuth();
+  const { user, profile, isAuthReady, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,14 +95,16 @@ export function Navbar() {
 
           {/* Auth Buttons */}
           <div className="hidden md:block">
-            {loading ? (
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+            {!isAuthReady ? (
+              <div className="w-6 h-6 animate-pulse bg-slate-200 rounded"></div>
             ) : user ? (
               <div className="flex items-center gap-3">
                 <Button variant="ghost" size="sm" asChild>
                   <Link href="/profil" className="flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    {profile?.first_name || user.email}
+                    <span className="max-w-24 truncate">
+                      {profile?.first_name || user.email?.split('@')[0] || 'Profil'}
+                    </span>
                   </Link>
                 </Button>
                 <Button
@@ -164,16 +166,18 @@ export function Navbar() {
               </Link>
             ))}
             <div className="pt-4 space-y-2">
-              {loading ? (
+              {!isAuthReady ? (
                 <div className="flex justify-center py-4">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                  <div className="w-full h-10 animate-pulse bg-slate-200 rounded"></div>
                 </div>
               ) : user ? (
                 <>
                   <Button asChild className="w-full" onClick={() => setIsOpen(false)}>
                     <Link href="/profil" className="flex items-center gap-2">
                       <User className="h-4 w-4" />
-                      {profile?.first_name || user.email}
+                      <span className="truncate">
+                        {profile?.first_name || user.email?.split('@')[0] || 'Profil'}
+                      </span>
                     </Link>
                   </Button>
                   <Button

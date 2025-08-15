@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase, type UserProfile } from '@/lib/supabase';
 
@@ -8,12 +8,15 @@ interface AuthContextType {
   user: User | null;
   profile: UserProfile | null;
   session: Session | null;
-  loading: boolean;
+  isLoading: boolean;
+  isAuthReady: boolean;
+  error: string | null;
   signUp: (email: string, password: string, userData?: { first_name?: string; last_name?: string }) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<{ error: Error | null }>;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<{ error: Error | null }>;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,85 +25,136 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthReady, setIsAuthReady] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Get initial session
-    const getInitialSession = async () => {
-      // Handle auth from URL hash (email confirmations)
-      const hashParams = new URLSearchParams(window.location.hash.substring(1));
-      const accessToken = hashParams.get('access_token');
-      const refreshToken = hashParams.get('refresh_token');
-      
-      if (accessToken && refreshToken) {
-        const { data, error } = await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-        });
-        
-        if (!error && data.session) {
-          setSession(data.session);
-          setUser(data.session.user);
-          await fetchProfile(data.session.user.id);
-          
-          // Clear the hash from URL
-          window.history.replaceState(null, '', window.location.pathname);
-          setLoading(false);
-          return;
+  // Profile fetching with retry logic
+  const fetchProfile = useCallback(async (userId: string, retries = 3): Promise<UserProfile | null> => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        const { data, error } = await supabase
+          .from('user_profiles')
+          .select('*')
+          .eq('id', userId)
+          .single();
+
+        if (error) {
+          if (error.code === 'PGRST116') {
+            // Profile doesn't exist yet, return null
+            return null;
+          }
+          throw error;
         }
-      }
-      
-      // Normal session check
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        await fetchProfile(session.user.id);
-      }
-      
-      setLoading(false);
-    };
 
-    getInitialSession();
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        await fetchProfile(session.user.id);
-      } else {
-        setProfile(null);
+        return data;
+      } catch (error) {
+        console.error(`Profile fetch attempt ${i + 1} failed:`, error);
+        if (i === retries - 1) {
+          setError('Failed to load profile data');
+          return null;
+        }
+        // Wait before retry
+        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
       }
-      
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    }
+    return null;
   }, []);
 
-  const fetchProfile = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
+  // Refresh profile data
+  const refreshProfile = useCallback(async () => {
+    if (!user) return;
+    const profileData = await fetchProfile(user.id);
+    setProfile(profileData);
+  }, [user, fetchProfile]);
 
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching profile:', error);
-        return;
-      }
+  // Handle auth state changes
+  const handleAuthChange = useCallback(async (event: string, session: Session | null) => {
+    console.log('Auth event:', event, session?.user?.id);
+    
+    setSession(session);
+    setUser(session?.user ?? null);
+    setError(null);
 
-      setProfile(data);
-    } catch (error) {
-      console.error('Error fetching profile:', error);
+    if (session?.user) {
+      // Fetch profile for authenticated user
+      const profileData = await fetchProfile(session.user.id);
+      setProfile(profileData);
+    } else {
+      // Clear profile for unauthenticated user
+      setProfile(null);
     }
-  };
+
+    setIsAuthReady(true);
+    setIsLoading(false);
+  }, [fetchProfile]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const initializeAuth = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // Handle URL hash tokens (email confirmations)
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const accessToken = hashParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token');
+        
+        if (accessToken && refreshToken) {
+          console.log('Processing auth tokens from URL');
+          const { data, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+          
+          if (!mounted) return;
+          
+          if (!error && data.session) {
+            // Clear the hash from URL
+            window.history.replaceState(null, '', window.location.pathname);
+            await handleAuthChange('session_from_url', data.session);
+            return;
+          } else {
+            console.error('Failed to set session from URL:', error);
+            setError('Failed to authenticate from email link');
+          }
+        }
+        
+        // Get existing session
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (!mounted) return;
+        
+        if (error) {
+          console.error('Failed to get session:', error);
+          setError('Failed to retrieve session');
+        }
+
+        await handleAuthChange('initial_session', session);
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+        if (mounted) {
+          setError('Authentication initialization failed');
+          setIsAuthReady(true);
+          setIsLoading(false);
+        }
+      }
+    };
+
+    initializeAuth();
+
+    // Listen for auth state changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(handleAuthChange);
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, [handleAuthChange]);
 
   const signUp = async (email: string, password: string, userData?: { first_name?: string; last_name?: string }) => {
     const { error } = await supabase.auth.signUp({
@@ -139,28 +193,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateProfile = async (updates: Partial<UserProfile>) => {
     if (!user) return { error: new Error('No user logged in') };
 
-    const { error } = await supabase
-      .from('user_profiles')
-      .update(updates)
-      .eq('id', user.id);
+    try {
+      const { error } = await supabase
+        .from('user_profiles')
+        .update(updates)
+        .eq('id', user.id);
 
-    if (!error) {
-      await fetchProfile(user.id);
+      if (!error) {
+        await refreshProfile();
+      }
+
+      return { error };
+    } catch (error) {
+      return { error: error as Error };
     }
-
-    return { error };
   };
 
   const value: AuthContextType = {
     user,
     profile,
     session,
-    loading,
+    isLoading,
+    isAuthReady,
+    error,
     signUp,
     signIn,
     signOut,
     resetPassword,
     updateProfile,
+    refreshProfile,
   };
 
   return (

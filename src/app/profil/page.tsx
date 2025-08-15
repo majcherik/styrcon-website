@@ -13,6 +13,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { User, Mail, Building, Phone, Save, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
+import { AuthGuard } from '@/components/auth/auth-guard';
 import type { UserProfile } from '@/lib/supabase';
 
 const profileSchema = z.object({
@@ -24,9 +25,9 @@ const profileSchema = z.object({
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
-export default function ProfilePage() {
+function ProfilePageContent() {
   const router = useRouter();
-  const { user, profile, loading, signOut, updateProfile } = useAuth();
+  const { user, profile, signOut, updateProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -41,11 +42,6 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push('/prihlasenie');
-      return;
-    }
-
     if (profile) {
       reset({
         firstName: profile.first_name || '',
@@ -54,7 +50,7 @@ export default function ProfilePage() {
         phone: profile.phone || '',
       });
     }
-  }, [user, profile, loading, router, reset]);
+  }, [profile, reset]);
 
   const onSubmit = async (data: ProfileFormData) => {
     setIsLoading(true);
@@ -87,17 +83,7 @@ export default function ProfilePage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return null; // Will redirect to login
-  }
+  // No need for loading checks - AuthGuard handles this
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-12 px-4">
@@ -128,7 +114,7 @@ export default function ProfilePage() {
                 <Label className="text-sm font-medium text-slate-900">Email</Label>
                 <div className="flex items-center gap-3 mt-1">
                   <Mail className="h-5 w-5 text-slate-400" />
-                  <span className="text-slate-700">{user.email}</span>
+                  <span className="text-slate-700">{user?.email}</span>
                 </div>
               </div>
 
@@ -137,7 +123,7 @@ export default function ProfilePage() {
                 <div className="flex items-center gap-3 mt-1">
                   <User className="h-5 w-5 text-slate-400" />
                   <span className="text-slate-700">
-                    {new Date(user.created_at).toLocaleDateString('sk-SK')}
+                    {user?.created_at ? new Date(user.created_at).toLocaleDateString('sk-SK') : 'N/A'}
                   </span>
                 </div>
               </div>
@@ -259,5 +245,13 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProfilePage() {
+  return (
+    <AuthGuard>
+      <ProfilePageContent />
+    </AuthGuard>
   );
 }
