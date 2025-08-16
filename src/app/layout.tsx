@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/layout/navbar";
+import { GlassmorphicNavbar } from "@/components/navigation/glassmorphic-navbar";
 import { Footer } from "@/components/layout/footer";
 import { StructuredData } from "@/components/structured-data";
 import { organizationStructuredData, websiteStructuredData } from "@/lib/structured-data";
@@ -46,7 +46,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <AuthProvider>
-          <Navbar />
+          <GlassmorphicNavbar />
           <main className="min-h-screen">
             {children}
           </main>
