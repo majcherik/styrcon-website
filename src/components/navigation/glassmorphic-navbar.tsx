@@ -13,7 +13,7 @@ import {
   Images, 
   Play, 
   Scroll, 
-  Cube,
+  Box,
   FolderOpen, 
   Newspaper, 
   Phone,
@@ -54,7 +54,7 @@ const navigationItems: NavItem[] = [
     children: [
       { label: 'Video Demo', href: '/video-demo', icon: Play },
       { label: 'Scroll Demo', href: '/scroll-demo', icon: Scroll },
-      { label: 'Test 3D', href: '/test-3d', icon: Cube },
+      { label: 'Test 3D', href: '/test-3d', icon: Box },
     ]
   },
   { 
