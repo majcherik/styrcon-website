@@ -217,7 +217,7 @@ export function GlassmorphicNavbar() {
           {/* Auth Buttons */}
           <div className="hidden lg:block">
             {!isAuthReady ? (
-              <div className="w-6 h-6 animate-pulse bg-white/20 rounded backdrop-blur-sm"></div>
+                <div className="w-6 h-6 animate-pulse bg-white/20 rounded backdrop-blur-sm"></div>
             ) : user ? (
               <div className="flex items-center gap-3">
                 <Button variant="ghost" size="sm" asChild>
