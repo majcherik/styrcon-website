@@ -111,20 +111,14 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Product Image Placeholder */}
-            <div className="relative">
-              <Card className="aspect-square rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 p-8 flex items-center justify-center">
-                <div className="w-full h-full bg-white/50 rounded-xl flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="text-6xl mb-4">🧱</div>
-                    <div className="text-slate-600 font-medium">
-                      STYRCON dosky
-                    </div>
-                    <div className="text-sm text-slate-500">
-                      Produktová fotografia
-                    </div>
-                  </div>
-                </div>
+            {/* Product Image */}
+            <div className="relative max-w-md mx-auto">
+              <Card className="aspect-[4/3] rounded-2xl overflow-hidden bg-slate-50">
+                <img
+                  src="https://www.e-ma.sk/imgcache/styrcon-suche-steny---teply-domov-e-news-96-5-400-300-0-ffffff.jpg?v=1736188623"
+                  alt="STYRCON paropriepustné tepelnoizolačné dosky - palety produktov vo sklade"
+                  className="w-full h-full object-cover"
+                />
               </Card>
             </div>
           </div>

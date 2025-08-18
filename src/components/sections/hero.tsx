@@ -75,8 +75,8 @@ export function Hero() {
           <div className="relative">
             <Card className="aspect-square rounded-2xl bg-gradient-to-br from-primary/5 to-secondary/5 overflow-hidden">
               <CompactVideoTexture 
-                videoUrl="10.mp4"
-                fallbackImageUrl="10.jpg"
+                videoUrl="https://i.imgur.com/tgzP8L1.mp4"
+                fallbackImageUrl="https://i.imgur.com/JqA3wIr.jpeg"
                 className="w-full h-full"
               />
             </Card>

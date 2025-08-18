@@ -13,8 +13,8 @@ interface CompactVideoTextureProps {
 }
 
 export function CompactVideoTexture({
-  videoUrl = '10.mp4',
-  fallbackImageUrl = '10.jpg',
+  videoUrl = 'https://i.imgur.com/tgzP8L1.mp4',
+  fallbackImageUrl = 'https://i.imgur.com/JqA3wIr.jpeg',
   className = 'w-full h-full'
 }: CompactVideoTextureProps) {
   return (

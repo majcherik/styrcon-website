@@ -27,8 +27,8 @@ export default function ScrollDemoPage() {
 
       {/* Scroll Video Section */}
       <ScrollVideoPlayer
-        videoSrc="/10.mp4"
-        posterSrc="/10.jpg"
+        videoSrc="https://i.imgur.com/tgzP8L1.mp4"
+        posterSrc="https://i.imgur.com/JqA3wIr.jpeg"
         height="300vh"
         showControls={true}
         className="bg-slate-900"

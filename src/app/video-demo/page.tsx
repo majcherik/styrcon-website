@@ -27,8 +27,8 @@ export default function VideoDemoPage() {
             Základná Video Textúra
           </h2>
           <VideoTextureScene 
-            videoUrl="10.mp4"
-            fallbackImageUrl="10.jpg"
+            videoUrl="https://i.imgur.com/tgzP8L1.mp4"
+            fallbackImageUrl="https://i.imgur.com/JqA3wIr.jpeg"
             className="w-full h-[600px] rounded-lg overflow-hidden"
           />
         </div>
@@ -38,8 +38,8 @@ export default function VideoDemoPage() {
             Kompaktná Verzia
           </h2>
           <VideoTextureScene 
-            videoUrl="10.mp4"
-            fallbackImageUrl="10.jpg"
+            videoUrl="https://i.imgur.com/tgzP8L1.mp4"
+            fallbackImageUrl="https://i.imgur.com/JqA3wIr.jpeg"
             aspectWidth={1600}
             aspectHeight={900}
             className="w-full h-[400px] rounded-lg overflow-hidden"

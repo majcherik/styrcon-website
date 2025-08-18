@@ -14,8 +14,8 @@ interface ScrollVideoSectionProps {
 export function ScrollVideoSection({
   title = "Interactive Experience",
   description = "Scroll to explore our innovative building materials in action.",
-  videoSrc = "/10.mp4",
-  posterSrc = "/10.jpg",
+  videoSrc = "https://i.imgur.com/tgzP8L1.mp4",
+  posterSrc = "https://i.imgur.com/JqA3wIr.jpeg",
   height = "200vh",
   showControls = true,
 }: ScrollVideoSectionProps) {

@@ -69,6 +69,7 @@ const navigationItems: NavItem[] = [
     children: [
       { label: 'Projekty', href: '/projekty', icon: FolderOpen },
       { label: 'Aktuality', href: '/aktuality', icon: Newspaper },
+      { label: 'Dokumenty', href: '/dokumenty', icon: FolderOpen },
     ]
   },
   { 
