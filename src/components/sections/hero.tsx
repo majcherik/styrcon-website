@@ -48,6 +48,7 @@ export function Hero() {
               </Button>
             </div>
             
+            
             {/* Trust Indicators */}
             <div className="flex flex-wrap items-center gap-6 pt-8 border-t border-slate-200">
               <div className="flex items-center gap-2 text-sm text-slate-600">

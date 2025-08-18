@@ -6,6 +6,8 @@ import { Footer } from "@/components/layout/footer";
 import { StructuredData } from "@/components/structured-data";
 import { organizationStructuredData, websiteStructuredData } from "@/lib/structured-data";
 import { AuthProvider } from "@/contexts/auth-context";
+import { HeroUIProvider } from "@heroui/react";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -45,13 +47,21 @@ export default function RootLayout({
         <StructuredData data={websiteStructuredData} />
       </head>
       <body className="antialiased">
-        <AuthProvider>
-          <GlassmorphicNavbar />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
-        </AuthProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="styrcon-light"
+          themes={["styrcon-light", "styrcon-dark"]}
+        >
+          <HeroUIProvider>
+            <AuthProvider>
+              <GlassmorphicNavbar />
+              <main className="min-h-screen">
+                {children}
+              </main>
+              <Footer />
+            </AuthProvider>
+          </HeroUIProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

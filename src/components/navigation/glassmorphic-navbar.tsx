@@ -23,6 +23,7 @@ import {
   ChevronUp
 } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
+import { HeroUIThemeSwitcher } from '@/components/ui/heroui-theme-switcher';
 
 interface NavItem {
   label: string;
@@ -215,13 +216,15 @@ export function GlassmorphicNavbar() {
             </div>
           </div>
 
-          {/* Auth Buttons */}
+          {/* Theme Switcher & Auth Buttons */}
           <div className="hidden lg:block">
-            {!isAuthReady ? (
-                <div className="w-6 h-6 animate-pulse bg-white/20 rounded backdrop-blur-sm"></div>
-            ) : user ? (
-              <div className="flex items-center gap-3">
-                <Button variant="ghost" size="sm" asChild>
+            <div className="flex items-center gap-3">
+              <HeroUIThemeSwitcher />
+              {!isAuthReady ? (
+                  <div className="w-6 h-6 animate-pulse bg-white/20 rounded backdrop-blur-sm"></div>
+              ) : user ? (
+                <div className="flex items-center gap-3">
+                  <Button variant="ghost" size="sm" asChild>
                   <Link href="/profil" className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20">
                     <User className="h-4 w-4" />
                     <span className="max-w-24 truncate">
@@ -253,10 +256,12 @@ export function GlassmorphicNavbar() {
                 </Button>
               </div>
             )}
+            </div>
           </div>
 
           {/* Mobile menu button */}
-          <div className="lg:hidden">
+          <div className="lg:hidden flex items-center gap-2">
+            <HeroUIThemeSwitcher />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300"

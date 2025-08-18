@@ -72,5 +72,96 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@heroui/theme")({
+    themes: {
+      "styrcon-light": {
+        layout: {
+          disabledOpacity: "0.3",
+          radius: {
+            small: "4px",
+            medium: "6px", 
+            large: "8px"
+          },
+          borderWidth: {
+            small: "1px",
+            medium: "2px",
+            large: "3px"
+          }
+        },
+        colors: {
+          background: "#ffffff",
+          foreground: "#0f172a",
+          primary: {
+            DEFAULT: "#0ea5e9", // STYRCON blue
+            foreground: "#ffffff"
+          },
+          secondary: {
+            DEFAULT: "#ff7700", // STYRCON orange
+            foreground: "#ffffff"
+          },
+          success: {
+            DEFAULT: "#10b981",
+            foreground: "#ffffff"
+          },
+          warning: {
+            DEFAULT: "#f59e0b",
+            foreground: "#ffffff"
+          },
+          danger: {
+            DEFAULT: "#ef4444",
+            foreground: "#ffffff"
+          },
+          default: {
+            DEFAULT: "#f1f5f9",
+            foreground: "#0f172a"
+          }
+        }
+      },
+      "styrcon-dark": {
+        layout: {
+          disabledOpacity: "0.3",
+          radius: {
+            small: "4px",
+            medium: "6px",
+            large: "8px"
+          },
+          borderWidth: {
+            small: "1px",
+            medium: "2px", 
+            large: "3px"
+          }
+        },
+        colors: {
+          background: "#0f172a",
+          foreground: "#f1f5f9",
+          primary: {
+            DEFAULT: "#0ea5e9", // Same STYRCON blue
+            foreground: "#ffffff"
+          },
+          secondary: {
+            DEFAULT: "#ff7700", // Same STYRCON orange
+            foreground: "#ffffff"
+          },
+          success: {
+            DEFAULT: "#10b981",
+            foreground: "#ffffff"
+          },
+          warning: {
+            DEFAULT: "#f59e0b",
+            foreground: "#ffffff"
+          },
+          danger: {
+            DEFAULT: "#ef4444",
+            foreground: "#ffffff"
+          },
+          default: {
+            DEFAULT: "#334155",
+            foreground: "#f1f5f9"
+          }
+        }
+      }
+    },
+    defaultTheme: "styrcon-light",
+    addCommonColors: false
+  })],
 }
