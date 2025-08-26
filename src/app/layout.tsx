@@ -6,8 +6,7 @@ import { Footer } from "@/components/layout/footer";
 import { StructuredData } from "@/components/structured-data";
 import { organizationStructuredData, websiteStructuredData } from "@/lib/structured-data";
 import { AuthProvider } from "@/contexts/auth-context";
-import { HeroUIProvider } from "@heroui/react";
-import { ThemeProvider } from "next-themes";
+import { Providers } from "@/components/providers/providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -41,27 +40,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="sk" className={inter.variable}>
+    <html lang="sk" className={inter.variable} suppressHydrationWarning={true}>
       <head>
         <StructuredData data={organizationStructuredData} />
         <StructuredData data={websiteStructuredData} />
       </head>
       <body className="antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="styrcon-light"
-          themes={["styrcon-light", "styrcon-dark"]}
-        >
-          <HeroUIProvider>
-            <AuthProvider>
-              <GlassmorphicNavbar />
-              <main className="min-h-screen">
-                {children}
-              </main>
-              <Footer />
-            </AuthProvider>
-          </HeroUIProvider>
-        </ThemeProvider>
+        <Providers>
+          <AuthProvider>
+            <GlassmorphicNavbar />
+            <main className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+          </AuthProvider>
+        </Providers>
       </body>
     </html>
   );

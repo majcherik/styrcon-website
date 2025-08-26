@@ -84,10 +84,15 @@ export function GlassmorphicNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const { user, profile, isAuthReady, signOut } = useAuth();
   const navRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -125,6 +130,53 @@ export function GlassmorphicNavbar() {
     setIsOpen(false);
     setOpenDropdown(null);
   };
+
+  // Prevent hydration mismatch by showing placeholder during SSR
+  if (!mounted) {
+    return (
+      <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <Link href="/" className="flex items-center">
+                <div className="text-xl font-bold text-slate-900">
+                  STYRCON
+                </div>
+                <div className="hidden sm:block ml-2 text-sm text-slate-600">
+                  E-MA SK s.r.o.
+                </div>
+              </Link>
+            </div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:block">
+              <div className="flex items-center space-x-1">
+                <div className="w-32 h-8 animate-pulse bg-white/10 rounded-lg"></div>
+                <div className="w-32 h-8 animate-pulse bg-white/10 rounded-lg"></div>
+                <div className="w-32 h-8 animate-pulse bg-white/10 rounded-lg"></div>
+              </div>
+            </div>
+
+            {/* Theme Switcher & Auth Buttons */}
+            <div className="hidden lg:block">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 animate-pulse bg-white/10 rounded-lg"></div>
+                <div className="w-16 h-8 animate-pulse bg-white/10 rounded-lg"></div>
+              </div>
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="lg:hidden flex items-center gap-2">
+              <button className="p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
+                <Menu className="h-6 w-6" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav 
@@ -261,7 +313,6 @@ export function GlassmorphicNavbar() {
 
           {/* Mobile menu button */}
           <div className="lg:hidden flex items-center gap-2">
-            <HeroUIThemeSwitcher />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300"

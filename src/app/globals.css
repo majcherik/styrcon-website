@@ -1,7 +1,23 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
- 
+@import "tailwindcss";
+
+@theme {
+  /* STYRCON theme configuration for Tailwind v4 */
+  --color-primary: #0ea5e9;
+  --color-secondary: #ff7700;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  
+  /* Layout configuration */
+  --radius-small: 4px;
+  --radius-medium: 6px;
+  --radius-large: 8px;
+  --border-width-small: 1px;
+  --border-width-medium: 2px;
+  --border-width-large: 3px;
+}
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -29,12 +45,7 @@
 }
  
 @layer base {
-  * {
-    @apply border-border;
-  }
-  
   body {
-    @apply bg-background text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 }
