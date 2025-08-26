@@ -23,7 +23,6 @@ import {
   ChevronUp
 } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
-import { HeroUIThemeSwitcher } from '@/components/ui/heroui-theme-switcher';
 
 interface NavItem {
   label: string;
@@ -268,10 +267,9 @@ export function GlassmorphicNavbar() {
             </div>
           </div>
 
-          {/* Theme Switcher & Auth Buttons */}
+          {/* Auth Buttons */}
           <div className="hidden lg:block">
             <div className="flex items-center gap-3">
-              <HeroUIThemeSwitcher />
               {!isAuthReady ? (
                   <div className="w-6 h-6 animate-pulse bg-white/20 rounded backdrop-blur-sm"></div>
               ) : user ? (
