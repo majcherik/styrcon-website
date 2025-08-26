@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -12,7 +13,7 @@ interface TextAnimateProps {
   startOnView?: boolean;
   once?: boolean;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: React.ElementType;
 }
 
 const animations = {
@@ -70,29 +71,29 @@ export function TextAnimate({
   const textParts = splitTextBy(children, by);
 
   if (by === 'character' || by === 'word') {
-    return (
-      <Component className={cn('inline-block', className)}>
-        {textParts.map((part, index) => (
-          <motion.span
-            key={index}
-            initial={animationConfig.initial}
-            animate={startOnView ? undefined : animationConfig.animate}
-            whileInView={startOnView ? animationConfig.animate : undefined}
-            viewport={{ once }}
-            transition={{
-              duration,
-              delay: delay + (index * 0.05),
-              ease: [0.25, 0.1, 0.25, 1]
-            }}
-            className="inline-block"
-            style={{ 
-              marginRight: by === 'word' ? '0.25em' : undefined 
-            }}
-          >
-            {part === ' ' ? '\u00A0' : part}
-          </motion.span>
-        ))}
-      </Component>
+    return React.createElement(
+      Component,
+      { className: cn('inline-block', className) },
+      textParts.map((part, index) => (
+        <motion.span
+          key={index}
+          initial={animationConfig.initial}
+          animate={startOnView ? undefined : animationConfig.animate}
+          whileInView={startOnView ? animationConfig.animate : undefined}
+          viewport={{ once }}
+          transition={{
+            duration,
+            delay: delay + (index * 0.05),
+            ease: [0.25, 0.1, 0.25, 1]
+          }}
+          className="inline-block"
+          style={{ 
+            marginRight: by === 'word' ? '0.25em' : undefined 
+          }}
+        >
+          {part === ' ' ? '\u00A0' : part}
+        </motion.span>
+      ))
     );
   }
 
@@ -128,9 +129,7 @@ export function TextAnimate({
           </motion.div>
         ))
       ) : (
-        <Component className={className}>
-          {children}
-        </Component>
+        React.createElement(Component, { className }, children)
       )}
     </motion.div>
   );

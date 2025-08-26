@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Flame, Droplets, Thermometer, Shield, Check } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 
 interface Feature {
@@ -63,11 +64,10 @@ const features: Feature[] = [
 
 interface FeatureItemProps {
   feature: Feature;
-  index: number;
   isReversed: boolean;
 }
 
-function FeatureItem({ feature, index, isReversed }: FeatureItemProps) {
+function FeatureItem({ feature, isReversed }: FeatureItemProps) {
   const Icon = feature.icon;
 
   return (
@@ -145,7 +145,7 @@ function FeatureItem({ feature, index, isReversed }: FeatureItemProps) {
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, delay: 0.3 }}
       >
-        <div className="aspect-[4/3] rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-100 to-slate-200">
+        <div className="aspect-[4/3] rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-100 to-slate-200 relative">
           {feature.videoUrl ? (
             <video
               className="w-full h-full object-cover"
@@ -157,10 +157,12 @@ function FeatureItem({ feature, index, isReversed }: FeatureItemProps) {
               <source src={feature.videoUrl} type="video/mp4" />
             </video>
           ) : feature.imageUrl ? (
-            <img
+            <Image
               src={feature.imageUrl}
               alt={feature.title}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-slate-200">
@@ -222,7 +224,6 @@ export function FeaturesScrollSection() {
             <FeatureItem
               key={index}
               feature={feature}
-              index={index}
               isReversed={index % 2 !== 0}
             />
           ))}

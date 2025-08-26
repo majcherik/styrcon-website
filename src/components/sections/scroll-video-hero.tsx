@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play, Pause, Volume2, VolumeX } from 'lucide-react';
 import { TextAnimate } from '@/components/magicui/text-animate';
@@ -14,7 +14,6 @@ interface ScrollVideoHeroProps {
 export function ScrollVideoHero({ videoSrc, className = '' }: ScrollVideoHeroProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isInView, setIsInView] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [isVideoReady, setIsVideoReady] = useState(false);
@@ -27,7 +26,6 @@ export function ScrollVideoHero({ videoSrc, className = '' }: ScrollVideoHeroPro
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        setIsInView(entry.isIntersecting);
         
         if (!entry.isIntersecting && videoRef.current) {
           videoRef.current.pause();
