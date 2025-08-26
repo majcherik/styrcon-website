@@ -36,7 +36,7 @@ const features: Feature[] = [
       "Predchádza vzniku plesní a kondenzácie",
       "Zdravé vnútorné prostredie"
     ],
-    videoUrl: "/10.mp4"
+    imageUrl: "https://www.e-ma.sk/imgcache/e-img-449.jpg?v=1632883952"
   },
   {
     icon: Thermometer,
