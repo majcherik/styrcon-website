@@ -115,8 +115,8 @@ export default function ProductPage() {
             <div className="relative max-w-md mx-auto">
               <Card className="aspect-[4/3] rounded-2xl overflow-hidden bg-slate-50">
                 <img
-                  src="https://www.e-ma.sk/imgcache/styrcon-suche-steny---teply-domov-e-news-96-5-400-300-0-ffffff.jpg?v=1736188623"
-                  alt="STYRCON paropriepustné tepelnoizolačné dosky - palety produktov vo sklade"
+                  src="https://www.e-ma.sk/imgcache/e-news-79.jpg?v=1632745952"
+                  alt="STYRCON paropriepustné tepelnoizolačné dosky - aplikácia na budove"
                   className="w-full h-full object-cover"
                 />
               </Card>

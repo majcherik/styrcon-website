@@ -1,12 +1,16 @@
-import { Hero } from '@/components/sections/hero';
+import { VideoHeader } from '@/components/sections/video-header';
 import { FeaturesScrollSection } from '@/components/sections/features-scroll-section';
+import { ProjectGallerySimple } from '@/components/sections/project-gallery-simple';
+import { BeforeAfterSection } from '@/components/sections/before-after';
 import { ContactCTA } from '@/components/sections/contact-cta';
 
 export default function Home() {
   return (
-    <div className="pt-16">
-      <Hero />
+    <div>
+      <VideoHeader />
       <FeaturesScrollSection />
+      <ProjectGallerySimple />
+      <BeforeAfterSection />
       <ContactCTA />
     </div>
   );
