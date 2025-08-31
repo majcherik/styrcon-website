@@ -1,0 +1,52 @@
+.header {
+  position: sticky;
+  top: 0;
+  background-color: var(--mantine-color-body);
+  transition: box-shadow 150ms ease;
+  z-index: 1;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-bottom: 1px solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-3));
+}
+
+.scrolled {
+  box-shadow: var(--mantine-shadow-sm);
+}
+
+/* Custom styling to match existing design */
+.mantineTable {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.mantineTable th {
+  font-weight: 600;
+  color: var(--foreground);
+  background-color: rgb(248 250 252); /* slate-50 equivalent */
+}
+
+.mantineTable tr:hover {
+  background-color: rgb(248 250 252); /* slate-50 equivalent */
+}
+
+.mantineTable td {
+  border-bottom: 1px solid rgb(226 232 240); /* slate-200 equivalent */
+}
+
+.valueCell {
+  color: #0ea5e9; /* primary color */
+  font-weight: 600;
+}
+
+.unitCell {
+  color: rgb(71 85 105); /* slate-600 equivalent */
+}
+
+.standardCell {
+  color: rgb(100 116 139); /* slate-500 equivalent */
+}

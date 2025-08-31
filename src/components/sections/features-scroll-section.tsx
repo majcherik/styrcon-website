@@ -73,230 +73,220 @@ interface FeatureItemProps {
 
 function FeatureItem({ feature, isReversed }: FeatureItemProps) {
   const Icon = feature.icon;
-  const hasVideo = !!feature.videoUrl;
 
   return (
-    <div className={`grid grid-cols-1 gap-8 sm:gap-10 md:gap-12 items-center lg:grid-cols-2 lg:gap-16 ${hasVideo ? 'relative py-12 sm:py-16 lg:py-20 px-6 sm:px-8 lg:px-12' : ''}`}>
-      {/* Video Background - only for video sections */}
-      {hasVideo && (
-        <>
-          <div className="absolute inset-0 w-full h-full overflow-hidden rounded-2xl">
-            <video
-              className="absolute inset-0 w-full h-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-            >
-              <source src={feature.videoUrl} type="video/mp4" />
-            </video>
-            {/* Dark overlay for better text contrast */}
-            <div className="absolute inset-0 bg-black/60"></div>
-          </div>
-        </>
-      )}
-
-      {/* Content */}
-      <motion.div 
-        className={`space-y-4 sm:space-y-5 md:space-y-6 ${isReversed ? 'lg:order-2' : ''} ${hasVideo ? 'relative z-10' : ''}`}
-        initial={{ opacity: 0, x: isReversed ? 50 : -50 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, delay: 0.2 }}
-      >
-        {/* Icon */}
-        <motion.div 
-          className={`inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl ${
-            hasVideo ? 'bg-white/20 backdrop-blur-sm' : 'bg-primary/10'
-          }`}
-          initial={{ scale: 0 }}
-          whileInView={{ scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
+    <section className="relative min-h-screen w-full overflow-hidden">
+      {/* Full-width background video */}
+      <div className="absolute inset-0 w-full h-full">
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster=""
         >
-          <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${
-            hasVideo ? 'text-white' : 'text-primary'
-          }`} />
-        </motion.div>
+          <source src={feature.videoUrl} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/50"></div>
+      </div>
 
-        {/* Title */}
-        <motion.h3 
-          className={`text-xl sm:text-2xl lg:text-3xl font-bold ${
-            hasVideo ? 'text-white' : 'text-slate-900'
-          }`}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-        >
-          {feature.title}
-        </motion.h3>
-
-        {/* Description */}
-        <motion.p 
-          className={`text-base sm:text-lg leading-relaxed ${
-            hasVideo ? 'text-white/90' : 'text-slate-600'
-          }`}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          {feature.description}
-        </motion.p>
-
-        {/* Benefits List */}
-        <motion.ul 
-          className="space-y-2 sm:space-y-3"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-        >
-          {feature.benefits.map((benefit, benefitIndex) => (
-            <motion.li 
-              key={benefitIndex}
-              className="flex items-start gap-2 sm:gap-3"
-              initial={{ opacity: 0, x: -20 }}
+      {/* Content positioned over background */}
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto w-full">
+          <div className="grid grid-cols-1 gap-12 items-center lg:grid-cols-2 lg:gap-16">
+            {/* Text Content */}
+            <motion.div 
+              className={`space-y-6 ${isReversed ? 'lg:order-2' : ''}`}
+              initial={{ opacity: 0, x: isReversed ? 50 : -50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.6 + (benefitIndex * 0.1) }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <Check className={`w-4 h-4 sm:w-5 sm:h-5 mt-0.5 flex-shrink-0 ${
-                hasVideo ? 'text-green-400' : 'text-green-600'
-              }`} />
-              <span className={`text-sm sm:text-base ${
-                hasVideo ? 'text-white/90' : 'text-slate-700'
-              }`}>{benefit}</span>
-            </motion.li>
-          ))}
-        </motion.ul>
-      </motion.div>
+              {/* Icon */}
+              <motion.div 
+                className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm"
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                <Icon className="w-7 h-7 text-white" />
+              </motion.div>
 
-      {/* Visual Content */}
-      <motion.div 
-        className={`relative ${isReversed ? 'lg:order-1' : ''}`}
-        initial={{ opacity: 0, x: isReversed ? -50 : 50 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-      >
-        <div className="aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden shadow-lg sm:shadow-2xl bg-gradient-to-br from-slate-100 to-slate-200 relative">
-          {feature.imageUrl ? (
-            <Image
-              src={feature.imageUrl}
-              alt={feature.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-slate-200">
-              <Icon className="w-16 h-16 text-slate-400" />
-            </div>
-          )}
+              {/* Title */}
+              <motion.h3 
+                className="text-3xl lg:text-4xl font-bold text-white leading-tight"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                {feature.title}
+              </motion.h3>
+
+              {/* Description */}
+              <motion.p 
+                className="text-lg lg:text-xl text-slate-200 leading-relaxed"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                {feature.description}
+              </motion.p>
+
+              {/* Benefits List */}
+              <motion.ul 
+                className="space-y-4"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+              >
+                {feature.benefits.map((benefit, benefitIndex) => (
+                  <motion.li 
+                    key={benefitIndex}
+                    className="flex items-start gap-3"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.6 + (benefitIndex * 0.1) }}
+                  >
+                    <Check className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
+                    <span className="text-slate-200 text-lg">{benefit}</span>
+                  </motion.li>
+                ))}
+              </motion.ul>
+            </motion.div>
+
+            {/* Product Image */}
+            <motion.div 
+              className={`relative ${isReversed ? 'lg:order-1' : ''}`}
+              initial={{ opacity: 0, x: isReversed ? -50 : 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              <div className="aspect-[4/3] rounded-xl overflow-hidden shadow-2xl bg-slate-800/50 backdrop-blur-sm relative">
+                <Image
+                  src={feature.imageUrl || ''}
+                  alt={feature.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
+            </motion.div>
+          </div>
         </div>
-      </motion.div>
-    </div>
+      </div>
+    </section>
   );
 }
 
 export function FeaturesScrollSection() {
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <motion.div 
-          className="text-center mb-12 sm:mb-16 lg:mb-20"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <motion.span 
-            className="text-primary font-semibold text-base sm:text-lg"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            Prečo STYRCON
-          </motion.span>
-          
-          <motion.h2 
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mt-3 sm:mt-4 mb-4 sm:mb-6"
-            initial={{ opacity: 0, y: 20 }}
+    <div>
+      {/* Section Header */}
+      <section className="py-12 sm:py-16 lg:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            className="text-center"
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            transition={{ duration: 0.8 }}
           >
-            Tepelnoizolačné riešenie budúcnosti
-          </motion.h2>
-          
-          <motion.p 
-            className="text-base sm:text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed px-4"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            Objavte jedinečné vlastnosti STYRCON dosiek, které kombinujú bezpečnosť, efektívnosť a trvalú udržateľnosť.
-          </motion.p>
-        </motion.div>
-
-        {/* Features */}
-        <div className="space-y-16 sm:space-y-20 lg:space-y-24">
-          {features.map((feature, index) => (
-            <FeatureItem
-              key={index}
-              feature={feature}
-              isReversed={index % 2 !== 0}
-            />
-          ))}
-        </div>
-
-        {/* CTA Section */}
-        <motion.div 
-          className="text-center mt-12 sm:mt-16 lg:mt-20"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <motion.h3 
-            className="text-xl sm:text-2xl font-bold text-slate-900 mb-3 sm:mb-4"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            Potrebujete podrobné technické údaje?
-          </motion.h3>
-          
-          <motion.p 
-            className="text-sm sm:text-base text-slate-600 mb-6 sm:mb-8 px-4"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            Pozrite si kompletné špecifikácie, certifikáty a technické dokumenty.
-          </motion.p>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <Button asChild size="lg" className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg">
-              <Link href="/styrcon-produkt">
-                Zobraziť technické údaje
-              </Link>
-            </Button>
+            <motion.span 
+              className="text-primary font-semibold text-base sm:text-lg"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              Prečo STYRCON
+            </motion.span>
+            
+            <motion.h2 
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mt-3 sm:mt-4 mb-4 sm:mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              Tepelnoizolačné riešenie budúcnosti
+            </motion.h2>
+            
+            <motion.p 
+              className="text-base sm:text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed px-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              Objavte jedinečné vlastnosti STYRCON dosiek, které kombinujú bezpečnosť, efektívnosť a trvalú udržateľnosť.
+            </motion.p>
           </motion.div>
-        </motion.div>
-      </div>
-    </section>
+        </div>
+      </section>
+
+      {/* Full-width video background sections */}
+      {features.map((feature, index) => (
+        <FeatureItem
+          key={index}
+          feature={feature}
+          isReversed={index % 2 !== 0}
+        />
+      ))}
+
+      {/* CTA Section */}
+      <section className="py-12 sm:py-16 lg:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            className="text-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <motion.h3 
+              className="text-xl sm:text-2xl font-bold text-slate-900 mb-3 sm:mb-4"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              Potrebujete podrobné technické údaje?
+            </motion.h3>
+            
+            <motion.p 
+              className="text-sm sm:text-base text-slate-600 mb-6 sm:mb-8 px-4"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              Pozrite si kompletné špecifikácie, certifikáty a technické dokumenty.
+            </motion.p>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <Button asChild size="lg" className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg">
+                <Link href="/styrcon-produkt">
+                  Zobraziť technické údaje
+                </Link>
+              </Button>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+    </div>
   );
 }

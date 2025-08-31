@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { LampContainer } from '@/components/ui/lamp';
 
 const projects = [
   {
@@ -38,23 +39,39 @@ const projects = [
 
 export function ProjectGallerySimple() {
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-slate-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <motion.div 
-          className="text-center mb-12 sm:mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
+    <section className="bg-slate-900">
+      {/* Lamp Effect Header */}
+      <div className="relative">
+        <LampContainer className="py-12 sm:py-16">
+          <motion.h1
+            initial={{ opacity: 0.5, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: 0.3,
+              duration: 0.8,
+              ease: "easeInOut",
+            }}
+            className="mt-8 bg-gradient-to-br from-slate-300 to-slate-500 py-4 bg-clip-text text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl"
+          >
             Naše Projekty
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: 0.5,
+              duration: 0.8,
+              ease: "easeInOut",
+            }}
+            className="text-slate-300 text-center text-lg md:text-xl max-w-2xl mx-auto mt-4"
+          >
             Preskúmajte naše realizované projekty s STYRCON riešeniami
-          </p>
-        </motion.div>
+          </motion.p>
+        </LampContainer>
+      </div>
+
+      {/* Project Gallery */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 lg:pb-20">
 
         {/* Horizontal Scrollable Gallery */}
         <div className="relative">

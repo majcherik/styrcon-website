@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { TableScrollArea, type TableColumn } from '@/components/ui/table-scroll-area';
 import { Download } from 'lucide-react';
 
 interface Specification {
@@ -60,6 +61,14 @@ const specifications: Specification[] = [
   }
 ];
 
+// Define table columns for the specifications
+const columns: TableColumn<Specification>[] = [
+  { key: 'parameter', label: 'Parameter' },
+  { key: 'value', label: 'Hodnota' },
+  { key: 'unit', label: 'Jednotka' },
+  { key: 'standard', label: 'Norma' },
+];
+
 export function ProductSpecs() {
   return (
     <section className="py-16 bg-white">
@@ -75,47 +84,12 @@ export function ProductSpecs() {
         </div>
 
         <Card className="overflow-hidden mb-8">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-slate-50">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">
-                    Parameter
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">
-                    Hodnota
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">
-                    Jednotka
-                  </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-900">
-                    Norma
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200">
-                {specifications.map((spec, index) => (
-                  <tr 
-                    key={index}
-                    className="hover:bg-slate-50 transition-colors duration-150"
-                  >
-                    <td className="px-6 py-4 text-sm font-medium text-slate-900">
-                      {spec.parameter}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-primary font-semibold">
-                      {spec.value}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-600">
-                      {spec.unit}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-500">
-                      {spec.standard}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <TableScrollArea
+            data={specifications}
+            columns={columns}
+            height={400}
+            minWidth={700}
+          />
         </Card>
 
         {/* Applications */}

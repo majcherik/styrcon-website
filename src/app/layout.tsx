@@ -7,6 +7,7 @@ import { StructuredData } from "@/components/structured-data";
 import { organizationStructuredData, websiteStructuredData } from "@/lib/structured-data";
 import { AuthProvider } from "@/contexts/auth-context";
 import { Providers } from "@/components/providers/providers";
+import { MantineProvider } from "@mantine/core";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -46,15 +47,17 @@ export default function RootLayout({
         <StructuredData data={websiteStructuredData} />
       </head>
       <body className="antialiased">
-        <Providers>
-          <AuthProvider>
-            <GlassmorphicNavbar />
-            <main className="min-h-screen">
-              {children}
-            </main>
-            <Footer />
-          </AuthProvider>
-        </Providers>
+        <MantineProvider>
+          <Providers>
+            <AuthProvider>
+              <GlassmorphicNavbar />
+              <main className="min-h-screen">
+                {children}
+              </main>
+              <Footer />
+            </AuthProvider>
+          </Providers>
+        </MantineProvider>
       </body>
     </html>
   );
