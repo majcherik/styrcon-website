@@ -1,5 +1,7 @@
 import { VideoHeader } from '@/components/sections/video-header';
 import { FeaturesScrollSection } from '@/components/sections/features-scroll-section';
+import { StyrexonInfoSection } from '@/components/sections/styrexon-info-section';
+import { StyrexonSystemSection } from '@/components/sections/styrexon-system-section';
 import { ProjectGallerySimple } from '@/components/sections/project-gallery-simple';
 import { BeforeAfterSection } from '@/components/sections/before-after';
 import { ContactCTA } from '@/components/sections/contact-cta';
@@ -11,6 +13,8 @@ export default function Home() {
       <SmoothScroll intensity={15} />
       <VideoHeader />
       <FeaturesScrollSection />
+      <StyrexonInfoSection />
+      <StyrexonSystemSection />
       <ProjectGallerySimple />
       <BeforeAfterSection />
       <ContactCTA />

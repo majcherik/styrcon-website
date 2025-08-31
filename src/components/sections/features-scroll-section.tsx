@@ -2,9 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Flame, Droplets, Thermometer, Shield, Check } from 'lucide-react';
-import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 
 interface Feature {
   icon: React.ComponentType<{ className?: string }>;
@@ -76,24 +74,22 @@ function FeatureItem({ feature, isReversed }: FeatureItemProps) {
 
   return (
     <section className="relative min-h-screen w-full overflow-hidden">
-      {/* Full-width background video */}
+      {/* Background Video */}
       <div className="absolute inset-0 w-full h-full">
         <video
-          className="absolute inset-0 w-full h-full object-cover"
           autoPlay
-          muted
           loop
+          muted
           playsInline
-          poster=""
+          className="w-full h-full object-cover"
         >
           <source src={feature.videoUrl} type="video/mp4" />
-          Your browser does not support the video tag.
         </video>
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-black/50"></div>
+        {/* Dark overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/60" />
       </div>
 
-      {/* Content positioned over background */}
+      {/* Content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid grid-cols-1 gap-12 items-center lg:grid-cols-2 lg:gap-16">
@@ -107,7 +103,7 @@ function FeatureItem({ feature, isReversed }: FeatureItemProps) {
             >
               {/* Icon */}
               <motion.div 
-                className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-white/10 backdrop-blur-sm"
+                className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30"
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
                 viewport={{ once: true }}
@@ -129,7 +125,7 @@ function FeatureItem({ feature, isReversed }: FeatureItemProps) {
 
               {/* Description */}
               <motion.p 
-                className="text-lg lg:text-xl text-slate-200 leading-relaxed"
+                className="text-lg lg:text-xl text-white/90 leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -156,7 +152,7 @@ function FeatureItem({ feature, isReversed }: FeatureItemProps) {
                     transition={{ duration: 0.4, delay: 0.6 + (benefitIndex * 0.1) }}
                   >
                     <Check className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
-                    <span className="text-slate-200 text-lg">{benefit}</span>
+                    <span className="text-white/90 text-lg">{benefit}</span>
                   </motion.li>
                 ))}
               </motion.ul>
@@ -170,7 +166,7 @@ function FeatureItem({ feature, isReversed }: FeatureItemProps) {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
-              <div className="aspect-[4/3] rounded-xl overflow-hidden shadow-2xl bg-slate-800/50 backdrop-blur-sm relative">
+              <div className="aspect-[4/3] rounded-xl overflow-hidden shadow-2xl bg-white/10 backdrop-blur-sm border border-white/20 relative">
                 <Image
                   src={feature.imageUrl || ''}
                   alt={feature.title}
@@ -242,51 +238,6 @@ export function FeaturesScrollSection() {
         />
       ))}
 
-      {/* CTA Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            className="text-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <motion.h3 
-              className="text-xl sm:text-2xl font-bold text-slate-900 mb-3 sm:mb-4"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              Potrebujete podrobné technické údaje?
-            </motion.h3>
-            
-            <motion.p 
-              className="text-sm sm:text-base text-slate-600 mb-6 sm:mb-8 px-4"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              Pozrite si kompletné špecifikácie, certifikáty a technické dokumenty.
-            </motion.p>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              <Button asChild size="lg" className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg">
-                <Link href="/styrcon-produkt">
-                  Zobraziť technické údaje
-                </Link>
-              </Button>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
     </div>
   );
 }

@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/imgcache/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.styrcon.sk',
+        port: '',
+        pathname: '/obchod_homedir/**',
+      },
     ],
   },
 };

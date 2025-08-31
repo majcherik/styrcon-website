@@ -11,9 +11,12 @@ export function ContactCTA() {
           <h2 className="text-3xl font-bold text-slate-900 mb-4">
             Máte otázky o STYRCON?
           </h2>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+          <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-6">
             Naši odborníci vám radi poskytnú technické poradenstvo a pomôžu s výberom 
             najvhodnejšieho riešenia pre váš projekt.
+          </p>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+            Pozrite si kompletné špecifikácie, certifikáty a technické dokumenty.
           </p>
         </div>
 
@@ -64,6 +67,12 @@ export function ContactCTA() {
                 <Link href="/kontakt">
                   Kontaktný formulár
                   <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              
+              <Button asChild variant="outline" size="lg">
+                <Link href="/styrcon-produkt">
+                  Technické údaje
                 </Link>
               </Button>
               
