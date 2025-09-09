@@ -73,7 +73,7 @@ function FeatureItem({ feature, isReversed }: FeatureItemProps) {
   const Icon = feature.icon;
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden">
+    <section className="relative min-h-[50vh] w-full overflow-hidden">
       {/* Background Video */}
       <div className="absolute inset-0 w-full h-full">
         <video
@@ -90,7 +90,7 @@ function FeatureItem({ feature, isReversed }: FeatureItemProps) {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 flex items-center justify-center min-h-[50vh] px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid grid-cols-1 gap-12 items-center lg:grid-cols-2 lg:gap-16">
             {/* Text Content */}

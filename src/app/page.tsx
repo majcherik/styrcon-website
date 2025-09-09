@@ -1,10 +1,6 @@
 import { VideoHeader } from '@/components/sections/video-header';
 import { FeaturesScrollSection } from '@/components/sections/features-scroll-section';
 import { StyrexonInfoSection } from '@/components/sections/styrexon-info-section';
-import { StyrexonSystemSection } from '@/components/sections/styrexon-system-section';
-import { ProjectGallerySimple } from '@/components/sections/project-gallery-simple';
-import { BeforeAfterSection } from '@/components/sections/before-after';
-import { ContactCTA } from '@/components/sections/contact-cta';
 import { SmoothScroll } from '@/components/layout/smooth-scroll';
 
 export default function Home() {
@@ -14,10 +10,6 @@ export default function Home() {
       <VideoHeader />
       <FeaturesScrollSection />
       <StyrexonInfoSection />
-      <StyrexonSystemSection />
-      <ProjectGallerySimple />
-      <BeforeAfterSection />
-      <ContactCTA />
     </div>
   );
 }
