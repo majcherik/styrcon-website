@@ -182,7 +182,7 @@ export function GlassmorphicNavbar() {
       ref={navRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-white/10 backdrop-blur-md border-b border-white/20 shadow-lg' 
+          ? 'bg-white shadow-lg border-b border-gray-200' 
           : 'bg-transparent'
       }`}
     >
@@ -191,10 +191,14 @@ export function GlassmorphicNavbar() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center" onClick={handleItemClick}>
-              <div className="text-xl font-bold text-slate-900">
+              <div className={`text-xl font-bold ${
+                isScrolled ? 'text-gray-900' : 'text-slate-900'
+              }`}>
                 STYRCON
               </div>
-              <div className="hidden sm:block ml-2 text-sm text-slate-600">
+              <div className={`hidden sm:block ml-2 text-sm ${
+                isScrolled ? 'text-gray-600' : 'text-slate-600'
+              }`}>
                 E-MA SK s.r.o.
               </div>
             </Link>
@@ -213,8 +217,10 @@ export function GlassmorphicNavbar() {
                     <div key={item.label} className="relative">
                       <button
                         onClick={() => toggleDropdown(item.label)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ease-out hover:bg-white/15 hover:backdrop-blur-md hover:border hover:border-white/20 hover:shadow-lg ${
-                          isActive ? 'bg-white/20 backdrop-blur-md border border-white/30 shadow-md' : ''
+                        className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ease-out ${
+                          isScrolled 
+                            ? `hover:bg-gray-100 ${isActive ? 'bg-gray-100 text-primary' : 'text-gray-700'}` 
+                            : `hover:bg-white/15 hover:backdrop-blur-md hover:border hover:border-white/20 hover:shadow-lg ${isActive ? 'bg-white/20 backdrop-blur-md border border-white/30 shadow-md' : ''}`
                         }`}
                       >
                         <Icon className="w-4 h-4" />
@@ -227,7 +233,11 @@ export function GlassmorphicNavbar() {
                       </button>
 
                       {openDropdown === item.label && (
-                        <div className="absolute top-full mt-2 left-0 min-w-48 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-xl py-2 z-50">
+                        <div className={`absolute top-full mt-2 left-0 min-w-48 rounded-xl shadow-xl py-2 z-50 ${
+                          isScrolled 
+                            ? 'bg-white border border-gray-200' 
+                            : 'bg-white/10 backdrop-blur-md border border-white/20'
+                        }`}>
                           {item.children.map((child) => {
                             const ChildIcon = child.icon;
                             return (
@@ -235,8 +245,10 @@ export function GlassmorphicNavbar() {
                                 key={child.href}
                                 href={child.href}
                                 onClick={handleItemClick}
-                                className={`flex items-center gap-3 px-4 py-3 hover:bg-white/15 transition-all duration-200 ${
-                                  pathname === child.href ? 'bg-white/20 shadow-sm' : ''
+                                className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 ${
+                                  isScrolled 
+                                    ? `hover:bg-gray-50 ${pathname === child.href ? 'bg-gray-50 text-primary' : 'text-gray-700'}` 
+                                    : `hover:bg-white/15 ${pathname === child.href ? 'bg-white/20 shadow-sm' : ''}`
                                 }`}
                               >
                                 <ChildIcon className="w-4 h-4" />
@@ -255,8 +267,10 @@ export function GlassmorphicNavbar() {
                     key={item.href}
                     href={item.href}
                     onClick={handleItemClick}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ease-out hover:bg-white/15 hover:backdrop-blur-md hover:border hover:border-white/20 hover:shadow-lg ${
-                      pathname === item.href ? 'bg-white/20 backdrop-blur-md border border-white/30 shadow-md' : ''
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ease-out ${
+                      isScrolled 
+                        ? `hover:bg-gray-100 ${pathname === item.href ? 'bg-gray-100 text-primary' : 'text-gray-700'}` 
+                        : `hover:bg-white/15 hover:backdrop-blur-md hover:border hover:border-white/20 hover:shadow-lg ${pathname === item.href ? 'bg-white/20 backdrop-blur-md border border-white/30 shadow-md' : ''}`
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -275,7 +289,11 @@ export function GlassmorphicNavbar() {
               ) : user ? (
                 <div className="flex items-center gap-3">
                   <Button variant="ghost" size="sm" asChild>
-                  <Link href="/profil" className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20">
+                  <Link href="/profil" className={`flex items-center gap-2 ${
+                    isScrolled 
+                      ? 'bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700' 
+                      : 'bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20'
+                  }`}>
                     <User className="h-4 w-4" />
                     <span className="max-w-24 truncate">
                       {profile?.first_name || user.email?.split('@')[0] || 'Profil'}
@@ -286,7 +304,11 @@ export function GlassmorphicNavbar() {
                   variant="outline"
                   size="sm"
                   onClick={handleSignOut}
-                  className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20"
+                  className={`flex items-center gap-2 ${
+                    isScrolled 
+                      ? 'bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700' 
+                      : 'bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20'
+                  }`}
                 >
                   <LogOut className="h-4 w-4" />
                   Odhlásiť
@@ -295,12 +317,20 @@ export function GlassmorphicNavbar() {
             ) : (
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="sm" asChild>
-                  <Link href="/prihlasenie" className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20">
+                  <Link href="/prihlasenie" className={`${
+                    isScrolled 
+                      ? 'bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700' 
+                      : 'bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20'
+                  }`}>
                     Prihlásenie
                   </Link>
                 </Button>
                 <Button size="sm" asChild>
-                  <Link href="/registracia" className="bg-primary/90 backdrop-blur-md hover:bg-primary">
+                  <Link href="/registracia" className={`${
+                    isScrolled 
+                      ? 'bg-primary text-white hover:bg-primary/90' 
+                      : 'bg-primary/90 backdrop-blur-md hover:bg-primary'
+                  }`}>
                     Registrácia
                   </Link>
                 </Button>
@@ -313,7 +343,11 @@ export function GlassmorphicNavbar() {
           <div className="lg:hidden flex items-center gap-2">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300"
+              className={`p-2 rounded-xl transition-all duration-300 ${
+                isScrolled 
+                  ? 'bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700' 
+                  : 'bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20'
+              }`}
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -322,8 +356,14 @@ export function GlassmorphicNavbar() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="lg:hidden border-t border-white/20 mt-2">
-            <div className="py-4 space-y-2 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 shadow-xl">
+          <div className={`lg:hidden mt-2 ${
+            isScrolled ? 'border-t border-gray-200' : 'border-t border-white/20'
+          }`}>
+            <div className={`py-4 space-y-2 rounded-xl shadow-xl ${
+              isScrolled 
+                ? 'bg-white border border-gray-200' 
+                : 'bg-white/10 backdrop-blur-md border border-white/20'
+            }`}>
               {navigationItems.map((item) => {
                 const Icon = item.icon;
                 
@@ -332,7 +372,9 @@ export function GlassmorphicNavbar() {
                     <div key={item.label}>
                       <button
                         onClick={() => toggleDropdown(item.label)}
-                        className="flex items-center justify-between w-full px-4 py-3 hover:bg-white/15 transition-all duration-200"
+                        className={`flex items-center justify-between w-full px-4 py-3 transition-all duration-200 ${
+                          isScrolled ? 'hover:bg-gray-50 text-gray-700' : 'hover:bg-white/15'
+                        }`}
                       >
                         <div className="flex items-center gap-3">
                           <Icon className="w-5 h-5" />
@@ -354,7 +396,9 @@ export function GlassmorphicNavbar() {
                                 key={child.href}
                                 href={child.href}
                                 onClick={handleItemClick}
-                                className="flex items-center gap-3 px-4 py-2 hover:bg-white/15 transition-all duration-200"
+                                className={`flex items-center gap-3 px-4 py-2 transition-all duration-200 ${
+                                  isScrolled ? 'hover:bg-gray-50 text-gray-600' : 'hover:bg-white/15'
+                                }`}
                               >
                                 <ChildIcon className="w-4 h-4" />
                                 <span className="text-sm">{child.label}</span>
@@ -372,7 +416,9 @@ export function GlassmorphicNavbar() {
                     key={item.href}
                     href={item.href}
                     onClick={handleItemClick}
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-white/15 transition-all duration-200"
+                    className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 ${
+                      isScrolled ? 'hover:bg-gray-50 text-gray-700' : 'hover:bg-white/15'
+                    }`}
                   >
                     <Icon className="w-5 h-5" />
                     <span className="font-medium">{item.label}</span>
@@ -381,14 +427,20 @@ export function GlassmorphicNavbar() {
               })}
 
               {/* Mobile Auth Section */}
-              <div className="pt-4 border-t border-white/20 space-y-2">
+              <div className={`pt-4 space-y-2 ${
+                isScrolled ? 'border-t border-gray-200' : 'border-t border-white/20'
+              }`}>
                 {!isAuthReady ? (
                   <div className="flex justify-center py-4">
                     <div className="w-full h-10 animate-pulse bg-white/20 rounded backdrop-blur-sm"></div>
                   </div>
                 ) : user ? (
                   <>
-                    <Button asChild className="w-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20" onClick={handleItemClick}>
+                    <Button asChild className={`w-full ${
+                      isScrolled 
+                        ? 'bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700' 
+                        : 'bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20'
+                    }`} onClick={handleItemClick}>
                       <Link href="/profil" className="flex items-center gap-2">
                         <User className="h-4 w-4" />
                         <span className="truncate">
@@ -398,7 +450,11 @@ export function GlassmorphicNavbar() {
                     </Button>
                     <Button
                       variant="outline"
-                      className="w-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20"
+                      className={`w-full ${
+                        isScrolled 
+                          ? 'bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700' 
+                          : 'bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20'
+                      }`}
                       onClick={handleSignOut}
                     >
                       <LogOut className="h-4 w-4 mr-2" />
@@ -407,12 +463,20 @@ export function GlassmorphicNavbar() {
                   </>
                 ) : (
                   <>
-                    <Button variant="outline" asChild className="w-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20">
+                    <Button variant="outline" asChild className={`w-full ${
+                      isScrolled 
+                        ? 'bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700' 
+                        : 'bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20'
+                    }`}>
                       <Link href="/prihlasenie" onClick={handleItemClick}>
                         Prihlásenie
                       </Link>
                     </Button>
-                    <Button asChild className="w-full bg-primary/90 backdrop-blur-md hover:bg-primary">
+                    <Button asChild className={`w-full ${
+                      isScrolled 
+                        ? 'bg-primary text-white hover:bg-primary/90' 
+                        : 'bg-primary/90 backdrop-blur-md hover:bg-primary'
+                    }`}>
                       <Link href="/registracia" onClick={handleItemClick}>
                         Registrácia
                       </Link>

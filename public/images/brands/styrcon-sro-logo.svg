@@ -1,0 +1,17 @@
+<svg width="200" height="80" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Styrcon s.r.o. logo based on provided image -->
+  
+  <!-- Main "styrcon" text in blue -->
+  <text x="20" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1e40af">
+    styrcon
+  </text>
+  
+  <!-- "paropriepustné zateplenie" tagline in orange -->
+  <text x="20" y="55" font-family="Arial, sans-serif" font-size="12" font-weight="normal" fill="#ea580c">
+    paropriepustné zateplenie
+  </text>
+  
+  <!-- Optional: Small decorative element -->
+  <circle cx="10" cy="30" r="3" fill="#1e40af"/>
+  <circle cx="10" cy="40" r="2" fill="#ea580c"/>
+</svg>

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Calendar, User, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ArticleTracingBeam } from '@/components/sections/article-tracing-beam';
 
 interface BlogPost {
   id: string;
@@ -1010,73 +1011,8 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
             {post.title}
           </h1>
 
-          {/* Featured Image */}
-          <div className="relative aspect-[16/9] mb-8 rounded-xl overflow-hidden">
-            <Image
-              src={post.image}
-              alt={post.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 896px"
-              priority
-            />
-          </div>
-
-          {/* Article Content */}
-          <div className="prose prose-lg prose-slate max-w-none
-                          prose-headings:font-bold prose-headings:text-slate-900
-                          prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
-                          prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3
-                          prose-p:text-slate-700 prose-p:leading-relaxed prose-p:mb-4
-                          prose-ul:my-4 prose-li:text-slate-700
-                          prose-strong:text-slate-900 prose-strong:font-semibold
-                          prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
-            {post.content.split('\n\n').map((paragraph, index) => {
-              if (paragraph.startsWith('## ')) {
-                return (
-                  <h2 key={index} className="text-2xl font-bold text-slate-900 mt-8 mb-4">
-                    {paragraph.replace('## ', '')}
-                  </h2>
-                );
-              }
-              if (paragraph.startsWith('### ')) {
-                return (
-                  <h3 key={index} className="text-xl font-bold text-slate-900 mt-6 mb-3">
-                    {paragraph.replace('### ', '')}
-                  </h3>
-                );
-              }
-              if (paragraph.startsWith('**') && paragraph.endsWith('**')) {
-                return (
-                  <h4 key={index} className="text-lg font-semibold text-slate-900 mt-4 mb-2">
-                    {paragraph.replace(/\*\*/g, '')}
-                  </h4>
-                );
-              }
-              if (paragraph.startsWith('- ') || paragraph.includes('\n- ')) {
-                const items = paragraph.split('\n').filter(item => item.startsWith('- '));
-                return (
-                  <ul key={index} className="list-disc list-inside space-y-2 my-4 text-slate-700">
-                    {items.map((item, itemIndex) => (
-                      <li key={itemIndex}>{item.replace('- ', '')}</li>
-                    ))}
-                  </ul>
-                );
-              }
-              if (paragraph.startsWith('*') && paragraph.endsWith('*')) {
-                return (
-                  <p key={index} className="text-slate-600 italic bg-slate-50 p-4 rounded-lg border-l-4 border-primary/30 my-6">
-                    {paragraph.replace(/^\*/, '').replace(/\*$/, '').replace(/\[kontaktnej stránky\]\(\/kontakt\)/, 'kontaktnej stránky')}
-                  </p>
-                );
-              }
-              return (
-                <p key={index} className="text-slate-700 leading-relaxed mb-4">
-                  {paragraph}
-                </p>
-              );
-            })}
-          </div>
+          {/* Article Content with TracingBeam */}
+          <ArticleTracingBeam post={post} />
 
           {/* Article Tags */}
           <div className="mt-8 pt-8 border-t border-slate-200">

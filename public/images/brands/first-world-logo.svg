@@ -1,0 +1,20 @@
+<svg width="200" height="80" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Globe with swoosh design -->
+  <g transform="translate(20, 10)">
+    <!-- Globe -->
+    <circle cx="35" cy="35" r="25" fill="#1E88E5"/>
+    <!-- Americas outline -->
+    <path d="M25 25 C30 22, 35 25, 40 30 C38 35, 35 40, 30 42 C25 40, 22 35, 25 25Z" fill="white"/>
+    <!-- Swooshes -->
+    <path d="M5 20 Q25 10, 65 25" stroke="#00BCD4" stroke-width="3" fill="none"/>
+    <path d="M5 50 Q25 60, 65 45" stroke="#9E9E9E" stroke-width="3" fill="none"/>
+  </g>
+  
+  <!-- First World text -->
+  <g transform="translate(90, 15)">
+    <!-- First -->
+    <text x="0" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1E88E5">First</text>
+    <!-- World -->
+    <text x="0" y="40" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1E88E5">World</text>
+  </g>
+</svg>
