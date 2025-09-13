@@ -9,8 +9,8 @@ export default function Home() {
     <div>
       <SmoothScroll intensity={15} />
       <VideoHeader />
-      <FeaturesScrollSection />
       <StyrexonInfoSection />
+      <FeaturesScrollSection />
       <BrandPartnersGrid />
     </div>
   );

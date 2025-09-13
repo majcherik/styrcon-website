@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Flame, Droplets, Thermometer, Shield, Check } from 'lucide-react';
 import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
 interface Feature {
   icon: React.ComponentType<{ className?: string }>;
@@ -13,7 +14,7 @@ interface Feature {
   videoUrl?: string;
 }
 
-const features: Feature[] = [
+const features = [
   {
     icon: Flame,
     title: "Trieda A1 - Maximálna požiarna bezpečnosť",
@@ -24,7 +25,8 @@ const features: Feature[] = [
       "Bezpečnosť pre obytné a komerčné budovy"
     ],
     videoUrl: "https://i.imgur.com/RAJ9PPr.mp4",
-    imageUrl: "https://www.e-ma.sk/imgcache/e-img-499.jpg?v=1632886730"
+    imageUrl: "https://www.e-ma.sk/imgcache/e-img-499.jpg?v=1632886730",
+    className: "col-span-1 lg:col-span-3 border-b lg:border-r dark:border-neutral-800"
   },
   {
     icon: Droplets,
@@ -36,7 +38,8 @@ const features: Feature[] = [
       "Zdravé vnútorné prostredie"
     ],
     videoUrl: "https://i.imgur.com/3X8FpGh.mp4",
-    imageUrl: "https://www.e-ma.sk/imgcache/e-img-449.jpg?v=1632883952"
+    imageUrl: "https://www.e-ma.sk/imgcache/e-img-449.jpg?v=1632883952",
+    className: "col-span-1 lg:col-span-3 border-b dark:border-neutral-800"
   },
   {
     icon: Thermometer,
@@ -48,7 +51,8 @@ const features: Feature[] = [
       "Vyšší komfort bývania"
     ],
     videoUrl: "https://i.imgur.com/oneQ8Yj.mp4",
-    imageUrl: "https://www.e-ma.sk/imgcache/e-img-369.jpg?v=1632893666"
+    imageUrl: "https://www.e-ma.sk/imgcache/e-img-369.jpg?v=1632893666",
+    className: "col-span-1 lg:col-span-3 lg:border-r dark:border-neutral-800"
   },
   {
     icon: Shield,
@@ -60,126 +64,74 @@ const features: Feature[] = [
       "Overené tisíckami projektov"
     ],
     videoUrl: "https://i.imgur.com/lYxVBHH.mp4",
-    imageUrl: "https://www.e-ma.sk/imgcache/e-img-297.jpg?v=1632879839"
+    imageUrl: "https://www.e-ma.sk/imgcache/e-img-297.jpg?v=1632879839",
+    className: "col-span-1 lg:col-span-3"
   }
 ];
 
-interface FeatureItemProps {
-  feature: Feature;
-  isReversed: boolean;
-}
-
-function FeatureItem({ feature, isReversed }: FeatureItemProps) {
-  const Icon = feature.icon;
-
+// Simple Aceternity-style Bento Components
+const FeatureCard = ({ children, className }: { children: React.ReactNode; className: string }) => {
   return (
-    <section className="relative min-h-[50vh] w-full overflow-hidden">
-      {/* Background Video */}
-      <div className="absolute inset-0 w-full h-full">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-        >
-          <source src={feature.videoUrl} type="video/mp4" />
-        </video>
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/60" />
-      </div>
+    <div className={cn(`p-5 relative overflow-hidden min-h-[350px]`, className)}>
+      {children}
+    </div>
+  );
+};
 
+function BentoFeature({ feature, className }: { feature: any; className: string }) {
+  const Icon = feature.icon;
+  
+  return (
+    <FeatureCard className={className}>
+      {/* Video Background */}
+      {feature.videoUrl && (
+        <div className="absolute inset-0 opacity-60 pointer-events-none">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          >
+            <source src={feature.videoUrl} type="video/mp4" />
+          </video>
+        </div>
+      )}
+      
       {/* Content */}
-      <div className="relative z-10 flex items-center justify-center min-h-[50vh] px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto w-full">
-          <div className="grid grid-cols-1 gap-12 items-center lg:grid-cols-2 lg:gap-16">
-            {/* Text Content */}
-            <motion.div 
-              className={`space-y-6 ${isReversed ? 'lg:order-2' : ''}`}
-              initial={{ opacity: 0, x: isReversed ? 50 : -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              {/* Icon */}
-              <motion.div 
-                className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30"
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-              >
-                <Icon className="w-7 h-7 text-white" />
-              </motion.div>
-
-              {/* Title */}
-              <motion.h3 
-                className="text-3xl lg:text-4xl font-bold text-white leading-tight"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                {feature.title}
-              </motion.h3>
-
-              {/* Description */}
-              <motion.p 
-                className="text-lg lg:text-xl text-white/90 leading-relaxed"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-              >
-                {feature.description}
-              </motion.p>
-
-              {/* Benefits List */}
-              <motion.ul 
-                className="space-y-4"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-              >
-                {feature.benefits.map((benefit, benefitIndex) => (
-                  <motion.li 
-                    key={benefitIndex}
-                    className="flex items-start gap-3"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: 0.6 + (benefitIndex * 0.1) }}
-                  >
-                    <Check className="w-5 h-5 text-green-400 mt-1 flex-shrink-0" />
-                    <span className="text-white/90 text-lg">{benefit}</span>
-                  </motion.li>
-                ))}
-              </motion.ul>
-            </motion.div>
-
-            {/* Product Image */}
-            <motion.div 
-              className={`relative ${isReversed ? 'lg:order-1' : ''}`}
-              initial={{ opacity: 0, x: isReversed ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-            >
-              <div className="aspect-[4/3] rounded-xl overflow-hidden shadow-2xl bg-white/10 backdrop-blur-sm border border-white/20 relative">
-                <Image
-                  src={feature.imageUrl || ''}
-                  alt={feature.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              </div>
-            </motion.div>
+      <div className="relative z-10 h-full flex flex-col">
+        {/* Icon */}
+        <div className="mb-4">
+          <div className="w-10 h-10 bg-primary/30 rounded-lg flex items-center justify-center">
+            <Icon className="w-5 h-5 text-primary" />
           </div>
         </div>
+        
+        {/* Title */}
+        <h3 className="text-xl md:text-2xl font-extrabold text-white mb-2 drop-shadow-lg">
+          {feature.title}
+        </h3>
+        
+        {/* Description */}
+        <p className="text-base font-medium text-white mb-4 drop-shadow-md flex-1">
+          {feature.description}
+        </p>
+        
+        {/* Benefits */}
+        <ul className="space-y-1 mt-auto">
+          {feature.benefits.map((benefit: string, idx: number) => (
+            <li key={idx} className="flex items-start text-sm font-medium text-white drop-shadow-lg">
+              <Check className="w-3 h-3 text-primary mt-1 mr-2 flex-shrink-0" />
+              {benefit}
+            </li>
+          ))}
+        </ul>
       </div>
-    </section>
+      
+      {/* Gradient overlays */}
+      <div className="absolute bottom-0 z-5 inset-x-0 h-32 bg-gradient-to-t from-black/40 via-black/20 to-transparent pointer-events-none" />
+      <div className="absolute top-0 z-5 inset-x-0 h-20 bg-gradient-to-b from-black/30 via-transparent to-transparent pointer-events-none" />
+    </FeatureCard>
   );
 }
 
@@ -191,37 +143,37 @@ export function FeaturesScrollSection() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="text-center"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.4 }}
           >
             <motion.span 
               className="text-primary font-semibold text-base sm:text-lg"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.3, delay: 0.1 }}
             >
               Prečo STYRCON
             </motion.span>
             
             <motion.h2 
               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mt-3 sm:mt-4 mb-4 sm:mb-6"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.4, delay: 0.15 }}
             >
               Tepelnoizolačné riešenie budúcnosti
             </motion.h2>
             
             <motion.p 
               className="text-base sm:text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed px-4"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.4, delay: 0.2 }}
             >
               Objavte jedinečné vlastnosti STYRCON dosiek, které kombinujú bezpečnosť, efektívnosť a trvalú udržateľnosť.
             </motion.p>
@@ -229,14 +181,20 @@ export function FeaturesScrollSection() {
         </div>
       </section>
 
-      {/* Full-width video background sections */}
-      {features.map((feature, index) => (
-        <FeatureItem
-          key={index}
-          feature={feature}
-          isReversed={index % 2 !== 0}
-        />
-      ))}
+      {/* Benefits Cards - Simple 2x2 Grid */}
+      <section className="py-12 sm:py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-6 xl:border rounded-md dark:border-neutral-800">
+            {features.map((feature) => (
+              <BentoFeature
+                key={feature.title}
+                feature={feature}
+                className={feature.className}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
 
     </div>
   );

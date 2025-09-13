@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { GlassmorphicNavbar } from "@/components/navigation/glassmorphic-navbar";
+import { ShadcnNavbar } from "@/components/navigation/shadcn-navbar";
 import { Footer } from "@/components/layout/footer";
 import { StructuredData } from "@/components/structured-data";
 import { organizationStructuredData, websiteStructuredData } from "@/lib/structured-data";
@@ -50,7 +50,7 @@ export default function RootLayout({
         <MantineProvider>
           <Providers>
             <AuthProvider>
-              <GlassmorphicNavbar />
+              <ShadcnNavbar />
               <main className="min-h-screen">
                 {children}
               </main>

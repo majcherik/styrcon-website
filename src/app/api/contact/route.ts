@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as z from 'zod';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/server';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Meno musí obsahovať aspoň 2 znaky'),
@@ -31,6 +31,9 @@ export async function POST(request: NextRequest) {
     }
 
     const { name, email, phone, company, subject, message } = validationResult.data;
+
+    // Create server-side Supabase client
+    const supabase = await createClient();
 
     // Save the contact submission to Supabase
     const { data: contactData, error: insertError } = await supabase

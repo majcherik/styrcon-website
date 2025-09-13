@@ -1,8 +1,21 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase, type UserProfile } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase/client';
+
+// Updated UserProfile interface to match database schema
+export interface UserProfile {
+  id: string
+  email: string
+  first_name: string | null
+  last_name: string | null
+  company: string | null
+  phone: string | null
+  avatar_url: string | null
+  created_at: string
+  updated_at: string
+}
 
 interface AuthContextType {
   user: User | null;
@@ -21,6 +34,9 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Create supabase client outside component to avoid hook violations
+const supabaseClient = createClient();
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -33,8 +49,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchProfile = useCallback(async (userId: string, retries = 3): Promise<UserProfile | null> => {
     for (let i = 0; i < retries; i++) {
       try {
-        const { data, error } = await supabase
-          .from('user_profiles')
+        const { data, error } = await supabaseClient
+          .from('profiles')
           .select('*')
           .eq('id', userId)
           .single();
@@ -104,7 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         if (accessToken && refreshToken) {
           console.log('Processing auth tokens from URL');
-          const { data, error } = await supabase.auth.setSession({
+          const { data, error } = await supabaseClient.auth.setSession({
             access_token: accessToken,
             refresh_token: refreshToken,
           });
@@ -123,7 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
         
         // Get existing session
-        const { data: { session }, error } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabaseClient.auth.getSession();
         
         if (!mounted) return;
         
@@ -148,7 +164,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth state changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(handleAuthChange);
+    } = supabaseClient.auth.onAuthStateChange(handleAuthChange);
 
     return () => {
       mounted = false;
@@ -157,7 +173,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [handleAuthChange]);
 
   const signUp = async (email: string, password: string, userData?: { first_name?: string; last_name?: string }) => {
-    const { error } = await supabase.auth.signUp({
+    const { error } = await supabaseClient.auth.signUp({
       email,
       password,
       options: {
@@ -169,7 +185,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabaseClient.auth.signInWithPassword({
       email,
       password,
     });
@@ -178,12 +194,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await supabaseClient.auth.signOut();
     return { error };
   };
 
   const resetPassword = async (email: string) => {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-hesla`,
     });
     
@@ -194,8 +210,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!user) return { error: new Error('No user logged in') };
 
     try {
-      const { error } = await supabase
-        .from('user_profiles')
+      const { error } = await supabaseClient
+        .from('profiles')
         .update(updates)
         .eq('id', user.id);
 

@@ -19,11 +19,11 @@ import {
   Phone,
   User,
   LogOut,
-  ChevronDown,
-  ChevronUp
+  ChevronDown
 } from 'lucide-react';
 import { useAuth } from '@/contexts/auth-context';
 import { DropdownButton } from '@/components/ui/dropdown-button';
+import { cn } from '@/lib/utils';
 
 interface NavItem {
   label: string;
@@ -44,9 +44,13 @@ const navigationItems: NavItem[] = [
     icon: Info 
   },
   { 
-    label: 'Produkt', 
-    href: '/styrcon-produkt', 
-    icon: Package 
+    label: 'Produkty', 
+    href: '#',
+    icon: Package,
+    children: [
+      { label: 'STYRCON', href: '/styrcon-produkt', icon: Package },
+      { label: 'POLYTEX', href: '/polytex-produkt', icon: Package }
+    ]
   },
   {
     label: 'Demo',
@@ -80,10 +84,10 @@ const navigationItems: NavItem[] = [
   },
 ];
 
-export function GlassmorphicNavbar() {
+
+export function ShadcnNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -106,7 +110,7 @@ export function GlassmorphicNavbar() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(event.target as Node)) {
-        setOpenDropdown(null);
+        setIsOpen(false);
       }
     };
 
@@ -122,13 +126,8 @@ export function GlassmorphicNavbar() {
     setIsOpen(false);
   };
 
-  const toggleDropdown = (label: string) => {
-    setOpenDropdown(openDropdown === label ? null : label);
-  };
-
   const handleItemClick = () => {
     setIsOpen(false);
-    setOpenDropdown(null);
   };
 
   // Prevent hydration mismatch by showing placeholder during SSR
@@ -137,7 +136,6 @@ export function GlassmorphicNavbar() {
       <nav className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
             <div className="flex-shrink-0">
               <Link href="/" className="flex items-center">
                 <div className="text-xl font-bold text-slate-900">
@@ -149,7 +147,6 @@ export function GlassmorphicNavbar() {
               </Link>
             </div>
 
-            {/* Desktop Navigation */}
             <div className="hidden lg:block">
               <div className="flex items-center space-x-1">
                 <div className="w-32 h-8 animate-pulse bg-white/10 rounded-lg"></div>
@@ -158,7 +155,6 @@ export function GlassmorphicNavbar() {
               </div>
             </div>
 
-            {/* Theme Switcher & Auth Buttons */}
             <div className="hidden lg:block">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 animate-pulse bg-white/10 rounded-lg"></div>
@@ -166,7 +162,6 @@ export function GlassmorphicNavbar() {
               </div>
             </div>
 
-            {/* Mobile menu button */}
             <div className="lg:hidden flex items-center gap-2">
               <button className="p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
                 <Menu className="h-6 w-6" />
@@ -205,7 +200,7 @@ export function GlassmorphicNavbar() {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Simple Dropdown */}
           <div className="hidden lg:block">
             <div className="flex items-center space-x-1">
               {navigationItems.map((item) => {
@@ -215,50 +210,51 @@ export function GlassmorphicNavbar() {
 
                 if (item.children) {
                   return (
-                    <div key={item.label} className="relative">
-                      <button
-                        onClick={() => toggleDropdown(item.label)}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ease-out ${
+                    <div key={item.label} className="relative group">
+                      <button 
+                        className={cn(
+                          "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300",
                           isScrolled 
-                            ? `hover:bg-gray-100 ${isActive ? 'bg-gray-100 text-primary' : 'text-gray-700'}` 
-                            : `hover:bg-white/15 hover:backdrop-blur-md hover:border hover:border-white/20 hover:shadow-lg ${isActive ? 'bg-white/20 backdrop-blur-md border border-white/30 shadow-md' : ''}`
-                        }`}
+                            ? "hover:bg-gray-100" 
+                            : "hover:bg-white/15 hover:backdrop-blur-md hover:border hover:border-white/20 hover:shadow-lg",
+                          isActive && (isScrolled 
+                            ? "bg-gray-100 text-primary" 
+                            : "bg-white/20 backdrop-blur-md border border-white/30 shadow-md")
+                        )}
                       >
                         <Icon className="w-4 h-4" />
-                        <span className="text-sm font-medium">{item.label}</span>
-                        {openDropdown === item.label ? (
-                          <ChevronUp className="w-3 h-3" />
-                        ) : (
-                          <ChevronDown className="w-3 h-3" />
-                        )}
+                        <span>{item.label}</span>
+                        <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
                       </button>
-
-                      {openDropdown === item.label && (
-                        <div className={`absolute top-full mt-2 left-0 min-w-48 rounded-xl shadow-xl py-2 z-50 ${
-                          isScrolled 
-                            ? 'bg-white border border-gray-200' 
-                            : 'bg-white/10 backdrop-blur-md border border-white/20'
-                        }`}>
-                          {item.children.map((child) => {
-                            const ChildIcon = child.icon;
-                            return (
-                              <Link
-                                key={child.href}
-                                href={child.href}
-                                onClick={handleItemClick}
-                                className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 ${
-                                  isScrolled 
-                                    ? `hover:bg-gray-50 ${pathname === child.href ? 'bg-gray-50 text-primary' : 'text-gray-700'}` 
-                                    : `hover:bg-white/15 ${pathname === child.href ? 'bg-white/20 shadow-sm' : ''}`
-                                }`}
-                              >
-                                <ChildIcon className="w-4 h-4" />
-                                <span className="text-sm font-medium">{child.label}</span>
-                              </Link>
-                            );
-                          })}
-                        </div>
-                      )}
+                      <div className={cn(
+                        "absolute top-full left-0 mt-1 w-48 rounded-lg shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50",
+                        isScrolled 
+                          ? "bg-white border-gray-200" 
+                          : "bg-white/95 backdrop-blur-md border-white/20"
+                      )}>
+                        {item.children.map((child) => {
+                          const ChildIcon = child.icon;
+                          return (
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              onClick={handleItemClick}
+                              className={cn(
+                                "flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-200 first:rounded-t-lg last:rounded-b-lg",
+                                isScrolled 
+                                  ? "hover:bg-gray-50 text-gray-700" 
+                                  : "hover:bg-white/20 text-gray-900",
+                                pathname === child.href && (isScrolled 
+                                  ? "bg-gray-50 text-primary" 
+                                  : "bg-white/20")
+                              )}
+                            >
+                              <ChildIcon className="w-4 h-4" />
+                              {child.label}
+                            </Link>
+                          );
+                        })}
+                      </div>
                     </div>
                   );
                 }
@@ -268,14 +264,18 @@ export function GlassmorphicNavbar() {
                     key={item.href}
                     href={item.href}
                     onClick={handleItemClick}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 ease-out ${
+                    className={cn(
+                      "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300",
                       isScrolled 
-                        ? `hover:bg-gray-100 ${pathname === item.href ? 'bg-gray-100 text-primary' : 'text-gray-700'}` 
-                        : `hover:bg-white/15 hover:backdrop-blur-md hover:border hover:border-white/20 hover:shadow-lg ${pathname === item.href ? 'bg-white/20 backdrop-blur-md border border-white/30 shadow-md' : ''}`
-                    }`}
+                        ? "hover:bg-gray-100" 
+                        : "hover:bg-white/15 hover:backdrop-blur-md hover:border hover:border-white/20 hover:shadow-lg",
+                      pathname === item.href && (isScrolled 
+                        ? "bg-gray-100 text-primary" 
+                        : "bg-white/20 backdrop-blur-md border border-white/30 shadow-md")
+                    )}
                   >
                     <Icon className="w-4 h-4" />
-                    <span className="text-sm font-medium">{item.label}</span>
+                    <span>{item.label}</span>
                   </Link>
                 );
               })}
@@ -344,44 +344,31 @@ export function GlassmorphicNavbar() {
                 
                 if (item.children) {
                   return (
-                    <div key={item.label}>
-                      <button
-                        onClick={() => toggleDropdown(item.label)}
-                        className={`flex items-center justify-between w-full px-4 py-3 transition-all duration-200 ${
-                          isScrolled ? 'hover:bg-gray-50 text-gray-700' : 'hover:bg-white/15'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <Icon className="w-5 h-5" />
-                          <span className="font-medium">{item.label}</span>
-                        </div>
-                        {openDropdown === item.label ? (
-                          <ChevronUp className="w-4 h-4" />
-                        ) : (
-                          <ChevronDown className="w-4 h-4" />
-                        )}
-                      </button>
-                      
-                      {openDropdown === item.label && (
-                        <div className="ml-8 space-y-1">
-                          {item.children.map((child) => {
-                            const ChildIcon = child.icon;
-                            return (
-                              <Link
-                                key={child.href}
-                                href={child.href}
-                                onClick={handleItemClick}
-                                className={`flex items-center gap-3 px-4 py-2 transition-all duration-200 ${
-                                  isScrolled ? 'hover:bg-gray-50 text-gray-600' : 'hover:bg-white/15'
-                                }`}
-                              >
-                                <ChildIcon className="w-4 h-4" />
-                                <span className="text-sm">{child.label}</span>
-                              </Link>
-                            );
-                          })}
-                        </div>
-                      )}
+                    <div key={item.label} className="space-y-1">
+                      <div className={`flex items-center gap-3 px-4 py-3 font-medium ${
+                        isScrolled ? 'text-gray-900' : 'text-gray-900'
+                      }`}>
+                        <Icon className="w-5 h-5" />
+                        <span>{item.label}</span>
+                      </div>
+                      <div className="ml-8 space-y-1">
+                        {item.children.map((child) => {
+                          const ChildIcon = child.icon;
+                          return (
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              onClick={handleItemClick}
+                              className={`flex items-center gap-3 px-4 py-2 transition-all duration-200 ${
+                                isScrolled ? 'hover:bg-gray-50 text-gray-600' : 'hover:bg-white/15 text-gray-700'
+                              }`}
+                            >
+                              <ChildIcon className="w-4 h-4" />
+                              <span className="text-sm">{child.label}</span>
+                            </Link>
+                          );
+                        })}
+                      </div>
                     </div>
                   );
                 }
@@ -392,7 +379,7 @@ export function GlassmorphicNavbar() {
                     href={item.href}
                     onClick={handleItemClick}
                     className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 ${
-                      isScrolled ? 'hover:bg-gray-50 text-gray-700' : 'hover:bg-white/15'
+                      isScrolled ? 'hover:bg-gray-50 text-gray-700' : 'hover:bg-white/15 text-gray-700'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
