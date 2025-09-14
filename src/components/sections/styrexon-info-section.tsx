@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, Building2, Shield, Thermometer } from 'lucide-react';
 import { StyrexonSystemCarousel } from './styrexon-system-carousel';
+import { GridBeams } from '@/components/magicui/grid-beams';
 
 interface BeforeAfterProps {
   beforeImage: string;
@@ -244,39 +245,51 @@ export function StyrexonInfoSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <div className="bg-slate-50 rounded-2xl p-8">
-              <h3 className="text-2xl font-bold text-slate-900 mb-6">
-                Kľúčové vlastnosti STYREXON
-              </h3>
-              
-              <div className="space-y-4">
-                {benefits.map((benefit, index) => {
-                  const Icon = benefit.icon;
-                  return (
-                    <motion.div 
-                      key={index}
-                      className="flex items-start gap-4"
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: 0.4 + (index * 0.1) }}
-                    >
-                      <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
-                        <Icon className="w-6 h-6 text-primary" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-slate-900 mb-1">
-                          {benefit.title}
-                        </h4>
-                        <p className="text-slate-600 text-sm leading-relaxed">
-                          {benefit.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  );
-                })}
+            <GridBeams
+              gridSize={20}
+              gridColor="rgba(59, 130, 246, 0.15)"
+              rayCount={15}
+              rayOpacity={0.4}
+              raySpeed={1.2}
+              rayLength="30vh"
+              gridFadeStart={10}
+              gridFadeEnd={85}
+              className="rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900/50 to-slate-800"
+            >
+              <div className="p-8">
+                <h3 className="text-2xl font-bold text-white mb-6">
+                  Kľúčové vlastnosti STYREXON
+                </h3>
+                
+                <div className="space-y-4">
+                  {benefits.map((benefit, index) => {
+                    const Icon = benefit.icon;
+                    return (
+                      <motion.div 
+                        key={index}
+                        className="flex items-start gap-4"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.4 + (index * 0.1) }}
+                      >
+                        <div className="flex-shrink-0 w-12 h-12 bg-blue-500/20 backdrop-blur-sm border border-blue-400/30 rounded-xl flex items-center justify-center">
+                          <Icon className="w-6 h-6 text-blue-300" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-white mb-1">
+                            {benefit.title}
+                          </h4>
+                          <p className="text-slate-300 text-sm leading-relaxed">
+                            {benefit.description}
+                          </p>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            </GridBeams>
           </motion.div>
         </div>
 

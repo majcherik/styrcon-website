@@ -130,6 +130,12 @@ export function ShadcnNavbar() {
     setIsOpen(false);
   };
 
+  // Helper function to determine if page should show white text at top
+  const shouldShowWhiteTextAtTop = () => {
+    const whiteTextPages = ['/', '/video-demo', '/scroll-demo', '/test-3d', '/galeria'];
+    return whiteTextPages.includes(pathname);
+  };
+
   // Prevent hydration mismatch by showing placeholder during SSR
   if (!mounted) {
     return (
@@ -188,12 +194,12 @@ export function ShadcnNavbar() {
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center" onClick={handleItemClick}>
               <div className={`text-xl font-bold ${
-                isScrolled ? 'text-gray-900' : 'text-slate-900'
+                isScrolled || !shouldShowWhiteTextAtTop() ? 'text-gray-900' : 'text-white'
               }`}>
                 STYRCON
               </div>
               <div className={`hidden sm:block ml-2 text-sm ${
-                isScrolled ? 'text-gray-600' : 'text-slate-600'
+                isScrolled || !shouldShowWhiteTextAtTop() ? 'text-gray-600' : 'text-gray-200'
               }`}>
                 E-MA SK s.r.o.
               </div>
@@ -214,17 +220,23 @@ export function ShadcnNavbar() {
                       <button 
                         className={cn(
                           "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300",
-                          isScrolled 
-                            ? "hover:bg-gray-100" 
-                            : "hover:bg-white/15 hover:backdrop-blur-md hover:border hover:border-white/20 hover:shadow-lg",
-                          isActive && (isScrolled 
+                          isScrolled || !shouldShowWhiteTextAtTop()
+                            ? "hover:bg-gray-100 text-gray-700" 
+                            : "hover:bg-white/15 hover:backdrop-blur-md hover:border hover:border-white/20 hover:shadow-lg text-white",
+                          isActive && (isScrolled || !shouldShowWhiteTextAtTop()
                             ? "bg-gray-100 text-primary" 
-                            : "bg-white/20 backdrop-blur-md border border-white/30 shadow-md")
+                            : "bg-white/20 backdrop-blur-md border border-white/30 shadow-md text-white")
                         )}
                       >
-                        <Icon className="w-4 h-4" />
-                        <span>{item.label}</span>
-                        <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
+                        <Icon className={cn("w-4 h-4", 
+                          isScrolled || !shouldShowWhiteTextAtTop() ? "text-gray-700" : "text-white"
+                        )} />
+                        <span className={cn(
+                          isScrolled || !shouldShowWhiteTextAtTop() ? "text-gray-700" : "text-white"
+                        )}>{item.label}</span>
+                        <ChevronDown className={cn("w-4 h-4 transition-transform group-hover:rotate-180",
+                          isScrolled || !shouldShowWhiteTextAtTop() ? "text-gray-700" : "text-white"
+                        )} />
                       </button>
                       <div className={cn(
                         "absolute top-full left-0 mt-1 w-48 rounded-lg shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50",
@@ -266,16 +278,20 @@ export function ShadcnNavbar() {
                     onClick={handleItemClick}
                     className={cn(
                       "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300",
-                      isScrolled 
-                        ? "hover:bg-gray-100" 
-                        : "hover:bg-white/15 hover:backdrop-blur-md hover:border hover:border-white/20 hover:shadow-lg",
-                      pathname === item.href && (isScrolled 
+                      isScrolled || !shouldShowWhiteTextAtTop()
+                        ? "hover:bg-gray-100 text-gray-700" 
+                        : "hover:bg-white/15 hover:backdrop-blur-md hover:border hover:border-white/20 hover:shadow-lg text-white",
+                      pathname === item.href && (isScrolled || !shouldShowWhiteTextAtTop()
                         ? "bg-gray-100 text-primary" 
-                        : "bg-white/20 backdrop-blur-md border border-white/30 shadow-md")
+                        : "bg-white/20 backdrop-blur-md border border-white/30 shadow-md text-white")
                     )}
                   >
-                    <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
+                    <Icon className={cn("w-4 h-4",
+                      isScrolled || !shouldShowWhiteTextAtTop() ? "text-gray-700" : "text-white"
+                    )} />
+                    <span className={cn(
+                      isScrolled || !shouldShowWhiteTextAtTop() ? "text-gray-700" : "text-white"
+                    )}>{item.label}</span>
                   </Link>
                 );
               })}
@@ -293,18 +309,18 @@ export function ShadcnNavbar() {
                 <div className="flex items-center gap-2">
                   <Button variant="ghost" size="sm" asChild>
                     <Link href="/prihlasenie" className={`${
-                      isScrolled 
+                      isScrolled || !shouldShowWhiteTextAtTop()
                         ? 'bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700' 
-                        : 'bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20'
+                        : 'bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white'
                     }`}>
                       Prihlásenie
                     </Link>
                   </Button>
                   <Button size="sm" asChild>
                     <Link href="/registracia" className={`${
-                      isScrolled 
+                      isScrolled || !shouldShowWhiteTextAtTop()
                         ? 'bg-primary text-white hover:bg-primary/90' 
-                        : 'bg-primary/90 backdrop-blur-md hover:bg-primary'
+                        : 'bg-primary/90 backdrop-blur-md hover:bg-primary text-white'
                     }`}>
                       Registrácia
                     </Link>
@@ -346,7 +362,7 @@ export function ShadcnNavbar() {
                   return (
                     <div key={item.label} className="space-y-1">
                       <div className={`flex items-center gap-3 px-4 py-3 font-medium ${
-                        isScrolled ? 'text-gray-900' : 'text-gray-900'
+                        isScrolled || !shouldShowWhiteTextAtTop() ? 'text-gray-900' : 'text-white'
                       }`}>
                         <Icon className="w-5 h-5" />
                         <span>{item.label}</span>
@@ -360,7 +376,7 @@ export function ShadcnNavbar() {
                               href={child.href}
                               onClick={handleItemClick}
                               className={`flex items-center gap-3 px-4 py-2 transition-all duration-200 ${
-                                isScrolled ? 'hover:bg-gray-50 text-gray-600' : 'hover:bg-white/15 text-gray-700'
+                                isScrolled || !shouldShowWhiteTextAtTop() ? 'hover:bg-gray-50 text-gray-600' : 'hover:bg-white/15 text-gray-300'
                               }`}
                             >
                               <ChildIcon className="w-4 h-4" />
@@ -379,7 +395,7 @@ export function ShadcnNavbar() {
                     href={item.href}
                     onClick={handleItemClick}
                     className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 ${
-                      isScrolled ? 'hover:bg-gray-50 text-gray-700' : 'hover:bg-white/15 text-gray-700'
+                      isScrolled || !shouldShowWhiteTextAtTop() ? 'hover:bg-gray-50 text-gray-700' : 'hover:bg-white/15 text-white'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
