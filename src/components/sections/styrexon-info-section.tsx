@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, Building2, Shield, Thermometer } from 'lucide-react';
+import { StyrexonSystemCarousel } from './styrexon-system-carousel';
 
 interface BeforeAfterProps {
   beforeImage: string;
@@ -278,6 +279,9 @@ export function StyrexonInfoSection() {
             </div>
           </motion.div>
         </div>
+
+        {/* STYREXON System Components Carousel */}
+        <StyrexonSystemCarousel />
 
         {/* Additional Applications */}
         <motion.div 

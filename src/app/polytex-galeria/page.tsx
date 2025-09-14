@@ -124,7 +124,6 @@ export default function PolytexGalleryPage() {
                     <HeroVideoDialog
                       videoSrc={video.youtubeUrl}
                       title={video.title}
-                      description={video.description}
                       size="md"
                       className="w-full h-40"
                     />
