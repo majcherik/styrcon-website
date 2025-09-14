@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Menu, X, User, LogOut, ChevronDown } from 'lucide-react';
-import { useAuth } from '@/contexts/auth-context';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { DropdownButton } from '@/components/ui/dropdown-button';
 
 interface NavItem {
@@ -38,7 +38,8 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { user, profile, isAuthReady, signOut } = useAuth();
+  const { signOut } = useAuth();
+  const { user, isLoaded } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -140,7 +141,7 @@ export function Navbar() {
 
           {/* Auth Section */}
           <div className="hidden md:block">
-            {!isAuthReady ? (
+            {!isLoaded ? (
               <div className="w-8 h-8 animate-pulse bg-slate-200 rounded-full"></div>
             ) : user ? (
               <DropdownButton />
@@ -221,7 +222,7 @@ export function Navbar() {
               );
             })}
             <div className="pt-4 space-y-2">
-              {!isAuthReady ? (
+              {!isLoaded ? (
                 <div className="flex justify-center py-4">
                   <div className="w-full h-10 animate-pulse bg-slate-200 rounded"></div>
                 </div>
@@ -231,7 +232,7 @@ export function Navbar() {
                     <Link href="/profil" className="flex items-center gap-2">
                       <User className="h-4 w-4" />
                       <span className="truncate">
-                        {profile?.first_name || user.email?.split('@')[0] || 'Profil'}
+                        {user.firstName || user.primaryEmailAddress?.emailAddress?.split('@')[0] || 'Profil'}
                       </span>
                     </Link>
                   </Button>

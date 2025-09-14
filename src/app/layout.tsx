@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ClerkProvider } from '@clerk/nextjs'
 import { ShadcnNavbar } from "@/components/navigation/shadcn-navbar";
 import { Footer } from "@/components/layout/footer";
 import { StructuredData } from "@/components/structured-data";
 import { organizationStructuredData, websiteStructuredData } from "@/lib/structured-data";
-import { AuthProvider } from "@/contexts/auth-context";
 import { Providers } from "@/components/providers/providers";
 import { MantineProvider } from "@mantine/core";
 
@@ -41,24 +41,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="sk" className={inter.variable} suppressHydrationWarning={true}>
-      <head>
-        <StructuredData data={organizationStructuredData} />
-        <StructuredData data={websiteStructuredData} />
-      </head>
-      <body className="antialiased">
-        <MantineProvider>
-          <Providers>
-            <AuthProvider>
+    <ClerkProvider>
+      <html lang="sk" className={inter.variable} suppressHydrationWarning={true}>
+        <head>
+          <StructuredData data={organizationStructuredData} />
+          <StructuredData data={websiteStructuredData} />
+        </head>
+        <body className="antialiased">
+          <MantineProvider>
+            <Providers>
               <ShadcnNavbar />
               <main className="min-h-screen">
                 {children}
               </main>
               <Footer />
-            </AuthProvider>
-          </Providers>
-        </MantineProvider>
-      </body>
-    </html>
+            </Providers>
+          </MantineProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

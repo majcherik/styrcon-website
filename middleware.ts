@@ -1,84 +1,66 @@
-import { createServerClient } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
-export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  })
+// Define protected routes that require authentication
+const isProtectedRoute = createRouteMatcher([
+  '/profil(.*)',
+  '/admin(.*)',
+])
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request,
-          })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
-        },
-      },
+// Define admin routes that require admin role
+const isAdminRoute = createRouteMatcher([
+  '/admin(.*)',
+])
+
+// Define public auth routes that should not be protected
+const isPublicRoute = createRouteMatcher([
+  '/prihlasenie(.*)',
+  '/registracia(.*)',
+  '/',
+])
+
+export default clerkMiddleware(async (auth, req) => {
+  const { userId, sessionClaims } = await auth()
+
+  // Skip protection for public auth routes
+  if (isPublicRoute(req)) {
+    return NextResponse.next()
+  }
+
+  // Check if user is trying to access protected route
+  if (isProtectedRoute(req)) {
+    // If not signed in, redirect to sign in page
+    if (!userId) {
+      const signInUrl = new URL('/prihlasenie', req.url)
+      signInUrl.searchParams.set('redirect_url', req.url)
+      return NextResponse.redirect(signInUrl)
     }
-  )
-
-  // IMPORTANT: Avoid writing any logic between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  // Protected routes that require authentication
-  const protectedRoutes = ['/profil', '/admin']
-  const isProtectedRoute = protectedRoutes.some(route => 
-    request.nextUrl.pathname.startsWith(route)
-  )
-
-  // Auth routes that should redirect if user is already logged in
-  const authRoutes = ['/prihlasenie', '/registracia']
-  const isAuthRoute = authRoutes.some(route => 
-    request.nextUrl.pathname.startsWith(route)
-  )
-
-  // If user is not logged in and trying to access protected route
-  if (isProtectedRoute && !user) {
-    const redirectUrl = new URL('/prihlasenie', request.url)
-    redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname)
-    return NextResponse.redirect(redirectUrl)
   }
 
-  // If user is logged in and trying to access auth routes
-  if (isAuthRoute && user) {
-    return NextResponse.redirect(new URL('/profil', request.url))
+  // Check if user is trying to access admin route
+  if (isAdminRoute(req)) {
+    // If not signed in, redirect to sign in
+    if (!userId) {
+      const signInUrl = new URL('/prihlasenie', req.url)
+      signInUrl.searchParams.set('redirect_url', req.url)
+      return NextResponse.redirect(signInUrl)
+    }
+
+    // Check if user has admin role
+    const isAdmin = (sessionClaims?.publicMetadata as any)?.role === 'admin'
+    if (!isAdmin) {
+      return NextResponse.redirect(new URL('/profil', req.url))
+    }
   }
 
-  // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
-  // creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object instead of the supabaseResponse object
-
-  return supabaseResponse
-}
+  return NextResponse.next()
+})
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
+    '/(api|trpc)(.*)',
   ],
 }

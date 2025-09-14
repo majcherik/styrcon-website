@@ -1,77 +1,92 @@
-import { ChevronDown, HelpCircle, LogOut01, Settings01, User01 } from "@untitledui/icons";
-import { AvatarLabelGroup } from "@/components/base/avatar/avatar-label-group";
-import { Button } from "@/components/base/buttons/button";
-import { Dropdown } from "@/components/base/dropdown/dropdown";
-import { useAuth } from '@/contexts/auth-context';
+import { ChevronDownIcon, HelpCircleIcon, LogOutIcon, SettingsIcon, UserIcon } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAuth, useUser } from '@clerk/nextjs';
 
 export const DropdownButton = () => {
-  const { user, profile, signOut } = useAuth();
+  const { signOut } = useAuth();
+  const { user, isLoaded } = useUser();
 
   const handleSignOut = async () => {
     await signOut();
   };
 
-  if (!user) return null;
+  if (!isLoaded || !user) return null;
 
-  const displayName = profile?.first_name && profile?.last_name
-    ? `${profile.first_name} ${profile.last_name}`
-    : profile?.first_name
-    ? profile.first_name
-    : user.email?.split('@')[0] || 'Používateľ';
+  const displayName = user.firstName && user.lastName
+    ? `${user.firstName} ${user.lastName}`
+    : user.firstName
+    ? user.firstName
+    : user.primaryEmailAddress?.emailAddress?.split('@')[0] || 'Používateľ';
 
-  const avatarSrc = profile?.avatar_url || undefined;
+  const avatarSrc = user.imageUrl || undefined;
+
+  // Generate initials from display name
+  const getInitials = (name: string) => {
+    const names = name.split(' ');
+    if (names.length >= 2) {
+      return `${names[0][0]}${names[1][0]}`.toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  };
 
   return (
-    <Dropdown.Root>
-      <Button className="group" color="secondary" iconTrailing={ChevronDown}>
-        Profil
-      </Button>
-
-      <Dropdown.Popover>
-        <div className="flex gap-3 border-b border-secondary p-3">
-          <AvatarLabelGroup
-            size="md"
-            src={avatarSrc}
-            status="online"
-            title={displayName}
-            subtitle={user.email || ''}
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
+          <Avatar>
+            <AvatarImage src={avatarSrc} alt="Profile image" />
+            <AvatarFallback>{getInitials(displayName)}</AvatarFallback>
+          </Avatar>
+          <ChevronDownIcon
+            size={16}
+            className="opacity-60"
+            aria-hidden="true"
           />
-        </div>
-        <Dropdown.Menu>
-          <Dropdown.Section>
-            <Dropdown.Item 
-              icon={User01}
-              onAction={() => window.location.href = '/profil'}
-            >
-              Zobraziť profil
-            </Dropdown.Item>
-            <Dropdown.Item 
-              icon={Settings01}
-              onAction={() => window.location.href = '/profil'}
-            >
-              Nastavenia
-            </Dropdown.Item>
-          </Dropdown.Section>
-          <Dropdown.Separator />
-          <Dropdown.Section>
-            <Dropdown.Item 
-              icon={HelpCircle}
-              onAction={() => window.location.href = '/kontakt'}
-            >
-              Podpora
-            </Dropdown.Item>
-          </Dropdown.Section>
-          <Dropdown.Separator />
-          <Dropdown.Section>
-            <Dropdown.Item 
-              icon={LogOut01}
-              onAction={handleSignOut}
-            >
-              Odhlásiť sa
-            </Dropdown.Item>
-          </Dropdown.Section>
-        </Dropdown.Menu>
-      </Dropdown.Popover>
-    </Dropdown.Root>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="max-w-64 bg-white border border-gray-200 shadow-lg z-[9999]">
+        <DropdownMenuLabel className="flex min-w-0 flex-col">
+          <span className="text-foreground truncate text-sm font-medium">
+            {displayName}
+          </span>
+          <span className="text-muted-foreground truncate text-xs font-normal">
+            {user.primaryEmailAddress?.emailAddress || ''}
+          </span>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => window.location.href = '/profil'}>
+            <UserIcon size={16} className="opacity-60" aria-hidden="true" />
+            <span>Zobraziť profil</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => window.location.href = '/profil'}>
+            <SettingsIcon size={16} className="opacity-60" aria-hidden="true" />
+            <span>Nastavenia</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => window.location.href = '/kontakt'}>
+            <HelpCircleIcon size={16} className="opacity-60" aria-hidden="true" />
+            <span>Podpora</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleSignOut}>
+          <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
+          <span>Odhlásiť sa</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

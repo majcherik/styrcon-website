@@ -22,7 +22,7 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
-import { useAuth } from '@/contexts/auth-context';
+import { useAuth, useUser } from '@clerk/nextjs';
 import { DropdownButton } from '@/components/ui/dropdown-button';
 
 interface NavItem {
@@ -87,7 +87,8 @@ export function GlassmorphicNavbar() {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { user, profile, isAuthReady, signOut } = useAuth();
+  const { isSignedIn, signOut } = useAuth();
+  const { user } = useUser();
   const navRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -115,10 +116,8 @@ export function GlassmorphicNavbar() {
   }, []);
 
   const handleSignOut = async () => {
-    const { error } = await signOut();
-    if (!error) {
-      router.push('/');
-    }
+    await signOut();
+    router.push('/');
     setIsOpen(false);
   };
 
@@ -285,9 +284,7 @@ export function GlassmorphicNavbar() {
           {/* Auth Section */}
           <div className="hidden lg:block">
             <div className="flex items-center gap-3">
-              {!isAuthReady ? (
-                <div className="w-8 h-8 animate-pulse bg-white/20 rounded-full backdrop-blur-sm"></div>
-              ) : user ? (
+              {isSignedIn ? (
                 <DropdownButton />
               ) : (
                 <div className="flex items-center gap-2">
@@ -405,11 +402,7 @@ export function GlassmorphicNavbar() {
               <div className={`pt-4 space-y-2 ${
                 isScrolled ? 'border-t border-gray-200' : 'border-t border-white/20'
               }`}>
-                {!isAuthReady ? (
-                  <div className="flex justify-center py-4">
-                    <div className="w-full h-10 animate-pulse bg-white/20 rounded backdrop-blur-sm"></div>
-                  </div>
-                ) : user ? (
+                {isSignedIn ? (
                   <div className="flex flex-col items-center gap-4">
                     <DropdownButton />
                     <Button
