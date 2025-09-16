@@ -4,25 +4,25 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { 
-  Menu, 
-  X, 
-  Home, 
-  Info, 
-  Package, 
-  Images, 
-  Play, 
-  Scroll, 
+import {
+  Menu,
+  X,
+  Home,
+  Info,
+  Package,
+  Images,
+  Play,
+  Scroll,
   Box,
-  FolderOpen, 
-  Newspaper, 
+  FolderOpen,
+  Newspaper,
   Phone,
   User,
   LogOut,
   ChevronDown
 } from 'lucide-react';
-import { useAuth, useUser } from '@clerk/nextjs';
-import { DropdownButton } from '@/components/ui/dropdown-button';
+import { useAuth, useUser, UserButton, SignedIn, SignedOut, ClerkLoaded, ClerkLoading } from '@clerk/nextjs';
+import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface NavItem {
@@ -91,8 +91,7 @@ export function ShadcnNavbar() {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { isSignedIn, signOut } = useAuth();
-  const { user } = useUser();
+  const { isSignedIn } = useAuth();
   const navRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -119,11 +118,6 @@ export function ShadcnNavbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSignOut = async () => {
-    await signOut();
-    router.push('/');
-    setIsOpen(false);
-  };
 
   const handleItemClick = () => {
     setIsOpen(false);
@@ -300,30 +294,65 @@ export function ShadcnNavbar() {
           {/* Auth Section */}
           <div className="hidden lg:block">
             <div className="flex items-center gap-3">
-              {isSignedIn ? (
-                <DropdownButton />
-              ) : (
+              <ClerkLoading>
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link href="/prihlasenie" className={`${
-                      isScrolled || !shouldShowWhiteTextAtTop()
-                        ? 'bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700' 
-                        : 'bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white'
-                    }`}>
-                      Prihlásenie
-                    </Link>
-                  </Button>
-                  <Button size="sm" asChild>
-                    <Link href="/registracia" className={`${
-                      isScrolled || !shouldShowWhiteTextAtTop()
-                        ? 'bg-primary text-white hover:bg-primary/90' 
-                        : 'bg-primary/90 backdrop-blur-md hover:bg-primary text-white'
-                    }`}>
-                      Registrácia
-                    </Link>
-                  </Button>
+                  <Loader2 className={`h-4 w-4 animate-spin ${
+                    isScrolled || !shouldShowWhiteTextAtTop() ? 'text-gray-600' : 'text-white'
+                  }`} />
+                  <span className={`text-sm ${
+                    isScrolled || !shouldShowWhiteTextAtTop() ? 'text-gray-600' : 'text-white'
+                  }`}>
+                    Načítavam...
+                  </span>
                 </div>
-              )}
+              </ClerkLoading>
+
+              <ClerkLoaded>
+                <SignedIn>
+                  <UserButton
+                    appearance={{
+                      elements: {
+                        avatarBox: "w-8 h-8",
+                        userButtonTrigger: `${
+                          isScrolled || !shouldShowWhiteTextAtTop()
+                            ? 'hover:bg-gray-100'
+                            : 'hover:bg-white/15 hover:backdrop-blur-md'
+                        } transition-all duration-300 rounded-lg`,
+                        userButtonPopoverCard: "shadow-lg border border-gray-200",
+                        userButtonPopoverActionButton: "hover:bg-gray-50",
+                        userButtonPopoverActionButtonText: "text-slate-700",
+                        userButtonPopoverActionButtonIcon: "text-slate-500",
+                      },
+                    }}
+                    userProfileMode="navigation"
+                    userProfileUrl="/profil"
+                  >
+                  </UserButton>
+                </SignedIn>
+
+                <SignedOut>
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link href="/prihlasenie" className={`${
+                        isScrolled || !shouldShowWhiteTextAtTop()
+                          ? 'bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700'
+                          : 'bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-white'
+                      }`}>
+                        Prihlásenie
+                      </Link>
+                    </Button>
+                    <Button size="sm" asChild>
+                      <Link href="/registracia" className={`${
+                        isScrolled || !shouldShowWhiteTextAtTop()
+                          ? 'bg-primary text-white hover:bg-primary/90'
+                          : 'bg-primary/90 backdrop-blur-md hover:bg-primary text-white'
+                      }`}>
+                        Registrácia
+                      </Link>
+                    </Button>
+                  </div>
+                </SignedOut>
+              </ClerkLoaded>
             </div>
           </div>
 
@@ -405,47 +434,63 @@ export function ShadcnNavbar() {
               <div className={`pt-4 space-y-2 ${
                 isScrolled ? 'border-t border-gray-200' : 'border-t border-white/20'
               }`}>
-                {isSignedIn ? (
-                  <div className="flex flex-col items-center gap-4">
-                    <DropdownButton />
-                    <Button
-                      variant="outline"
-                      className={`w-full ${
+                <ClerkLoading>
+                  <div className="flex items-center justify-center gap-2 py-4">
+                    <Loader2 className={`h-4 w-4 animate-spin ${
+                      isScrolled || !shouldShowWhiteTextAtTop() ? 'text-gray-600' : 'text-white'
+                    }`} />
+                    <span className={`text-sm ${
+                      isScrolled || !shouldShowWhiteTextAtTop() ? 'text-gray-600' : 'text-white'
+                    }`}>
+                      Načítavam...
+                    </span>
+                  </div>
+                </ClerkLoading>
+
+                <ClerkLoaded>
+                  <SignedIn>
+                    <div className="flex flex-col items-center gap-4">
+                      <UserButton
+                        appearance={{
+                          elements: {
+                            avatarBox: "w-10 h-10",
+                            userButtonTrigger: "hover:bg-gray-100 transition-all duration-300 rounded-lg",
+                            userButtonPopoverCard: "shadow-lg border border-gray-200",
+                            userButtonPopoverActionButton: "hover:bg-gray-50",
+                            userButtonPopoverActionButtonText: "text-slate-700",
+                            userButtonPopoverActionButtonIcon: "text-slate-500",
+                          },
+                        }}
+                        userProfileMode="navigation"
+                        userProfileUrl="/profil"
+                      >
+                      </UserButton>
+                    </div>
+                  </SignedIn>
+
+                  <SignedOut>
+                    <>
+                      <Button variant="outline" asChild className={`w-full ${
                         isScrolled
                           ? 'bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700'
                           : 'bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20'
-                      }`}
-                      onClick={() => {
-                        handleSignOut();
-                        handleItemClick();
-                      }}
-                    >
-                      <LogOut className="h-4 w-4 mr-2" />
-                      Odhlásiť sa
-                    </Button>
-                  </div>
-                ) : (
-                  <>
-                    <Button variant="outline" asChild className={`w-full ${
-                      isScrolled 
-                        ? 'bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700' 
-                        : 'bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20'
-                    }`}>
-                      <Link href="/prihlasenie" onClick={handleItemClick}>
-                        Prihlásenie
-                      </Link>
-                    </Button>
-                    <Button asChild className={`w-full ${
-                      isScrolled 
-                        ? 'bg-primary text-white hover:bg-primary/90' 
-                        : 'bg-primary/90 backdrop-blur-md hover:bg-primary'
-                    }`}>
-                      <Link href="/registracia" onClick={handleItemClick}>
-                        Registrácia
-                      </Link>
-                    </Button>
-                  </>
-                )}
+                      }`}>
+                        <Link href="/prihlasenie" onClick={handleItemClick}>
+                          Prihlásenie
+                        </Link>
+                      </Button>
+                      <Button asChild className={`w-full ${
+                        isScrolled
+                          ? 'bg-primary text-white hover:bg-primary/90'
+                          : 'bg-primary/90 backdrop-blur-md hover:bg-primary'
+                      }`}>
+                        <Link href="/registracia" onClick={handleItemClick}>
+                          Registrácia
+                        </Link>
+                      </Button>
+                    </>
+                  </SignedOut>
+                </ClerkLoaded>
               </div>
             </div>
           </div>

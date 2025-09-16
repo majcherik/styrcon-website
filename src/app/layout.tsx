@@ -8,6 +8,7 @@ import { StructuredData } from "@/components/structured-data";
 import { organizationStructuredData, websiteStructuredData } from "@/lib/structured-data";
 import { Providers } from "@/components/providers/providers";
 import { MantineProvider } from "@mantine/core";
+import { AuthErrorBoundary } from "@/components/auth/auth-error-boundary";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -50,11 +51,13 @@ export default function RootLayout({
         <body className="antialiased">
           <MantineProvider>
             <Providers>
-              <ShadcnNavbar />
-              <main className="min-h-screen">
-                {children}
-              </main>
-              <Footer />
+              <AuthErrorBoundary>
+                <ShadcnNavbar />
+                <main className="min-h-screen">
+                  {children}
+                </main>
+                <Footer />
+              </AuthErrorBoundary>
             </Providers>
           </MantineProvider>
         </body>

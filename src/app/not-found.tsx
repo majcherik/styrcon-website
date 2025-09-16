@@ -1,11 +1,16 @@
+'use client'
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Home, ArrowLeft, Search } from 'lucide-react';
+import { Home, ArrowLeft, Search, Loader2 } from 'lucide-react';
+import { ClerkLoaded, ClerkLoading } from '@clerk/nextjs';
+import { AuthWrapper } from '@/components/auth/auth-wrapper';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
-      <div className="text-center max-w-md mx-auto">
+    <AuthWrapper requireAuth={false}>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
+        <div className="text-center max-w-md mx-auto">
         {/* 404 Graphic */}
         <div className="mb-8">
           <div className="text-[120px] font-bold text-slate-200 leading-none select-none">
@@ -46,17 +51,28 @@ export default function NotFound() {
           </Button>
         </div>
 
-        {/* Additional Help */}
-        <div className="mt-8 pt-6 border-t border-slate-200">
-          <p className="text-sm text-slate-500 mb-3">
-            Potrebujete pomoc?
-          </p>
-          <Link 
-            href="/kontakt" 
-            className="text-sm text-primary hover:underline font-medium"
-          >
-            Kontaktujte nás
-          </Link>
+        {/* Authentication State & Additional Help */}
+        <div className="mt-8 pt-6 border-t border-slate-200 space-y-4">
+          <ClerkLoading>
+            <div className="flex items-center justify-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin text-slate-500" />
+              <span className="text-sm text-slate-500">Načítavam autentifikáciu...</span>
+            </div>
+          </ClerkLoading>
+
+          <ClerkLoaded>
+            <div>
+              <p className="text-sm text-slate-500 mb-3">
+                Potrebujete pomoc?
+              </p>
+              <Link
+                href="/kontakt"
+                className="text-sm text-primary hover:underline font-medium"
+              >
+                Kontaktujte nás
+              </Link>
+            </div>
+          </ClerkLoaded>
         </div>
 
         {/* Popular Pages */}
@@ -80,7 +96,8 @@ export default function NotFound() {
             </Link>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </AuthWrapper>
   );
 }
