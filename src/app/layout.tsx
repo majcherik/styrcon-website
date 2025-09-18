@@ -7,7 +7,6 @@ import { Footer } from "@/components/layout/footer";
 import { StructuredData } from "@/components/structured-data";
 import { organizationStructuredData, websiteStructuredData } from "@/lib/structured-data";
 import { Providers } from "@/components/providers/providers";
-import { MantineProvider } from "@mantine/core";
 import { AuthErrorBoundary } from "@/components/auth/auth-error-boundary";
 
 const inter = Inter({
@@ -49,17 +48,15 @@ export default function RootLayout({
           <StructuredData data={websiteStructuredData} />
         </head>
         <body className="antialiased">
-          <MantineProvider>
-            <Providers>
-              <AuthErrorBoundary>
-                <ShadcnNavbar />
-                <main className="min-h-screen">
-                  {children}
-                </main>
-                <Footer />
-              </AuthErrorBoundary>
-            </Providers>
-          </MantineProvider>
+          <Providers>
+            <AuthErrorBoundary>
+              <ShadcnNavbar />
+              <main className="min-h-screen">
+                {children}
+              </main>
+              <Footer />
+            </AuthErrorBoundary>
+          </Providers>
         </body>
       </html>
     </ClerkProvider>

@@ -1,6 +1,4 @@
 @import "tailwindcss";
-@import '@mantine/core/styles.css';
-@import 'antd/dist/reset.css';
 
 @theme {
   /* STYRCON theme configuration for Tailwind v4 */

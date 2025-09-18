@@ -13,7 +13,6 @@ import {
   Images, 
   Play, 
   Scroll, 
-  Box,
   FolderOpen, 
   Newspaper, 
   Phone,
@@ -53,9 +52,7 @@ const navigationItems: NavItem[] = [
     href: '#',
     icon: Play,
     children: [
-      { label: 'Video Demo', href: '/video-demo', icon: Play },
       { label: 'Scroll Demo', href: '/scroll-demo', icon: Scroll },
-      { label: 'Test 3D', href: '/test-3d', icon: Box },
     ]
   },
   { 
@@ -190,13 +187,13 @@ export function GlassmorphicNavbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center" onClick={handleItemClick}>
-              <div className={`text-xl font-bold ${
+            <Link href="/" className="flex items-center flex-nowrap min-w-fit" onClick={handleItemClick}>
+              <div className={`text-xl font-bold whitespace-nowrap ${
                 isScrolled ? 'text-gray-900' : 'text-slate-900'
               }`}>
                 STYRCON
               </div>
-              <div className={`hidden sm:block ml-2 text-sm ${
+              <div className={`hidden sm:block ml-2 text-sm whitespace-nowrap ${
                 isScrolled ? 'text-gray-600' : 'text-slate-600'
               }`}>
                 E-MA SK s.r.o.

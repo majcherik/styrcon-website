@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ['three'],
   images: {
     remotePatterns: [
       {
@@ -12,9 +11,27 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'www.e-ma.sk',
+        port: '',
+        pathname: '/design/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'www.styrcon.sk',
         port: '',
         pathname: '/obchod_homedir/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.styrcon.sk',
+        port: '',
+        pathname: '/Data/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+        port: '',
+        pathname: '/**',
       },
     ],
   },

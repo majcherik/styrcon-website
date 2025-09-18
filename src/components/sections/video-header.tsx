@@ -35,7 +35,7 @@ export function VideoHeader() {
               text="E-MA SK s.r.o."
               duration={150}
               startDelay={500}
-              className="text-6xl sm:text-7xl lg:text-8xl font-bold text-white drop-shadow-2xl mb-4 text-left"
+              className="text-6xl sm:text-7xl lg:text-8xl font-bold text-white drop-shadow-2xl mb-4 text-left whitespace-nowrap"
             />
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-light text-white/95 leading-relaxed">
               Tepelná izolácia novej generácie

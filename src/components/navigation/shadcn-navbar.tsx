@@ -13,7 +13,6 @@ import {
   Images,
   Play,
   Scroll,
-  Box,
   FolderOpen,
   Newspaper,
   Phone,
@@ -57,9 +56,7 @@ const navigationItems: NavItem[] = [
     href: '#',
     icon: Play,
     children: [
-      { label: 'Video Demo', href: '/video-demo', icon: Play },
       { label: 'Scroll Demo', href: '/scroll-demo', icon: Scroll },
-      { label: 'Test 3D', href: '/test-3d', icon: Box },
     ]
   },
   { 
@@ -125,7 +122,7 @@ export function ShadcnNavbar() {
 
   // Helper function to determine if page should show white text at top
   const shouldShowWhiteTextAtTop = () => {
-    const whiteTextPages = ['/', '/video-demo', '/scroll-demo', '/test-3d', '/galeria'];
+    const whiteTextPages = ['/', '/scroll-demo', '/galeria'];
     return whiteTextPages.includes(pathname);
   };
 
@@ -185,13 +182,13 @@ export function ShadcnNavbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center" onClick={handleItemClick}>
-              <div className={`text-xl font-bold ${
+            <Link href="/" className="flex items-center flex-nowrap min-w-fit" onClick={handleItemClick}>
+              <div className={`text-xl font-bold whitespace-nowrap ${
                 isScrolled || !shouldShowWhiteTextAtTop() ? 'text-gray-900' : 'text-white'
               }`}>
                 STYRCON
               </div>
-              <div className={`hidden sm:block ml-2 text-sm ${
+              <div className={`hidden sm:block ml-2 text-sm whitespace-nowrap ${
                 isScrolled || !shouldShowWhiteTextAtTop() ? 'text-gray-600' : 'text-gray-200'
               }`}>
                 E-MA SK s.r.o.

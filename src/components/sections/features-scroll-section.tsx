@@ -139,8 +139,13 @@ export function FeaturesScrollSection() {
   return (
     <div>
       {/* Section Header */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-b from-slate-50/50 to-stone-50/30 relative overflow-hidden">
+        {/* Subtle geometric background elements */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-10 right-20 w-64 h-64 bg-gradient-to-br from-blue-100 to-transparent rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 left-20 w-48 h-48 bg-gradient-to-br from-orange-100 to-transparent rounded-full blur-3xl"></div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div 
             className="text-center"
             initial={{ opacity: 0, y: 20 }}
@@ -182,8 +187,14 @@ export function FeaturesScrollSection() {
       </section>
 
       {/* Benefits Cards - Simple 2x2 Grid */}
-      <section className="py-12 sm:py-16 lg:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-stone-100/40 via-slate-100/30 to-stone-50/40 relative">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-200 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-orange-200 rounded-full blur-2xl"></div>
+          <div className="absolute top-3/4 left-3/4 w-28 h-28 bg-slate-300 rounded-full blur-2xl"></div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-6 xl:border rounded-md dark:border-neutral-800">
             {features.map((feature) => (
               <BentoFeature

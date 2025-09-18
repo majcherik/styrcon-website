@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { TableScrollArea, type TableColumn } from '@/components/ui/table-scroll-area';
 import { Download } from 'lucide-react';
 
 interface Specification {
@@ -61,13 +60,6 @@ const specifications: Specification[] = [
   }
 ];
 
-// Define table columns for the specifications
-const columns: TableColumn<Specification>[] = [
-  { key: 'parameter', label: 'Parameter' },
-  { key: 'value', label: 'Hodnota' },
-  { key: 'unit', label: 'Jednotka' },
-  { key: 'standard', label: 'Norma' },
-];
 
 export function ProductSpecs() {
   return (
@@ -84,12 +76,28 @@ export function ProductSpecs() {
         </div>
 
         <Card className="overflow-hidden mb-8">
-          <TableScrollArea
-            data={specifications}
-            columns={columns}
-            height={400}
-            minWidth={700}
-          />
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px]">
+              <thead>
+                <tr className="border-b border-slate-200">
+                  <th className="text-left p-4 font-semibold text-slate-900">Parameter</th>
+                  <th className="text-left p-4 font-semibold text-slate-900">Hodnota</th>
+                  <th className="text-left p-4 font-semibold text-slate-900">Jednotka</th>
+                  <th className="text-left p-4 font-semibold text-slate-900">Norma</th>
+                </tr>
+              </thead>
+              <tbody>
+                {specifications.map((spec, index) => (
+                  <tr key={index} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                    <td className="p-4 text-slate-900">{spec.parameter}</td>
+                    <td className="p-4 text-slate-700 font-medium">{spec.value}</td>
+                    <td className="p-4 text-slate-600">{spec.unit}</td>
+                    <td className="p-4 text-slate-600">{spec.standard || '-'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </Card>
 
         {/* Applications */}

@@ -164,8 +164,14 @@ export function StyrexonInfoSection() {
   ];
 
   return (
-    <section className="py-16 lg:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 lg:py-24 bg-gradient-to-br from-stone-50 via-slate-50 to-stone-100 relative overflow-hidden">
+      {/* Subtle decorative background elements */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-blue-100 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-orange-100 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-slate-200 rounded-full blur-2xl"></div>
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div 
           className="text-center mb-16"
@@ -297,8 +303,8 @@ export function StyrexonInfoSection() {
         <StyrexonSystemCarousel />
 
         {/* Additional Applications */}
-        <motion.div 
-          className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl p-8 lg:p-12"
+        <motion.div
+          className="bg-gradient-to-r from-blue-50/80 to-orange-50/80 backdrop-blur-sm rounded-2xl p-8 lg:p-12 border border-white/50 shadow-lg"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -309,8 +315,8 @@ export function StyrexonInfoSection() {
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
-            <motion.div 
-              className="bg-white rounded-xl p-6 shadow-sm"
+            <motion.div
+              className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-sm border border-white/60"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -322,8 +328,8 @@ export function StyrexonInfoSection() {
               </p>
             </motion.div>
             
-            <motion.div 
-              className="bg-white rounded-xl p-6 shadow-sm"
+            <motion.div
+              className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-sm border border-white/60"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -335,8 +341,8 @@ export function StyrexonInfoSection() {
               </p>
             </motion.div>
             
-            <motion.div 
-              className="bg-white rounded-xl p-6 shadow-sm"
+            <motion.div
+              className="bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-sm border border-white/60"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
