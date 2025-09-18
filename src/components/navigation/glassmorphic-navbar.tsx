@@ -23,6 +23,8 @@ import {
 } from 'lucide-react';
 import { useAuth, useUser } from '@clerk/nextjs';
 import { DropdownButton } from '@/components/ui/dropdown-button';
+import { useClickOutside } from '@/hooks/use-click-outside';
+import { useDebounce } from '@/hooks/use-debounce';
 
 interface NavItem {
   label: string;
@@ -79,9 +81,13 @@ const navigationItems: NavItem[] = [
 
 export function GlassmorphicNavbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+
+  // Debounce scroll value for better performance
+  const debouncedScrollY = useDebounce(scrollY, 10);
+  const isScrolled = debouncedScrollY > 10;
   const pathname = usePathname();
   const router = useRouter();
   const { isSignedIn, signOut } = useAuth();
@@ -94,23 +100,18 @@ export function GlassmorphicNavbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setScrollY(window.scrollY);
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (navRef.current && !navRef.current.contains(event.target as Node)) {
-        setOpenDropdown(null);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  // Use custom hook for click outside functionality
+  useClickOutside(navRef, () => {
+    setOpenDropdown(null);
+    setIsOpen(false); // Also close mobile menu
+  });
 
   const handleSignOut = async () => {
     await signOut();

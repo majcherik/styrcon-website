@@ -6,6 +6,8 @@ import { Flame, Droplets, Thermometer, Shield, Check } from 'lucide-react';
 import Link from 'next/link';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { useLocalStorage } from '@/hooks/use-local-storage';
+import { useDebounce } from '@/hooks/use-debounce';
 
 // STYRCON features data adapted for accordion
 const accordionData = [
@@ -60,7 +62,8 @@ const accordionData = [
 ];
 
 const HorizontalAccordion = () => {
-  const [expandedIndex, setExpandedIndex] = useState(0);
+  // Use localStorage to remember the last expanded panel
+  const [expandedIndex, setExpandedIndex] = useLocalStorage('styrcon-accordion-expanded', 0);
 
   // Use intersection observer to optimize video loading
   const [ref, isVisible] = useIntersectionObserver({
@@ -73,7 +76,7 @@ const HorizontalAccordion = () => {
   const isSmallScreen = useMediaQuery('(max-width: 640px)');
 
   return (
-    <div ref={ref} className={`w-full ${isSmallScreen ? 'h-[300px]' : isMobile ? 'h-[350px]' : 'h-[380px] md:h-[450px]'}`}>
+    <div ref={ref as React.RefObject<HTMLDivElement>} className={`w-full ${isSmallScreen ? 'h-[300px]' : isMobile ? 'h-[350px]' : 'h-[380px] md:h-[450px]'}`}>
       <LayoutGroup>
         <div className="flex w-full h-full gap-2">
           {accordionData.map((item, index) => {
