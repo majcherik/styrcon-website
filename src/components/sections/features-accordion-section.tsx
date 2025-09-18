@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { Flame, Droplets, Thermometer, Shield, Check } from 'lucide-react';
 import Link from 'next/link';
+import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 // STYRCON features data adapted for accordion
 const accordionData = [
@@ -60,8 +62,18 @@ const accordionData = [
 const HorizontalAccordion = () => {
   const [expandedIndex, setExpandedIndex] = useState(0);
 
+  // Use intersection observer to optimize video loading
+  const [ref, isVisible] = useIntersectionObserver({
+    threshold: 0.2,
+    rootMargin: '50px'
+  });
+
+  // Use media query for responsive behavior
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isSmallScreen = useMediaQuery('(max-width: 640px)');
+
   return (
-    <div className="w-full h-[380px] md:h-[450px]">
+    <div ref={ref} className={`w-full ${isSmallScreen ? 'h-[300px]' : isMobile ? 'h-[350px]' : 'h-[380px] md:h-[450px]'}`}>
       <LayoutGroup>
         <div className="flex w-full h-full gap-2">
           {accordionData.map((item, index) => {
@@ -80,23 +92,25 @@ const HorizontalAccordion = () => {
                 }}
                 transition={{ duration: 1.5, ease: [0.25, 1, 0.5, 1] }}
               >
-                {/* Video Background */}
-                <motion.video
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-cover"
-                  animate={{
-                    scale: isExpanded ? 1 : 1.05,
-                    filter: isExpanded
-                      ? "brightness(0.9)"
-                      : "brightness(0.6)",
-                  }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <source src={item.videoUrl} type="video/mp4" />
-                </motion.video>
+                {/* Video Background - only load when visible */}
+                {isVisible && (
+                  <motion.video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                    animate={{
+                      scale: isExpanded ? 1 : 1.05,
+                      filter: isExpanded
+                        ? "brightness(0.9)"
+                        : "brightness(0.6)",
+                    }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <source src={item.videoUrl} type="video/mp4" />
+                  </motion.video>
+                )}
 
                 <motion.div
                   className="absolute inset-0 flex flex-col justify-end p-5 text-white z-20"
@@ -118,7 +132,9 @@ const HorizontalAccordion = () => {
                     layout="position"
                     className="font-bold text-white mb-1 drop-shadow-lg"
                     animate={{
-                      fontSize: isExpanded ? "1.5rem" : "1.2rem",
+                      fontSize: isExpanded
+                        ? isSmallScreen ? "1.1rem" : isMobile ? "1.3rem" : "1.5rem"
+                        : isSmallScreen ? "0.9rem" : "1.2rem",
                       lineHeight: isExpanded ? "1.3" : "1.4"
                     }}
                     transition={{ duration: 0.3 }}
