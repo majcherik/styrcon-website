@@ -39,7 +39,7 @@ const systemComponents: SystemComponent[] = [
   {
     id: 4,
     name: "TANIEROVÁ HMOŽDINKA",
-    description: "hmožinka na kotvenie dosiek Styrcon",
+    description: "hmoždinka na kotvenie dosiek Styrcon",
     imageUrl: "https://www.e-ma.sk/imgcache/tanierova-hmozdinka-e-img-161-5-800-600-0-ffffff.jpg?v=1632745932"
   },
   {

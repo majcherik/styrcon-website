@@ -144,7 +144,7 @@ export function StyrexonInfoSection() {
     {
       icon: Shield,
       title: "Nehorľavé a bezpečné",
-      description: "Zachováva všetky prednosti tepelnej izolácie STYRCON 200® s triedou nehorľavosti A2"
+      description: "Zachováva všetky prednosti tepelnej izolácie STYRCON 200® s triedou nehorľavosti A1"
     },
     {
       icon: Thermometer,
@@ -154,7 +154,7 @@ export function StyrexonInfoSection() {
     {
       icon: Building2,
       title: "Univerzálne použitie",
-      description: "Vhodné na novostavby i starších budovy, sanáciu histórie budov aj interiérov"
+      description: "Vhodné na novostavby a staršie budovy, sanáciu historických budov a interiérov"
     },
     {
       icon: CheckCircle,

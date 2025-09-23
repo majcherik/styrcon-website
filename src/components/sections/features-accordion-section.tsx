@@ -8,6 +8,7 @@ import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useDebounce } from '@/hooks/use-debounce';
+import { StarsBackground } from '@/components/animate-ui/backgrounds/stars';
 
 // STYRCON features data adapted for accordion
 const accordionData = [
@@ -241,51 +242,34 @@ export function FeaturesAccordionSection() {
   return (
     <div>
       {/* Section Header */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-b from-slate-50/50 to-stone-50/30 relative overflow-hidden">
-        {/* Subtle geometric background elements */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-10 right-20 w-64 h-64 bg-gradient-to-br from-blue-100 to-transparent rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 left-20 w-48 h-48 bg-gradient-to-br from-orange-100 to-transparent rounded-full blur-3xl"></div>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            className="text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.4 }}
-          >
-            <motion.span
-              className="text-primary font-semibold text-base sm:text-lg"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-            >
-              Prečo STYRCON
-            </motion.span>
-
-            <motion.h2
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mt-3 sm:mt-4 mb-4 sm:mb-6"
-              initial={{ opacity: 0, y: 15 }}
+      <section className="py-8 sm:py-10 lg:py-12 relative overflow-hidden">
+        <StarsBackground
+          className="bg-white min-h-[25vh] w-full"
+          starColor="#000000"
+          factor={0.03}
+          speed={60}
+          pointerEvents={true}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex items-center justify-start min-h-[25vh]">
+            <motion.div
+              className="text-left w-full"
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.4, delay: 0.15 }}
+              transition={{ duration: 0.4 }}
             >
-              Tepelnoizolačné riešenie budúcnosti
-            </motion.h2>
-
-            <motion.p
-              className="text-base sm:text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed px-4"
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.4, delay: 0.2 }}
-            >
-              Objavte jedinečné vlastnosti STYRCON dosiek, které kombinujú bezpečnosť, efektívnosť a trvalú udržateľnosť.
-            </motion.p>
-          </motion.div>
-        </div>
+              <motion.h2
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900"
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.4, delay: 0.15 }}
+              >
+                Objavte hlavné výhody STYRCONU
+              </motion.h2>
+            </motion.div>
+          </div>
+        </StarsBackground>
       </section>
 
       {/* Horizontal Accordion */}

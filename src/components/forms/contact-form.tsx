@@ -16,7 +16,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { CheckCircle, Loader2 } from 'lucide-react';
+import { CheckCircle, Loader2, MailIcon } from 'lucide-react';
+import {
+  RequiredInput,
+  InputWithIcon,
+  InputWithClear,
+  PhoneInputComponent,
+  TextareaNoResize
+} from '@/components/ui/origin-inputs';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Meno musí obsahovať aspoň 2 znaky'),
@@ -85,7 +92,7 @@ export function ContactForm() {
           Správa bola úspešne odoslaná
         </h3>
         <p className="text-slate-600 mb-6">
-          Ďakujeme za Váš záujem o STYRCON produkty. Odpovieme Vám do 24 hodín.
+          Ďakujeme za Váš záujem.
         </p>
         <Button 
           onClick={() => {
@@ -114,28 +121,32 @@ export function ContactForm() {
             <FormField
               control={form.control}
               name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Meno *</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Vaše meno" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+              render={({ field, fieldState }) => (
+                <InputWithClear
+                  label="Meno"
+                  placeholder="Vaše meno"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={fieldState.error?.message}
+                  required
+                />
               )}
             />
 
             <FormField
               control={form.control}
               name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email *</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="vás@email.sk" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+              render={({ field, fieldState }) => (
+                <InputWithIcon
+                  label="Email"
+                  placeholder="vasmail@mail.sk"
+                  type="email"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={fieldState.error?.message}
+                  icon={MailIcon}
+                  required
+                />
               )}
             />
           </div>
@@ -144,28 +155,28 @@ export function ContactForm() {
             <FormField
               control={form.control}
               name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Telefón</FormLabel>
-                  <FormControl>
-                    <Input type="tel" placeholder="+421 xxx xxx xxx" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+              render={({ field, fieldState }) => (
+                <PhoneInputComponent
+                  label="Telefón"
+                  placeholder="+421 000 000 000"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={fieldState.error?.message}
+                />
               )}
             />
 
             <FormField
               control={form.control}
               name="company"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Spoločnosť</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Názov spoločnosti" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+              render={({ field, fieldState }) => (
+                <InputWithClear
+                  label="Spoločnosť"
+                  placeholder="Názov spoločnosti"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={fieldState.error?.message}
+                />
               )}
             />
           </div>
@@ -173,32 +184,31 @@ export function ContactForm() {
           <FormField
             control={form.control}
             name="subject"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Predmet *</FormLabel>
-                <FormControl>
-                  <Input placeholder="Predmet vašej správy" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+            render={({ field, fieldState }) => (
+              <InputWithClear
+                label="Predmet"
+                placeholder="Predmet vašej správy"
+                value={field.value}
+                onChange={field.onChange}
+                error={fieldState.error?.message}
+                required
+              />
             )}
           />
 
           <FormField
             control={form.control}
             name="message"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Správa *</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Opíšte váš projekt alebo položte otázku o STYRCON produktoch..."
-                    rows={5}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+            render={({ field, fieldState }) => (
+              <TextareaNoResize
+                label="Správa"
+                placeholder="Text vašej správy..."
+                rows={5}
+                value={field.value}
+                onChange={field.onChange}
+                error={fieldState.error?.message}
+                required
+              />
             )}
           />
 

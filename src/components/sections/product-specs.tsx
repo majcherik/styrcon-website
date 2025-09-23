@@ -102,33 +102,7 @@ export function ProductSpecs() {
 
         {/* Applications */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <Card className="p-6">
-            <h3 className="text-xl font-semibold text-slate-900 mb-4">
-              Oblasti použitia
-            </h3>
-            <ul className="space-y-2 text-sm text-slate-600">
-              <li className="flex items-start gap-2">
-                <div className="w-2 h-2 bg-primary rounded-full mt-1.5 flex-shrink-0" />
-                <span>Zateplenie fasád rodinných a bytových domov</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-2 h-2 bg-primary rounded-full mt-1.5 flex-shrink-0" />
-                <span>Sanačné zateplenie vlhkých murív</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-2 h-2 bg-primary rounded-full mt-1.5 flex-shrink-0" />
-                <span>Tepelná izolácia priemyselných budov</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-2 h-2 bg-primary rounded-full mt-1.5 flex-shrink-0" />
-                <span>Rekonštrukcia historických objektov</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-2 h-2 bg-primary rounded-full mt-1.5 flex-shrink-0" />
-                <span>Požiarne odolné konštrukcie</span>
-              </li>
-            </ul>
-          </Card>
+         
 
           <Card className="p-6">
             <h3 className="text-xl font-semibold text-slate-900 mb-4">
@@ -153,23 +127,11 @@ export function ProductSpecs() {
               </div>
             </div>
             
-            <div className="mt-4 p-3 bg-primary/5 rounded-lg">
-              <div className="text-sm font-medium text-primary mb-1">
-                Individuálne rozmery na požiadanie
-              </div>
-              <div className="text-xs text-slate-600">
-                Kontaktujte nás pre výrobu dosiek v nestandardných rozmeroch.
-              </div>
-            </div>
+           
           </Card>
         </div>
 
-        <div className="text-center">
-          <Button size="lg">
-            <Download className="mr-2 h-4 w-4" />
-            Stiahnuť technický list PDF
-          </Button>
-        </div>
+       
       </div>
     </section>
   );

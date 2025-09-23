@@ -17,7 +17,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "STYRCON - Paropriepustné tepelnoizolačné dosky | E-MA SK s.r.o.",
   description: "STYRCON nehorľavé paropriepustné tepelnoizolačné dosky triedy A1. Profesionálne riešenia pre zateplenie budov. Kontaktujte E-MA SK s.r.o.",
-  keywords: "styrcon, paropriepustné dosky, tepelná izolácia, nehorľavá izolácia, zateplenie budov, sanačné zateplenie",
+  keywords: "styrcon, paropriepustné dosky, tepelná izolácia, nehorľavá izolácia, zateplenie budov, sanačné zateplenie, tepelna izolacia, nehorlava izolacia, budovy, uspora tepla, rekonstrukcia, obklad, lacne zateplenie, polystyren, vlna, murivo, sanacia, polytex, byvanie, byty, domy, nehnutelnosti, domov, vykurovanie, Jelenec, isolation, heating",
   authors: [{ name: "E-MA SK s.r.o." }],
   robots: "index, follow",
   openGraph: {

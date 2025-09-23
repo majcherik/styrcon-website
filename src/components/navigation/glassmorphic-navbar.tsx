@@ -25,6 +25,8 @@ import { useAuth, useUser } from '@clerk/nextjs';
 import { DropdownButton } from '@/components/ui/dropdown-button';
 import { useClickOutside } from '@/hooks/use-click-outside';
 import { useDebounce } from '@/hooks/use-debounce';
+import { useScrollPosition } from '@/hooks/use-scroll-position';
+import { useToggle } from '@/hooks/use-toggle';
 
 interface NavItem {
   label: string;
@@ -80,14 +82,13 @@ const navigationItems: NavItem[] = [
 ];
 
 export function GlassmorphicNavbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
+  const [isOpen, toggleMobile, setMobileOpen] = useToggle(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  // Debounce scroll value for better performance
-  const debouncedScrollY = useDebounce(scrollY, 10);
-  const isScrolled = debouncedScrollY > 10;
+  // Advanced scroll position tracking with built-in debouncing
+  const { scrollY } = useScrollPosition({ debounceMs: 10 });
+  const isScrolled = scrollY > 10;
   const pathname = usePathname();
   const router = useRouter();
   const { isSignedIn, signOut } = useAuth();
@@ -98,25 +99,18 @@ export function GlassmorphicNavbar() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // Scroll handling is now managed by useScrollPosition hook
 
   // Use custom hook for click outside functionality
   useClickOutside(navRef, () => {
     setOpenDropdown(null);
-    setIsOpen(false); // Also close mobile menu
+    setMobileOpen(false); // Also close mobile menu
   });
 
   const handleSignOut = async () => {
     await signOut();
     router.push('/');
-    setIsOpen(false);
+    setMobileOpen(false);
   };
 
   const toggleDropdown = (label: string) => {
@@ -124,7 +118,7 @@ export function GlassmorphicNavbar() {
   };
 
   const handleItemClick = () => {
-    setIsOpen(false);
+    setMobileOpen(false);
     setOpenDropdown(null);
   };
 
@@ -312,7 +306,7 @@ export function GlassmorphicNavbar() {
           {/* Mobile menu button */}
           <div className="lg:hidden flex items-center gap-2">
             <button
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={toggleMobile}
               className={`p-2 rounded-xl transition-all duration-300 ${
                 isScrolled 
                   ? 'bg-gray-100 border border-gray-200 hover:bg-gray-200 text-gray-700' 

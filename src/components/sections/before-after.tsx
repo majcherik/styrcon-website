@@ -165,7 +165,7 @@ export function BeforeAfterSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            Pozrite si transformáciu budovy s STYRCON tepelnou izoláciou. Posuňte posúvač pre porovnanie.
+            Pozrite si aplikáciu Styrconu. Posuňte posúvač pre porovnanie.
           </motion.p>
         </motion.div>
 
@@ -192,7 +192,7 @@ export function BeforeAfterSection() {
           transition={{ duration: 0.6, delay: 0.6 }}
         >
           <p className="text-sm sm:text-base text-slate-500">
-            Potiahnutím posúvača porovnajte stav pred a po aplikácii STYRCON izolácie
+            Potiahnutím posúvača môžete vidieť finálny výsledok
           </p>
         </motion.div>
       </div>

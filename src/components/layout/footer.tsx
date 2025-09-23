@@ -13,12 +13,12 @@ interface CompanyInfo {
 
 const companyInfo: CompanyInfo = {
   name: 'E-MA SK s.r.o.',
-  address: 'Adresa bude doplnená',
+  address: 'Námestie osloboditeľov 3/A, 040 01 Košice, Slovensko',
   phone: '+421 XXX XXX XXX',
-  email: 'info@e-ma-sk.com',
-  ico: 'XXXXXXXX',
-  dic: 'XXXXXXXXXX',
-  icDph: 'SKXXXXXXXXXX'
+  email: 'e-ma@e-ma.sk',
+  ico: '52781933',
+  dic: '2121152506',
+  icDph: 'SK2121152506'
 };
 
 export function Footer() {
@@ -30,15 +30,14 @@ export function Footer() {
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="text-xl font-bold text-white mb-4">
-              STYRCON
+              E-MA SK s.r.o.
             </div>
             <div className="text-sm text-slate-400 mb-2">
-              E-MA SK s.r.o.
+
             </div>
             
             <p className="text-sm mb-4">
-              E-MA SK s.r.o. - komerčný a exportný partner pre STYRCON tepelnoizolačné dosky. 
-              Výrobca: Styrcon s.r.o.
+              E-MA SK s.r.o. - komerčný a exportný partner pre Styrcon s.r.o. 
             </p>
             
             <div className="space-y-2 text-sm">
@@ -124,9 +123,7 @@ export function Footer() {
             © {new Date().getFullYear()} E-MA SK s.r.o. Všetky práva vyhradené.
           </p>
           
-          <div className="flex items-center space-x-4 mt-4 sm:mt-0 text-xs text-slate-400">
-            <span>Výrobca: Styrcon s.r.o.</span>
-          </div>
+
         </div>
       </div>
     </footer>

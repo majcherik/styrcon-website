@@ -10,11 +10,11 @@ export function VisuallyHidden({ children, className, ...props }: VisuallyHidden
     <span
       className={cn(
         "absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0",
-        "clip-path-[inset(50%)]", // Modern clip-path approach
         className
       )}
       style={{
         clip: "rect(0, 0, 0, 0)", // Fallback for older browsers
+        clipPath: "inset(50%)", // Modern clip-path approach
       }}
       {...props}
     >
