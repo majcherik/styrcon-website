@@ -2,14 +2,13 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import Lenis from 'lenis';
 
 interface SmoothScrollProps {
   intensity?: number;
 }
 
 export function SmoothScroll({ intensity = 15 }: SmoothScrollProps) {
-  const lenisRef = useRef<Lenis | null>(null);
+  const lenisRef = useRef<any>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -17,70 +16,84 @@ export function SmoothScroll({ intensity = 15 }: SmoothScrollProps) {
     if (pathname !== '/') {
       return;
     }
+
+    // Dynamic import to avoid SSR issues
+    const initializeLenis = async () => {
+      try {
+        const { default: Lenis } = await import('lenis');
+
+        // Initialize Lenis
+        const lenis = new Lenis({
+          duration: 1.2,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          orientation: 'vertical',
+          gestureOrientation: 'vertical',
+          smoothWheel: true,
+          wheelMultiplier: 1,
+          touchMultiplier: 2,
+          infinite: false,
+        });
+
+        lenisRef.current = lenis;
+
+        // Expose to window for global access
+        if (typeof window !== 'undefined') {
+          (window as any).lenis = lenis;
+        }
+
+        // Animation frame loop
+        function raf(time: number) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+
+        // Handle overlay detection to pause scrolling
+        const handleOverlayMutation = () => {
+          const overlays = document.querySelectorAll('[data-overlay="true"], .modal, .dialog, [role="dialog"]');
+          const hasActiveOverlay = Array.from(overlays).some((overlay) => {
+            const style = window.getComputedStyle(overlay as Element);
+            return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+          });
+
+          if (hasActiveOverlay) {
+            lenis.stop();
+          } else {
+            lenis.start();
+          }
+        };
+
+        // Create mutation observer to watch for overlays
+        const observer = new MutationObserver(handleOverlayMutation);
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['style', 'class', 'data-overlay'],
+        });
+
+        // Initial check
+        handleOverlayMutation();
+
+        // Cleanup function
+        return () => {
+          observer.disconnect();
+          lenis.destroy();
+          lenisRef.current = null;
+          // Clear global window reference
+          if (typeof window !== 'undefined' && (window as any).lenis === lenis) {
+            delete (window as any).lenis;
+          }
+        };
+      } catch (error) {
+        console.warn('Failed to initialize Lenis:', error);
+        return () => {}; // Return empty cleanup function
+      }
+    };
+
     // Initialize Lenis
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
-      infinite: false,
-    });
-
-    lenisRef.current = lenis;
-
-    // Expose to window for global access
-    if (typeof window !== 'undefined') {
-      window.lenis = lenis;
-    }
-
-    // Animation frame loop
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
-    // Handle overlay detection to pause scrolling
-    const handleOverlayMutation = () => {
-      const overlays = document.querySelectorAll('[data-overlay="true"], .modal, .dialog, [role="dialog"]');
-      const hasActiveOverlay = Array.from(overlays).some((overlay) => {
-        const style = window.getComputedStyle(overlay as Element);
-        return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
-      });
-
-      if (hasActiveOverlay) {
-        lenis.stop();
-      } else {
-        lenis.start();
-      }
-    };
-
-    // Create mutation observer to watch for overlays
-    const observer = new MutationObserver(handleOverlayMutation);
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['style', 'class', 'data-overlay'],
-    });
-
-    // Initial check
-    handleOverlayMutation();
-
-    // Cleanup
-    return () => {
-      observer.disconnect();
-      lenis.destroy();
-      lenisRef.current = null;
-      // Clear global window reference
-      if (typeof window !== 'undefined' && window.lenis === lenis) {
-        delete window.lenis;
-      }
-    };
+    initializeLenis();
   }, [intensity, pathname]);
 
   // Add global styles for smooth scrolling (only on homepage)

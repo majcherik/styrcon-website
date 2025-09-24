@@ -4,29 +4,64 @@ export const organizationStructuredData = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'E-MA SK s.r.o.',
-  description: 'Komerčný a exportný partner pre STYRCON tepelnoizolačné dosky',
+  alternateName: 'E-MA Slovakia',
+  description: 'Komerčný a exportný partner pre STYRCON tepelnoizolačné dosky. Profesionálne riešenia pre zateplenie budov na Slovensku.',
   url: process.env.NEXT_PUBLIC_SITE_URL,
   logo: `${process.env.NEXT_PUBLIC_SITE_URL}/logo.svg`,
-  contactPoint: {
-    '@type': 'ContactPoint',
-    telephone: '+421-xxx-xxx-xxx',
-    contactType: 'customer service',
-    email: 'info@e-ma-sk.com',
-    availableLanguage: ['Slovak', 'English']
-  },
+  foundingDate: '2020', // Update with actual founding date
+  legalName: 'E-MA SK s.r.o.',
+  contactPoint: [
+    {
+      '@type': 'ContactPoint',
+      telephone: '+421-xxx-xxx-xxx',
+      contactType: 'customer service',
+      email: 'info@e-ma-sk.com',
+      availableLanguage: ['sk', 'en'],
+      areaServed: 'SK',
+      hoursAvailable: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '08:00',
+        closes: '17:00'
+      }
+    },
+    {
+      '@type': 'ContactPoint',
+      telephone: '+421-xxx-xxx-xxx',
+      contactType: 'sales',
+      email: 'predaj@e-ma-sk.com',
+      availableLanguage: ['sk']
+    }
+  ],
   address: {
     '@type': 'PostalAddress',
     streetAddress: 'Adresa bude doplnená',
     addressLocality: 'Mesto',
     postalCode: 'PSČ',
-    addressCountry: 'SK'
+    addressCountry: 'SK',
+    addressRegion: 'Slovensko'
   },
   sameAs: [
     // Social media links will be added here
   ],
-  manufacturer: {
-    '@type': 'Organization',
-    name: 'Styrcon s.r.o.'
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'STYRCON produkty',
+    itemListElement: [
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Product',
+          name: 'STYRCON tepelnoizolačné dosky'
+        }
+      }
+    ]
+  },
+  keywords: 'styrcon, tepelná izolácia, zateplenie budov, paropriepustné dosky, nehorľavá izolácia, Slovensko',
+  areaServed: {
+    '@type': 'Country',
+    name: 'Slovensko',
+    alternateName: 'Slovakia'
   }
 };
 

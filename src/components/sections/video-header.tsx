@@ -7,7 +7,7 @@ import TypingAnimation from '@/components/magicui/typing-animation';
 export function VideoHeader() {
   return (
     <section className="relative min-h-[75vh] w-full overflow-hidden">
-      {/* Background video */}
+      {/* Background video - optimized for performance */}
       <div className="absolute inset-0 w-full h-full">
         <video
           className="absolute inset-0 w-full h-full object-cover"
@@ -15,7 +15,15 @@ export function VideoHeader() {
           muted
           loop
           playsInline
-          poster=""
+          preload="metadata"
+          poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTkyMCAxMDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxOTIwIiBoZWlnaHQ9IjEwODAiIGZpbGw9IiMwZjE3MmEiLz48L3N2Zz4="
+          onLoadStart={(e) => {
+            // Optimize video loading for mobile
+            const video = e.currentTarget;
+            if (window.innerWidth < 768) {
+              video.style.display = 'none';
+            }
+          }}
         >
           <source src="https://i.imgur.com/EC9kkDP.mp4" type="video/mp4" />
           Your browser does not support the video tag.
@@ -43,7 +51,7 @@ export function VideoHeader() {
           </div>
           
           {/* Subtitle */}
-          <p className="text-base sm:text-lg text-white/90 leading-relaxed font-light mb-10 max-w-lg">
+          <p className="text-base sm:text-lg text-white/90 leading-relaxed font-light mb-10 max-w-2xl whitespace-normal">
             Paropriepustné dosky triedy A1 pre profesionálne zateplenie budov
           </p>
           

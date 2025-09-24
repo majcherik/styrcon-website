@@ -4,6 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ProductSpecs } from '@/components/sections/product-specs';
 import { ContactCTA } from '@/components/sections/contact-cta';
+import { StyrexonSystemInfo } from '@/components/sections/styrexon-system-info';
+import { ApplicationAreas } from '@/components/sections/application-areas';
+import { BeforeAfterSection } from '@/components/sections/before-after-section';
 import { Shield, Droplets, Thermometer, Flame, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -170,6 +173,15 @@ export default function ProductPage() {
           </div>
         </div>
       </section>
+
+      {/* STYREXON System Information */}
+      <StyrexonSystemInfo />
+
+      {/* Application Areas */}
+      <ApplicationAreas />
+
+      {/* Before/After Section */}
+      <BeforeAfterSection />
 
       {/* Technical Specifications */}
       <ProductSpecs />

@@ -10,7 +10,7 @@ export default function NotFound() {
   return (
     <AuthWrapper requireAuth={false}>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
-        <div className="text-center max-w-md mx-auto">
+        <div className="text-center max-w-2xl mx-auto">
         {/* 404 Graphic */}
         <div className="mb-8">
           <div className="text-[120px] font-bold text-slate-200 leading-none select-none">
@@ -28,8 +28,8 @@ export default function NotFound() {
           <h1 className="text-2xl font-bold text-slate-900 mb-3">
             Stránka nebola nájdená
           </h1>
-          <p className="text-slate-600 leading-relaxed">
-            Ľutujeme, ale stránka ktorú hľadáte neexistuje alebo bola presunutá. 
+          <p className="text-slate-600 leading-relaxed whitespace-normal">
+            Ľutujeme, ale stránka ktorú hľadáte neexistuje alebo bola presunutá.
             Skontrolujte prosím URL adresu alebo sa vráťte na hlavnú stránku.
           </p>
         </div>

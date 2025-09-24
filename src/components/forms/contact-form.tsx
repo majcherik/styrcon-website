@@ -23,7 +23,7 @@ import {
   InputWithClear,
   PhoneInputComponent,
   TextareaNoResize
-} from '@/components/ui/origin-inputs';
+} from '@/components/ui/origin-inputs/index';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Meno musí obsahovať aspoň 2 znaky'),

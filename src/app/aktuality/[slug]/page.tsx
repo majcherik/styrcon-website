@@ -917,7 +917,8 @@ interface BlogPostPageProps {
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
-  const post = blogPosts[params.slug];
+  const resolvedParams = await params;
+  const post = blogPosts[resolvedParams.slug];
   
   if (!post) {
     return {
@@ -933,8 +934,9 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   };
 }
 
-export default function BlogPostPage({ params }: BlogPostPageProps) {
-  const post = blogPosts[params.slug];
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  const resolvedParams = await params;
+  const post = blogPosts[resolvedParams.slug];
   
   if (!post) {
     notFound();

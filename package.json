@@ -6,6 +6,7 @@
     "dev": "NODE_OPTIONS='--max-old-space-size=8192' next dev",
     "dev:turbo": "NODE_OPTIONS='--max-old-space-size=8192' next dev --turbopack",
     "build": "NODE_OPTIONS='--max-old-space-size=8192' next build",
+    "build:analyze": "ANALYZE=true NODE_OPTIONS='--max-old-space-size=8192' next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
@@ -13,7 +14,10 @@
     "type-check": "tsc --noEmit",
     "prepare": "husky install",
     "clean": "rm -rf .next node_modules/.cache",
-    "dev:safe": "npm run clean && npm run dev"
+    "dev:safe": "npm run clean && npm run dev",
+    "lighthouse": "lhci autorun",
+    "lighthouse:ci": "lhci collect --upload.target=temporary-public-storage",
+    "perf": "npm run build && npm run lighthouse"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.32.0",
@@ -49,6 +53,8 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@lhci/cli": "^0.13.0",
+    "@next/bundle-analyzer": "^15.5.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
