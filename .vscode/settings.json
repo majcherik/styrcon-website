@@ -1,0 +1,50 @@
+{
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+  "typescript.suggest.autoImports": true,
+  "typescript.suggest.classMemberSnippets.enabled": true,
+  "typescript.suggest.objectLiteralMethodSnippets.enabled": true,
+  "typescript.suggest.paths": true,
+
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+
+  "emmet.includeLanguages": {
+    "typescript": "html",
+    "typescriptreact": "html"
+  },
+
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+
+  "path-intellisense.mappings": {
+    "@": "${workspaceRoot}/src",
+    "@components": "${workspaceRoot}/src/components",
+    "@lib": "${workspaceRoot}/src/lib",
+    "@ui": "${workspaceRoot}/src/components/ui",
+    "@hooks": "${workspaceRoot}/src/hooks",
+    "@utils": "${workspaceRoot}/src/lib/utils",
+    "@config": "${workspaceRoot}/src/lib/config",
+    "@styles": "${workspaceRoot}/src/app"
+  },
+
+  "search.exclude": {
+    "**/.next": true,
+    "**/node_modules": true,
+    "**/*.log": true
+  },
+
+  "files.exclude": {
+    "**/.next": true
+  }
+}

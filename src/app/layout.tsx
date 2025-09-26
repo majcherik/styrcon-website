@@ -1,21 +1,27 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs'
 import { ShadcnNavbar } from "@/components/navigation/shadcn-navbar";
 import { Footer } from "@/components/layout/footer";
 import { StructuredData } from "@/components/structured-data";
-import { organizationStructuredData, websiteStructuredData } from "@/lib/structured-data";
+import { localBusinessStructuredData, websiteStructuredData } from "@/lib/structured-data";
 import { Providers } from "@/components/providers/providers";
 import { AuthErrorBoundary } from "@/components/auth/auth-error-boundary";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: 'swap',
-  preload: true,
-  weight: ['300', '400', '500', '600', '700'],
-});
+import { GlobalErrorBoundary } from "@/components/error/global-error-boundary";
+import { WebVitalsTracker } from "@/components/analytics/web-vitals";
+import { StyrconWebVitals } from "@/components/analytics/styrcon-web-vitals";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { ServiceWorkerRegistration } from "@/components/pwa/service-worker";
+import {
+  inter,
+  roboto,
+  sourceSans3,
+  openSans,
+  fontLoadingOptimization
+} from "@/lib/fonts/slovak-typography";
+import { debugClerkInitialization } from "@/lib/clerk/clerk-validation";
+import { ClerkDebugComponent } from "@/components/debug/clerk-debug-component";
+import { ClerkConnectionTest } from "@/components/test/clerk-connection-test";
 
 export const metadata: Metadata = {
   title: {
@@ -115,21 +121,63 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="sk" className={inter.variable} suppressHydrationWarning={true}>
+      <html
+        lang="sk"
+        className={`${inter.variable} ${roboto.variable} ${sourceSans3.variable} ${openSans.variable}`}
+        suppressHydrationWarning={true}
+      >
         <head>
-          <StructuredData data={organizationStructuredData} />
+          <StructuredData data={localBusinessStructuredData} />
           <StructuredData data={websiteStructuredData} />
+
+          {/* Next.js optimized fonts handle their own preloading */}
+
+          {/* Enhanced typography CSS variables */}
+          <style dangerouslySetInnerHTML={{
+            __html: `
+              :root {
+                --font-primary: ${inter.style.fontFamily}, system-ui, -apple-system, sans-serif;
+                --font-business: ${roboto.style.fontFamily}, var(--font-primary);
+                --font-headings: ${sourceSans3.style.fontFamily}, var(--font-primary);
+                --font-technical: ${openSans.style.fontFamily}, var(--font-primary);
+              }
+              body {
+                font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+                font-variant-ligatures: common-ligatures contextual;
+                text-rendering: optimizeLegibility;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+              }
+              h1, h2, h3, h4, h5, h6 {
+                font-family: var(--font-headings);
+                font-feature-settings: "kern" 1, "liga" 1;
+                letter-spacing: -0.0125em;
+              }
+            `
+          }} />
         </head>
-        <body className="antialiased">
+        <body className="antialiased font-primary">
           <Providers>
-            <AuthErrorBoundary>
-              <ShadcnNavbar />
-              <main className="min-h-screen">
-                {children}
-              </main>
-              <Footer />
-            </AuthErrorBoundary>
+            <GlobalErrorBoundary>
+              <AuthErrorBoundary>
+                <ShadcnNavbar />
+                <main className="min-h-screen">
+                  {children}
+                </main>
+                <Footer />
+              </AuthErrorBoundary>
+            </GlobalErrorBoundary>
           </Providers>
+
+          {/* Analytics, Performance and PWA monitoring */}
+          <GoogleAnalytics />
+          <WebVitalsTracker />
+          <StyrconWebVitals />
+          <ServiceWorkerRegistration />
+
+          {/* Development debugging */}
+          <ClerkDebugComponent />
+          <ClerkConnectionTest />
         </body>
       </html>
     </ClerkProvider>

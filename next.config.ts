@@ -6,6 +6,20 @@ const withBundleAnalyzer = process.env.ANALYZE === 'true'
   : (config: NextConfig) => config;
 
 const nextConfig: NextConfig = {
+  // Security optimizations
+  poweredByHeader: false, // Remove X-Powered-By header for security
+  productionBrowserSourceMaps: false, // Disable source maps in production for security
+
+  // Development and SEO optimizations
+  reactStrictMode: true, // Enable strict mode for better debugging and future compatibility
+  trailingSlash: false, // Consistent URL structure without trailing slashes for Slovak SEO
+
+  // HTTP compression optimization for Slovak thermal insulation content
+  compress: true, // Explicitly enable gzip compression (default true, but explicit for clarity)
+
+  // Output optimization for better performance
+  output: 'standalone', // Optimize for deployment with minimal dependencies
+
   images: {
     remotePatterns: [
       {
@@ -53,6 +67,13 @@ const nextConfig: NextConfig = {
   },
   // Performance and memory optimizations
   experimental: {
+    // Memory usage optimizations
+    webpackMemoryOptimizations: true,
+    webpackBuildWorker: true,
+
+    // Enable use cache directive
+    useCache: true,
+
     // Optimize memory usage during development
     optimizePackageImports: [
       'lucide-react',
@@ -61,78 +82,318 @@ const nextConfig: NextConfig = {
       '@clerk/nextjs',
       'tailwind-merge',
       'class-variance-authority',
-      'lenis'
+      'lenis',
+      'react-hook-form',
+      '@hookform/resolvers',
+      'zod',
+      'embla-carousel-react',
+      'next-themes'
     ],
-    // Reduce memory usage for large pages
-    optimizeCss: process.env.NODE_ENV === 'production',
-    // Enable automatic static optimization
-    esmExternals: true,
-    // Optimize server components (deprecated - moved to serverExternalPackages)
   },
-  // Enhanced webpack optimizations
-  webpack: (config, { dev, isServer }) => {
-    // Performance optimizations for both dev and production
-    config.optimization = {
-      ...config.optimization,
-      splitChunks: {
-        chunks: 'all',
-        cacheGroups: {
-          default: false,
-          vendors: false,
-          // Framework chunks (React, Next.js)
-          framework: {
-            name: 'framework',
-            test: /[\\/]node_modules[\\/](react|react-dom|next)[\\/]/,
-            chunks: 'all',
-            priority: 40,
-            enforce: true,
+
+  // Enhanced Turbopack configuration for STYRCON development
+  turbopack: {
+    resolveExtensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+    resolveAlias: {
+      // Centralized alias configuration for better import resolution
+      '@': './src',
+      '@components': './src/components',
+      '@lib': './src/lib',
+      '@ui': './src/components/ui',
+      '@hooks': './src/hooks',
+      '@utils': './src/lib/utils',
+      '@config': './src/lib/config',
+      '@styles': './src/app',
+      // Slovak thermal insulation specific aliases
+      '@thermal': './src/lib/thermal',
+      '@slovakia': './src/lib/slovakia',
+      '@styrcon': './src/components/styrcon',
+    },
+    // Enhanced rules for STYRCON asset handling
+    rules: {
+      // SVG optimization for thermal insulation diagrams
+      '*.svg': {
+        loaders: [{
+          loader: '@svgr/webpack',
+          options: {
+            svgo: true,
+            svgoConfig: {
+              plugins: ['preset-default'],
+            },
+            titleProp: true,
+            ref: true,
           },
-          // UI library chunks
-          ui: {
-            name: 'ui',
-            test: /[\\/]node_modules[\\/](@radix-ui|lucide-react|tailwind-merge|class-variance-authority)[\\/]/,
-            chunks: 'all',
-            priority: 30,
-            enforce: true,
-          },
-          // Animation libraries
-          animations: {
-            name: 'animations',
-            test: /[\\/]node_modules[\\/](framer-motion|lenis)[\\/]/,
-            chunks: 'all',
-            priority: 25,
-            enforce: true,
-          },
-          // Vendor chunks
-          vendor: {
-            name: 'vendor',
-            test: /[\\/]node_modules[\\/]/,
-            chunks: 'all',
-            priority: 20,
-          },
-          // Common chunks
-          common: {
-            name: 'common',
-            minChunks: 2,
-            priority: 10,
-            reuseExistingChunk: true,
-            enforce: true,
-          },
-        },
+        }],
+        as: '*.js',
       },
+    },
+  },
+  // Simplified webpack optimizations with Radix UI ESM support
+  webpack: (config, { dev }) => {
+    // Add specific module resolution for Radix UI components
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@radix-ui/react-collection': require.resolve('@radix-ui/react-collection'),
+      '@radix-ui/react-slider': require.resolve('@radix-ui/react-slider'),
+      '@radix-ui/react-checkbox': require.resolve('@radix-ui/react-checkbox'),
     };
 
-    // Add performance hints for production
+    // Enhanced production optimizations for STYRCON thermal insulation content
     if (!dev) {
-      config.performance = {
-        hints: 'warning',
-        maxEntrypointSize: 512000,
-        maxAssetSize: 512000,
-      };
+      config.optimization = {
+        ...config.optimization,
+        sideEffects: false,
+        // Better chunk splitting for Slovak business content
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            // Separate vendor bundles for better caching
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+            },
+            // STYRCON-specific components bundle
+            styrcon: {
+              test: /[\\/]src[\\/](components|lib)[\\/]/,
+              name: 'styrcon-components',
+              chunks: 'all',
+              minSize: 10000,
+            },
+          },
+        },
+        // Remove unused code more aggressively
+        usedExports: true,
+      }
+
+      // Additional optimizations for thermal insulation image assets
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        crypto: false,
+      }
     }
 
     return config;
   },
+  // Strategic redirects for Slovak business SEO and UX
+  async redirects() {
+    return [
+      // Legacy product page redirects
+      {
+        source: '/produkty',
+        destination: '/styrcon-produkt',
+        permanent: true,
+      },
+      {
+        source: '/product',
+        destination: '/styrcon-produkt',
+        permanent: true,
+      },
+
+      // Slovak language variations
+      {
+        source: '/o-firme',
+        destination: '/o-nas',
+        permanent: true,
+      },
+      {
+        source: '/o-spolecnosti',
+        destination: '/o-nas',
+        permanent: true,
+      },
+
+      // Contact page variations
+      {
+        source: '/kontakty',
+        destination: '/kontakt',
+        permanent: true,
+      },
+      {
+        source: '/contact',
+        destination: '/kontakt',
+        permanent: true,
+      },
+
+      // Gallery redirects
+      {
+        source: '/projekty',
+        destination: '/galeria',
+        permanent: true,
+      },
+      {
+        source: '/gallery',
+        destination: '/galeria',
+        permanent: true,
+      },
+
+      // News/blog redirects
+      {
+        source: '/blog',
+        destination: '/aktuality',
+        permanent: true,
+      },
+      {
+        source: '/novinky',
+        destination: '/aktuality',
+        permanent: true,
+      },
+
+      // Documents/downloads
+      {
+        source: '/download',
+        destination: '/dokumenty',
+        permanent: true,
+      },
+      {
+        source: '/downloads',
+        destination: '/dokumenty',
+        permanent: true,
+      },
+
+      // Common typos and variations
+      {
+        source: '/styrkon',
+        destination: '/styrcon-produkt',
+        permanent: true,
+      },
+      {
+        source: '/stircon',
+        destination: '/styrcon-produkt',
+        permanent: true,
+      },
+
+      // Legacy technical pages
+      {
+        source: '/technicke-listy',
+        destination: '/dokumenty',
+        permanent: true,
+      },
+      {
+        source: '/certifikaty',
+        destination: '/dokumenty',
+        permanent: true,
+      },
+    ]
+  },
+
+  // Enhanced security and performance headers for Slovak thermal insulation business
+  async headers() {
+    return [
+      {
+        // Apply security headers to all routes
+        source: '/(.*)',
+        headers: [
+          // Security headers
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block'
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin'
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()'
+          },
+          // HSTS for HTTPS enforcement (production only)
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload'
+          },
+          // Performance and caching headers
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+          // Slovak market optimization
+          {
+            key: 'X-Market-Region',
+            value: 'SK-EU'
+          },
+          {
+            key: 'X-Business-Sector',
+            value: 'thermal-insulation'
+          },
+          {
+            key: 'X-Content-Language',
+            value: 'sk'
+          }
+        ],
+      },
+      {
+        // Static assets optimization
+        source: '/images/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          },
+          {
+            key: 'X-Asset-Type',
+            value: 'styrcon-image'
+          }
+        ],
+      },
+      {
+        // API routes specific headers
+        source: '/api/(.*)',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex'
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: process.env.NEXT_PUBLIC_SITE_URL || 'https://styrcon.sk'
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, OPTIONS'
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type, Authorization'
+          }
+        ],
+      },
+      {
+        // Content Security Policy for enhanced security
+        source: '/((?!api).*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://www.googletagmanager.com https://vercel.live https://*.clerk.accounts.dev https://*.clerk.com https://clerk.useful-weevil-9.lcl.dev",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com",
+              "img-src 'self' data: https: blob:",
+              "media-src 'self' https:",
+              "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.useful-weevil-9.lcl.dev https://api.clerk.com https://api.clerk.dev",
+              "frame-src 'self' https://vercel.live https://*.clerk.accounts.dev https://*.clerk.com https://clerk.useful-weevil-9.lcl.dev",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "frame-ancestors 'none'",
+              "upgrade-insecure-requests"
+            ].join('; ')
+          }
+        ],
+      }
+    ]
+  },
+
   // Server external packages (replaces experimental.serverComponentsExternalPackages)
   serverExternalPackages: ['@supabase/supabase-js'],
 };

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 interface BeforeAfterProps {
   beforeImage: string;
@@ -79,10 +80,13 @@ export function BeforeAfterSlider({ beforeImage, afterImage, beforeLabel = "PRED
     <div className="relative w-full h-[40vh] overflow-hidden select-none rounded-xl" ref={containerRef}>
       {/* Before Image */}
       <div className="absolute inset-0">
-        <img
+        <Image
           src={beforeImage}
           alt="Before"
-          className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover pointer-events-none"
+          priority={false}
         />
         {/* Before Label */}
         <div className="absolute top-3 left-3 bg-red-600 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg">
@@ -95,10 +99,13 @@ export function BeforeAfterSlider({ beforeImage, afterImage, beforeLabel = "PRED
         className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none"
         style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
       >
-        <img
+        <Image
           src={afterImage}
           alt="After"
-          className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover pointer-events-none"
+          priority={false}
         />
         {/* After Label */}
         <div className="absolute top-3 right-3 bg-green-600 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg">
@@ -111,9 +118,15 @@ export function BeforeAfterSlider({ beforeImage, afterImage, beforeLabel = "PRED
         ref={handleRef}
         className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize touch-action-none z-10 shadow-lg"
         style={{ left: `${position}%` }}
+        role="slider"
+        aria-label="Porovnávanie obrázkov pred a po"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(position)}
+        tabIndex={0}
       >
         {/* Handle Circle */}
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full shadow-xl flex items-center justify-center border-2 border-slate-200">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full shadow-xl flex items-center justify-center border-2 border-slate-200 focus:ring-2 focus:ring-primary focus:outline-none">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"

@@ -1,0 +1,30 @@
+# Robots.txt for STYRCON Slovak Website
+# E-MA SK s.r.o. - Thermal Insulation Solutions
+
+User-agent: *
+Allow: /
+
+# Important Slovak business pages
+Allow: /styrcon-produkt
+Allow: /polytex-produkt
+Allow: /kontakt
+Allow: /galeria
+Allow: /aktuality
+Allow: /dokumenty
+
+# Block admin/auth pages
+Disallow: /prihlasenie
+Disallow: /registracia
+Disallow: /profil
+Disallow: /admin
+
+# Block development files
+Disallow: /_next/
+Disallow: /api/
+Disallow: *.json$
+
+# Slovak sitemap location
+Sitemap: https://styrcon.sk/sitemap.xml
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1

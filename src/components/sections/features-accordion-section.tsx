@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { Flame, Droplets, Thermometer, Shield, Check } from 'lucide-react';
 import Link from 'next/link';
@@ -76,8 +76,19 @@ const HorizontalAccordion = () => {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isSmallScreen = useMediaQuery('(max-width: 640px)');
 
+  // Memoize expansion handler for better performance
+  const handleExpansion = useCallback((index: number) => {
+    setExpandedIndex(index);
+  }, [setExpandedIndex]);
+
+  // Memoize responsive class calculation
+  const containerClasses = useMemo(() =>
+    `w-full ${isSmallScreen ? 'h-[300px]' : isMobile ? 'h-[350px]' : 'h-[380px] md:h-[450px]'}`,
+    [isSmallScreen, isMobile]
+  );
+
   return (
-    <div ref={ref as React.RefObject<HTMLDivElement>} className={`w-full ${isSmallScreen ? 'h-[300px]' : isMobile ? 'h-[350px]' : 'h-[380px] md:h-[450px]'}`}>
+    <div ref={ref as React.RefObject<HTMLDivElement>} className={containerClasses}>
       <LayoutGroup>
         <div className="flex w-full h-full gap-2">
           {accordionData.map((item, index) => {
@@ -89,7 +100,7 @@ const HorizontalAccordion = () => {
                 key={item.id}
                 layout
                 initial={false}
-                onMouseOver={() => setExpandedIndex(index)}
+                onMouseOver={() => handleExpansion(index)}
                 className="relative rounded-xl overflow-hidden cursor-pointer flex-shrink-0"
                 animate={{
                   flex: isExpanded ? 3 : 1,
@@ -139,7 +150,7 @@ const HorizontalAccordion = () => {
                       fontSize: isExpanded
                         ? isSmallScreen ? "1.1rem" : isMobile ? "1.3rem" : "1.5rem"
                         : isSmallScreen ? "0.9rem" : "1.2rem",
-                      lineHeight: isExpanded ? "1.3" : "1.4"
+                      lineHeight: isExpanded ? 1.3 : 1.4
                     }}
                     transition={{ duration: 0.3 }}
                   >

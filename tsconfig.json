@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2020", // Updated for better performance and features
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -13,13 +13,36 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+
+    // Enhanced strictness for better code quality in Slovak thermal insulation business
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+
+    // Better imports and module handling
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@ui/*": ["./src/components/ui/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@utils/*": ["./src/lib/utils/*"],
+      "@config/*": ["./src/lib/config/*"],
+      "@styles/*": ["./src/app/*"],
+      // Slovak thermal insulation specific paths
+      "@thermal/*": ["./src/lib/thermal/*"],
+      "@slovakia/*": ["./src/lib/slovakia/*"],
+      "@styrcon/*": ["./src/components/styrcon/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

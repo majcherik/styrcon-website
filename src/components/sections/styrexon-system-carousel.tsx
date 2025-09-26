@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -107,10 +108,13 @@ export function StyrexonSystemCarousel() {
                 >
                   <Card className="h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white">
                     <CardContent className="flex flex-col items-center p-6">
-                      <div className="w-full h-48 mb-4 bg-slate-50 rounded-lg overflow-hidden flex items-center justify-center">
-                        <img 
-                          src={component.imageUrl} 
+                      <div className="w-full h-48 mb-4 bg-slate-50 rounded-lg overflow-hidden flex items-center justify-center relative">
+                        <Image
+                          src={component.imageUrl}
                           alt={component.name}
+                          width={300}
+                          height={200}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           className="max-w-full max-h-full object-contain"
                         />
                       </div>

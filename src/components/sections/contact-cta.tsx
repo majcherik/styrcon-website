@@ -14,9 +14,6 @@ export function ContactCTA() {
           <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-6">
             Radi vám poradíme s výberom vhodných produktov pre váš projekt.
           </p>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            
-          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -25,8 +22,6 @@ export function ContactCTA() {
             <h3 className="text-2xl font-semibold text-slate-900 mb-6">
               Kontaktujte nás
             </h3>
-            
-           
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button asChild size="lg">
@@ -35,12 +30,14 @@ export function ContactCTA() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              
-             
             </div>
           </div>
 
-          
+          <div className="flex items-center justify-center">
+            <div className="text-center text-slate-500">
+              <p>Očakávame váš kontakt!</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

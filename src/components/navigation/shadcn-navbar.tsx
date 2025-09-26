@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useTransition, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -86,10 +86,21 @@ export function ShadcnNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
   const router = useRouter();
   const { isSignedIn } = useAuth();
   const navRef = useRef<HTMLDivElement>(null);
+
+  // Optimized navigation handler
+  const handleNavigation = useCallback((href: string) => {
+    if (href === '#') return;
+
+    startTransition(() => {
+      router.push(href);
+      setIsOpen(false); // Close mobile menu after navigation
+    });
+  }, [router]);
 
   useEffect(() => {
     setMounted(true);
@@ -116,9 +127,13 @@ export function ShadcnNavbar() {
   }, []);
 
 
-  const handleItemClick = () => {
-    setIsOpen(false);
-  };
+  const handleItemClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const href = e.currentTarget.getAttribute('href');
+    if (href) {
+      handleNavigation(href);
+    }
+  }, [handleNavigation]);
 
   // Helper function to determine if page should show white text at top
   const shouldShowWhiteTextAtTop = () => {
@@ -170,14 +185,18 @@ export function ShadcnNavbar() {
   }
 
   return (
-    <nav 
+    <nav
       ref={navRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white shadow-lg border-b border-gray-200' 
+        isScrolled
+          ? 'bg-white shadow-lg border-b border-gray-200'
           : 'bg-transparent'
-      }`}
+      } ${isPending ? 'opacity-75 pointer-events-none' : ''}`}
     >
+      {/* Navigation Pending Indicator */}
+      {isPending && (
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 animate-pulse"></div>
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
