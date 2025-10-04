@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useDeferredValue, useMemo, useTransition } from 'react';
+import { useState, useDeferredValue, useMemo, useTransition, useRef } from 'react';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { useHover } from '@/hooks/use-hover';
 
 interface ResourceCard {
   id: string;
@@ -81,6 +82,77 @@ const resourceCards: ResourceCard[] = [
   }
 ];
 
+// Resource Card Component with hover effects
+function ResourceCardComponent({ card }: { card: ResourceCard }) {
+  const cardRef = useRef<HTMLAnchorElement>(null);
+  const isHovered = useHover(cardRef);
+
+  return (
+    <Link
+      key={card.id}
+      href={card.link}
+      ref={cardRef}
+      className="group cursor-pointer block"
+    >
+      <div className={`relative aspect-[4/3] mb-4 overflow-hidden rounded-xl transition-all duration-300 ${
+        isHovered ? 'shadow-xl scale-[1.02] ring-2 ring-primary/20' : 'shadow-md'
+      }`}>
+        <img
+          src={card.image}
+          alt={card.title}
+          className={`w-full h-full object-cover transition-transform duration-500 ${
+            isHovered ? 'scale-110' : 'scale-105'
+          }`}
+        />
+        <div className={`absolute inset-0 bg-gradient-to-t transition-opacity duration-300 ${
+          isHovered ? 'from-black/40 to-transparent' : 'from-black/20 to-transparent'
+        }`} />
+        {isHovered && (
+          <div className="absolute inset-0 bg-primary/10 transition-opacity duration-300" />
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <span className={`text-xs font-medium uppercase tracking-wide transition-colors duration-200 ${
+            isHovered ? 'text-primary' : 'text-slate-600'
+          }`}>
+            {categories.find(cat => cat.id === card.category)?.label}
+          </span>
+        </div>
+
+        <h3 className={`text-lg font-semibold transition-all duration-200 line-clamp-2 ${
+          isHovered ? 'text-primary scale-[1.02]' : 'text-slate-900 group-hover:text-primary'
+        }`}>
+          {card.title}
+        </h3>
+
+        <p className={`text-sm leading-relaxed line-clamp-3 transition-colors duration-200 ${
+          isHovered ? 'text-slate-700' : 'text-slate-600'
+        }`}>
+          {card.description}
+        </p>
+
+        <div className={`inline-flex items-center font-medium transition-all duration-200 text-sm ${
+          isHovered ? 'text-primary scale-105 translate-x-1' : 'text-primary group-hover:text-primary/80'
+        }`}>
+          Čítať viac
+          <svg
+            className={`ml-1 h-4 w-4 transition-transform duration-200 ${
+              isHovered ? 'translate-x-1' : ''
+            }`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export function AktualityClient() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -133,7 +205,7 @@ export function AktualityClient() {
             </p>
             
             {/* Search Section */}
-            <div className="max-w-md">
+            <div className="w-full max-w-2xl">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                 <Input
@@ -187,39 +259,7 @@ export function AktualityClient() {
             searchTerm !== deferredSearchTerm ? 'opacity-70' : 'opacity-100'
           }`}>
             {filteredCards.map((card) => (
-              <Link key={card.id} href={card.link} className="group cursor-pointer block">
-                <div className="relative aspect-[4/3] mb-4 overflow-hidden rounded-xl">
-                  <img
-                    src={card.image}
-                    alt={card.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-slate-600 uppercase tracking-wide">
-                      {categories.find(cat => cat.id === card.category)?.label}
-                    </span>
-                  </div>
-                  
-                  <h3 className="text-lg font-semibold text-slate-900 group-hover:text-primary transition-colors line-clamp-2">
-                    {card.title}
-                  </h3>
-                  
-                  <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
-                    {card.description}
-                  </p>
-                  
-                  <div className="inline-flex items-center text-primary font-medium group-hover:text-primary/80 transition-colors text-sm">
-                    Čítať viac
-                    <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </div>
-              </Link>
+              <ResourceCardComponent key={card.id} card={card} />
             ))}
           </div>
 

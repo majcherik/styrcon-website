@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft, Calendar, User, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ArticleTracingBeam } from '@/components/sections/article-tracing-beam';
+import { RecommendedArticles } from '@/components/blog/recommended-articles';
 
 // Route segment config for optimal performance according to Next.js best practices
 export const dynamic = 'force-static' // Force static generation for better performance
@@ -971,14 +972,6 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   };
 }
 
-// Generate static params for all blog posts
-export async function generateStaticParams() {
-  const slugs = Object.keys(blogPosts)
-
-  return slugs.map((slug) => ({
-    slug: slug,
-  }))
-}
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const resolvedParams = await params;
@@ -999,7 +992,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     <div className="pt-16">
       {/* Breadcrumb */}
       <div className="bg-slate-50 py-4">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex items-center gap-2 text-sm">
             <Link href="/" className="text-slate-600 hover:text-primary">
               Domov
@@ -1009,15 +1002,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               Aktuality
             </Link>
             <span className="text-slate-400">/</span>
-            <span className="text-slate-900 font-medium">{post.title}</span>
+            <span className="text-slate-900 font-medium line-clamp-1">{post.title}</span>
           </nav>
         </div>
       </div>
 
-      {/* Article Header */}
-      <article className="py-8 lg:py-12">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+      {/* Main Content Area */}
+      <div className="py-8 lg:py-12 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
           {/* Back Button */}
           <div className="mb-8">
             <Button asChild variant="ghost" className="pl-0">
@@ -1028,73 +1021,95 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </Button>
           </div>
 
-          {/* Article Meta */}
-          <div className="mb-6">
-            <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600 mb-4">
-              <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                <time dateTime={post.publishedAt}>
-                  {new Date(post.publishedAt).toLocaleDateString('sk-SK', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </time>
+          {/* Two Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
+
+            {/* Main Article Content */}
+            <main className="lg:col-span-3 relative overflow-hidden">
+
+              {/* Article Header */}
+              <header className="mb-8">
+                {/* Article Meta */}
+                <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600 mb-6">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4" />
+                    <time dateTime={post.publishedAt}>
+                      {new Date(post.publishedAt).toLocaleDateString('sk-SK', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </time>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Tag className="h-4 w-4" />
+                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
+                      {categoryLabels[post.category]}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Article Title */}
+                <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+                  {post.title}
+                </h1>
+
+                {/* Article Excerpt */}
+                <p className="text-lg text-slate-600 leading-relaxed mb-8">
+                  {post.excerpt}
+                </p>
+              </header>
+
+              {/* Article Content with TracingBeam */}
+              <ArticleTracingBeam post={post} />
+
+              {/* Article Tags */}
+              <footer className="mt-12 pt-8 border-t border-slate-200 relative overflow-hidden">
+                <div className="mb-8">
+                  <h3 className="text-sm font-medium text-gray-700 mb-3">Značky:</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm font-medium hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Navigation */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <Button asChild variant="outline">
+                    <Link href="/aktuality">
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      Všetky články
+                    </Link>
+                  </Button>
+
+                  <Button asChild>
+                    <Link href="/kontakt">
+                      Kontaktovať nás
+                    </Link>
+                  </Button>
+                </div>
+              </footer>
+            </main>
+
+            {/* Sidebar */}
+            <aside className="lg:col-span-1">
+              <div className="sticky top-24">
+                <RecommendedArticles
+                  currentPost={post}
+                  allPosts={blogPosts}
+                />
               </div>
-              <div className="flex items-center gap-1">
-                <User className="h-4 w-4" />
-                <span>{post.author}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Tag className="h-4 w-4" />
-                <span className="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
-                  {categoryLabels[post.category]}
-                </span>
-              </div>
-            </div>
-          </div>
+            </aside>
 
-          {/* Article Title */}
-          <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-slate-900 mb-6 leading-tight">
-            {post.title}
-          </h1>
-
-          {/* Article Content with TracingBeam */}
-          <ArticleTracingBeam post={post} />
-
-          {/* Article Tags */}
-          <div className="mt-8 pt-8 border-t border-slate-200">
-            <div className="flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm font-medium"
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Navigation */}
-          <div className="mt-12 pt-8 border-t border-slate-200">
-            <div className="flex justify-between items-center">
-              <Button asChild variant="outline">
-                <Link href="/aktuality">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Všetky články
-                </Link>
-              </Button>
-              
-              <Button asChild>
-                <Link href="/kontakt">
-                  Kontaktovať nás
-                </Link>
-              </Button>
-            </div>
           </div>
         </div>
-      </article>
+      </div>
     </div>
   );
 }

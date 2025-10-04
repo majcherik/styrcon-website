@@ -59,30 +59,30 @@ export const metadata: Metadata = {
 const keyFeatures = [
   {
     icon: <Flame className="h-6 w-6" />,
-    title: 'Nehorľavosť A1',
-    description: 'Najvyššia trieda požiarnej bezpečnosti podľa EN 13501-1',
-    highlight: 'A1',
+    title: 'Reakcia na oheň A2-s1,d0',
+    description: 'Vysoká trieda požiarnej bezpečnosti podľa EN 13501-1',
+    highlight: 'A2-s1,d0',
     color: 'red'
   },
   {
     icon: <Droplets className="h-6 w-6" />,
-    title: 'Výnimočná paropriepustnosť',
-    description: 'Faktor difúzneho odporu μ ≤ 3 umožňuje prirodzené vysychanie murív',
-    highlight: 'μ ≤ 3',
+    title: 'Paropriepustnosť',
+    description: 'Faktor difúzneho odporu μ = 9 zabezpečuje odvod vlhkosti',
+    highlight: 'μ = 9',
     color: 'blue'
   },
   {
     icon: <Thermometer className="h-6 w-6" />,
-    title: 'Nízka tepelná vodivosť',
-    description: 'Výnimočné izolačné vlastnosti λ = 0,041 W/mK',
-    highlight: '0,041 W/mK',
+    title: 'Tepelná vodivosť',
+    description: 'Výnimočné izolačné vlastnosti λ = 0,047 W·K⁻¹·m⁻¹',
+    highlight: '0,047 W/mK',
     color: 'green'
   },
   {
     icon: <Shield className="h-6 w-6" />,
     title: 'Mechanická odolnosť',
-    description: 'Pevnosť v tlaku ≥ 150 kPa pri 10% deformácii',
-    highlight: '≥ 150 kPa',
+    description: 'Pevnosť v tlaku 180 kPa pri 10% stlačení',
+    highlight: '180 kPa',
     color: 'purple'
   }
 ];
@@ -119,30 +119,30 @@ export default async function ProductPage() {
             <div>
               <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium mb-4">
                 <Shield className="h-4 w-4" />
-                Trieda A1 - Nehorľavé
+                Trieda A2-s1,d0
               </div>
-              
+
               <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
-                STYRCON
+                STYRCON 200®
                 <span className="block text-2xl lg:text-3xl font-medium text-slate-600 mt-2">
                   Paropriepustné tepelnoizolačné dosky
                 </span>
               </h1>
-              
+
               <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-                Inovatívne tepelnoizolačné dosky z minerálnej vlny s výnimočnou 
-                paropriepustnosťou a najvyššou triedou požiarnej bezpečnosti A1. 
+                Inovatívne tepelnoizolačné dosky z minerálnej vlny s paropriepustnosťou
+                a vysokou triedou požiarnej bezpečnosti A2-s1,d0.
                 Ideálne riešenie pre sanačné zateplenie aj moderné stavby.
               </p>
-              
+
               {/* Quick specs */}
               <div className="grid grid-cols-2 gap-4 mb-8">
                 <div className="text-center p-4 bg-slate-50 rounded-lg">
-                  <div className="text-2xl font-bold text-primary mb-1">A1</div>
+                  <div className="text-2xl font-bold text-primary mb-1">A2-s1,d0</div>
                   <div className="text-sm text-slate-600">Reakcia na oheň</div>
                 </div>
                 <div className="text-center p-4 bg-slate-50 rounded-lg">
-                  <div className="text-2xl font-bold text-primary mb-1">≤ 3</div>
+                  <div className="text-2xl font-bold text-primary mb-1">μ = 9</div>
                   <div className="text-sm text-slate-600">Faktor difúzneho odporu</div>
                 </div>
               </div>
@@ -253,23 +253,23 @@ export default async function ProductPage() {
                   <CheckCircle className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" />
                   <div>
                     <div className="font-medium text-slate-900">Bezpečnosť na prvom mieste</div>
-                    <div className="text-sm text-slate-600">Trieda A1 zaručuje najvyššiu úroveň požiarnej bezpečnosti</div>
+                    <div className="text-sm text-slate-600">Trieda A2-s1,d0 zaručuje vysokú úroveň požiarnej bezpečnosti</div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-3">
                   <CheckCircle className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" />
                   <div>
-                    <div className="font-medium text-slate-900">Prirodzené vysychanie</div>
-                    <div className="text-sm text-slate-600">Paropriepustnosť μ ≤ 3 umožňuje odvod vlhkosti z konštrukcie</div>
+                    <div className="font-medium text-slate-900">Odvod vlhkosti</div>
+                    <div className="text-sm text-slate-600">Faktor difúzneho odporu μ = 9 umožňuje odvod vlhkosti z konštrukcie</div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-3">
                   <CheckCircle className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" />
                   <div>
                     <div className="font-medium text-slate-900">Výnimočná izolácia</div>
-                    <div className="text-sm text-slate-600">Nízka tepelná vodivosť λ = 0,041 W/mK pre energeticky efektívne budovy</div>
+                    <div className="text-sm text-slate-600">Tepelná vodivosť λ = 0,047 W·K⁻¹·m⁻¹ pre energeticky efektívne budovy</div>
                   </div>
                 </div>
                 
@@ -299,7 +299,7 @@ export default async function ProductPage() {
                 </div>
                 <div className="flex items-center justify-between py-2 border-b border-slate-100">
                   <span className="text-slate-600">EN 13501-1:</span>
-                  <span className="font-medium text-red-600">A1 - Nehorľavé</span>
+                  <span className="font-medium text-orange-600">A2-s1,d0</span>
                 </div>
                 <div className="flex items-center justify-between py-2 border-b border-slate-100">
                   <span className="text-slate-600">ISO 9001:</span>

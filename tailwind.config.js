@@ -8,9 +8,11 @@ module.exports = {
     './src/utils/**/*.{js,ts,jsx,tsx}',
     './src/contexts/**/*.{js,ts,jsx,tsx}',
     './src/types/**/*.{js,ts,jsx,tsx}',
+    './node_modules/preline/preline.js',
   ],
   plugins: [
     require("tailwindcss-animate"),
+    require("preline/plugin"),
     require("@heroui/theme")({
       themes: {
         "styrcon-light": {

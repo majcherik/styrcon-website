@@ -19,9 +19,6 @@ import {
   openSans,
   fontLoadingOptimization
 } from "@/lib/fonts/slovak-typography";
-import { debugClerkInitialization } from "@/lib/clerk/clerk-validation";
-import { ClerkDebugComponent } from "@/components/debug/clerk-debug-component";
-import { ClerkConnectionTest } from "@/components/test/clerk-connection-test";
 
 export const metadata: Metadata = {
   title: {
@@ -175,9 +172,6 @@ export default function RootLayout({
           <StyrconWebVitals />
           <ServiceWorkerRegistration />
 
-          {/* Development debugging */}
-          <ClerkDebugComponent />
-          <ClerkConnectionTest />
         </body>
       </html>
     </ClerkProvider>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useState, useOptimistic, useCallback } from 'react'
+import { useActionState, useState, useOptimistic, useCallback, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -11,6 +11,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CheckCircle, Loader2, AlertTriangle, Send } from 'lucide-react'
 import { submitContactForm, type FormState } from '@/lib/actions/contact'
 import { cn } from '@/lib/utils'
+import { useTimeout } from '@/hooks/use-timeout'
+import { useSessionStorage } from '@/hooks/use-session-storage'
 
 const initialState: FormState = {}
 
@@ -24,9 +26,41 @@ interface OptimisticMessage {
   timestamp: number
 }
 
+interface FormDraft {
+  name: string
+  email: string
+  subject: string
+  message: string
+  company?: string
+  gdprConsent: boolean
+  lastSaved: number
+}
+
 export function EnhancedContactForm() {
   const [state, formAction, isPending] = useActionState(submitContactForm, initialState)
   const [optimisticSubmitted, setOptimisticSubmitted] = useState(false)
+  const [showSuccessMessage, setShowSuccessMessage] = useState(true)
+
+  // Session storage for form draft
+  const [formDraft, setFormDraft, clearFormDraft] = useSessionStorage<FormDraft>('contact-form-draft', {
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+    company: '',
+    gdprConsent: false,
+    lastSaved: Date.now()
+  })
+
+  // Individual form field states
+  const [formData, setFormData] = useState({
+    name: formDraft.name || '',
+    email: formDraft.email || '',
+    subject: formDraft.subject || '',
+    message: formDraft.message || '',
+    company: formDraft.company || '',
+    gdprConsent: formDraft.gdprConsent || false
+  })
 
   // Optimistic state for immediate feedback
   const [optimisticMessages, addOptimisticMessage] = useOptimistic<OptimisticMessage[], OptimisticMessage>(
@@ -56,7 +90,60 @@ export function EnhancedContactForm() {
   // Check if form was successfully submitted
   const isSuccess = state?.success && !isPending
 
-  if (isSuccess && !optimisticSubmitted) {
+  // Auto-hide success message after 5 seconds
+  useTimeout(() => {
+    if (isSuccess && showSuccessMessage) {
+      setShowSuccessMessage(false)
+    }
+  }, isSuccess && showSuccessMessage ? 5000 : null)
+
+  // Reset success message visibility when form is successfully submitted
+  useEffect(() => {
+    if (isSuccess && !showSuccessMessage) {
+      setShowSuccessMessage(true)
+    }
+  }, [isSuccess, showSuccessMessage])
+
+  // Save form draft when data changes
+  useEffect(() => {
+    const saveDraft = () => {
+      setFormDraft({
+        ...formData,
+        lastSaved: Date.now()
+      })
+    }
+
+    // Only save if there's some content to save
+    const hasContent = formData.name || formData.email || formData.subject || formData.message || formData.company
+    if (hasContent) {
+      saveDraft()
+    }
+  }, [formData, setFormDraft])
+
+  // Clear draft when form is successfully submitted
+  useEffect(() => {
+    if (isSuccess) {
+      clearFormDraft()
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+        company: '',
+        gdprConsent: false
+      })
+    }
+  }, [isSuccess, clearFormDraft])
+
+  // Handle form field changes
+  const handleFieldChange = useCallback((field: keyof typeof formData, value: string | boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }, [])
+
+  if (isSuccess && !optimisticSubmitted && showSuccessMessage) {
     return (
       <Card className="p-8 text-center w-full max-w-lg">
         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -66,16 +153,23 @@ export function EnhancedContactForm() {
         <p className="text-gray-600 mb-4">
           {state.message}
         </p>
-        <Button
-          onClick={() => {
-            setOptimisticSubmitted(false)
-            // Reset form could be implemented here
-          }}
-          variant="outline"
-          size="sm"
-        >
-          Odoslať ďalšiu správu
-        </Button>
+        <div className="space-y-3">
+          <Button
+            onClick={() => {
+              setOptimisticSubmitted(false)
+              setShowSuccessMessage(true)
+              // Reset form could be implemented here
+            }}
+            variant="outline"
+            size="sm"
+          >
+            Odoslať ďalšiu správu
+          </Button>
+
+          <p className="text-xs text-slate-500">
+            Táto správa sa automaticky skryje za 5 sekúnd
+          </p>
+        </div>
       </Card>
     )
   }

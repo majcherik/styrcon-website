@@ -3,6 +3,7 @@ import React from "react";
 import { calsans } from "@/fonts/calsans";
 import { twMerge } from "tailwind-merge";
 import { TracingBeam } from "../ui/tracing-beam";
+import { SocialShare } from "../blog/social-share";
 import Image from "next/image";
 
 interface BlogPost {
@@ -127,8 +128,8 @@ export function ArticleTracingBeam({ post }: ArticleTracingBeamProps) {
   const sections = parseArticleContent(post.content, post.category);
 
   return (
-    <TracingBeam className="px-6">
-      <div className="max-w-2xl mx-auto antialiased pt-4 relative">
+    <TracingBeam className="px-4 lg:px-6">
+      <div className="max-w-none antialiased pt-4 relative">
         {sections.map((item, index) => (
           <div key={`content-${index}`} className="mb-10">
             <h2 className="bg-blue-600 text-white rounded-full text-sm w-fit px-4 py-1 mb-4 font-medium">
@@ -139,7 +140,7 @@ export function ArticleTracingBeam({ post }: ArticleTracingBeamProps) {
               {item.title}
             </p>
 
-            <div className="text-sm prose prose-sm dark:prose-invert">
+            <div className="prose prose-base dark:prose-invert max-w-none">
               {index === 0 && post.image && (
                 <div className="relative aspect-[16/9] mb-6 rounded-lg overflow-hidden">
                   <Image
@@ -147,12 +148,23 @@ export function ArticleTracingBeam({ post }: ArticleTracingBeamProps) {
                     alt={post.title}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 600px"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 60vw, 50vw"
                   />
                 </div>
               )}
               {item.description}
             </div>
+
+            {/* Add social sharing after the first section */}
+            {index === 0 && (
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <SocialShare
+                  title={post.title}
+                  url={`/aktuality/${post.id}`}
+                  excerpt={post.excerpt}
+                />
+              </div>
+            )}
           </div>
         ))}
       </div>

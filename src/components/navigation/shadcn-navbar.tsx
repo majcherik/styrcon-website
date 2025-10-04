@@ -10,14 +10,9 @@ import {
   Home,
   Info,
   Package,
-  Images,
-  Play,
-  Scroll,
   FolderOpen,
   Newspaper,
   Phone,
-  User,
-  LogOut,
   ChevronDown
 } from 'lucide-react';
 import { useAuth, useUser, UserButton, SignedIn, SignedOut, ClerkLoaded, ClerkLoading } from '@clerk/nextjs';
@@ -32,18 +27,18 @@ interface NavItem {
 }
 
 const navigationItems: NavItem[] = [
-  { 
-    label: 'Domov', 
-    href: '/', 
-    icon: Home 
+  {
+    label: 'Domov',
+    href: '/',
+    icon: Home
   },
-  { 
-    label: 'O nás', 
-    href: '/o-nas', 
-    icon: Info 
+  {
+    label: 'O nás',
+    href: '/o-nas',
+    icon: Info
   },
-  { 
-    label: 'Produkty', 
+  {
+    label: 'Produkty',
     href: '#',
     icon: Package,
     children: [
@@ -52,32 +47,18 @@ const navigationItems: NavItem[] = [
     ]
   },
   {
-    label: 'Demo',
-    href: '#',
-    icon: Play,
-    children: [
-      { label: 'Scroll Demo', href: '/scroll-demo', icon: Scroll },
-    ]
-  },
-  { 
-    label: 'Galéria', 
-    href: '/galeria', 
-    icon: Images 
-  },
-  {
     label: 'Info',
     href: '#',
     icon: FolderOpen,
     children: [
-      { label: 'Projekty', href: '/projekty', icon: FolderOpen },
       { label: 'Aktuality', href: '/aktuality', icon: Newspaper },
       { label: 'Dokumenty', href: '/dokumenty', icon: FolderOpen },
     ]
   },
-  { 
-    label: 'Kontakt', 
-    href: '/kontakt', 
-    icon: Phone 
+  {
+    label: 'Kontakt',
+    href: '/kontakt',
+    icon: Phone
   },
 ];
 
@@ -137,7 +118,7 @@ export function ShadcnNavbar() {
 
   // Helper function to determine if page should show white text at top
   const shouldShowWhiteTextAtTop = () => {
-    const whiteTextPages = ['/', '/scroll-demo', '/galeria'];
+    const whiteTextPages = ['/'];
     return whiteTextPages.includes(pathname);
   };
 

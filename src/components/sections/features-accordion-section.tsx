@@ -6,7 +6,6 @@ import { Flame, Droplets, Thermometer, Shield, Check } from 'lucide-react';
 import Link from 'next/link';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { useMediaQuery } from '@/hooks/use-media-query';
-import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useDebounce } from '@/hooks/use-debounce';
 import { StarsBackground } from '@/components/animate-ui/backgrounds/stars';
 
@@ -63,8 +62,31 @@ const accordionData = [
 ];
 
 const HorizontalAccordion = () => {
-  // Use localStorage to remember the last expanded panel
-  const [expandedIndex, setExpandedIndex] = useLocalStorage('styrcon-accordion-expanded', 0);
+  // Use state for expanded index to avoid hydration mismatch
+  const [expandedIndex, setExpandedIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  // Load from localStorage after mount (client-side only)
+  React.useEffect(() => {
+    setMounted(true);
+    if (typeof window !== 'undefined') {
+      const stored = window.localStorage.getItem('styrcon-accordion-expanded');
+      if (stored !== null) {
+        try {
+          setExpandedIndex(JSON.parse(stored));
+        } catch (error) {
+          console.log('Error reading localStorage:', error);
+        }
+      }
+    }
+  }, []);
+
+  // Save to localStorage when expandedIndex changes (only after mount)
+  React.useEffect(() => {
+    if (mounted && typeof window !== 'undefined') {
+      window.localStorage.setItem('styrcon-accordion-expanded', JSON.stringify(expandedIndex));
+    }
+  }, [expandedIndex, mounted]);
 
   // Use intersection observer to optimize video loading
   const [ref, isVisible] = useIntersectionObserver({
@@ -79,7 +101,7 @@ const HorizontalAccordion = () => {
   // Memoize expansion handler for better performance
   const handleExpansion = useCallback((index: number) => {
     setExpandedIndex(index);
-  }, [setExpandedIndex]);
+  }, []);
 
   // Memoize responsive class calculation
   const containerClasses = useMemo(() =>

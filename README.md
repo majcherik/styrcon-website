@@ -117,6 +117,17 @@ npm run build
 npm start
 ```
 
+### ⚠️ Important Production Notes
+
+#### Social Sharing URLs
+The blog article social sharing feature (LinkedIn, Facebook, Copy Link) currently uses `localhost` URLs in development. **Before production deployment**, ensure the following environment variable is properly configured with your actual production domain:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://your-production-domain.com
+```
+
+Replace `your-production-domain.com` with the actual production domain once it's determined. This will ensure that shared article links use the correct production domain instead of localhost. The social sharing component automatically detects and uses this environment variable when available.
+
 ## 📝 Content Management
 
 Currently, content is managed through React components. Future phases will include:
