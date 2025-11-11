@@ -286,10 +286,7 @@ const nextConfig: NextConfig = {
         source: '/(.*)',
         headers: [
           // Security headers
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY'
-          },
+          // X-Frame-Options removed - using CSP frame-ancestors instead to allow YouTube embeds
           {
             key: 'X-Content-Type-Options',
             value: 'nosniff'
@@ -375,13 +372,14 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://www.googletagmanager.com https://vercel.live https://*.clerk.accounts.dev https://*.clerk.com https://clerk.useful-weevil-9.lcl.dev",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com https://www.googletagmanager.com https://vercel.live",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: https: blob:",
+              "img-src 'self' data: https: blob: https://img.youtube.com",
               "media-src 'self' https:",
-              "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.useful-weevil-9.lcl.dev https://api.clerk.com https://api.clerk.dev",
-              "frame-src 'self' https://vercel.live https://*.clerk.accounts.dev https://*.clerk.com https://clerk.useful-weevil-9.lcl.dev",
+              "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com",
+              "frame-src 'self' https://vercel.live https://www.youtube.com https://www.youtube-nocookie.com",
+              "child-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",

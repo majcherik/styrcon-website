@@ -1,46 +1,17 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 import { generateNonce, CSP_NONCE_HEADER } from '@/lib/security/nonce'
 
-// Define protected routes that require authentication
-const isProtectedRoute = createRouteMatcher([
-  '/profil(.*)',
-])
-
-// Define public auth routes that should not be protected
-const isPublicRoute = createRouteMatcher([
-  '/prihlasenie(.*)',
-  '/registracia(.*)',
-  '/',
-])
-
-export default clerkMiddleware(async (auth, req) => {
-  const { userId, sessionClaims } = await auth()
-
+export function middleware(req: NextRequest) {
   // Generate nonce for this request
   const nonce = generateNonce()
 
   // Create response
-  let response = NextResponse.next();
-
-  // Skip protection for public auth routes
-  if (isPublicRoute(req)) {
-    response = NextResponse.next()
-  }
-
-  // Check if user is trying to access protected route
-  if (isProtectedRoute(req)) {
-    // If not signed in, redirect to sign in page
-    if (!userId) {
-      const signInUrl = new URL('/prihlasenie', req.url)
-      signInUrl.searchParams.set('redirect_url', req.url)
-      response = NextResponse.redirect(signInUrl)
-    }
-  }
+  const response = NextResponse.next();
 
   // Add enhanced security headers
   response.headers.set('X-DNS-Prefetch-Control', 'on');
-  response.headers.set('X-Frame-Options', 'DENY');
+  // X-Frame-Options removed - using CSP frame-ancestors instead to avoid conflicts
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('X-XSS-Protection', '1; mode=block');
@@ -70,17 +41,18 @@ export default clerkMiddleware(async (auth, req) => {
     "default-src 'self'",
     // Script sources with nonce and strict-dynamic
     isDev
-      ? `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' 'unsafe-inline' https://clerk.com https://*.clerk.com https://va.vercel-scripts.com`
-      : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://clerk.com https://*.clerk.com https://va.vercel-scripts.com`,
+      ? `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com`
+      : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com`,
     // Style sources with nonce
     isDev
       ? `style-src 'self' 'nonce-${nonce}' 'unsafe-inline' https://fonts.googleapis.com`
       : `style-src 'self' 'nonce-${nonce}' https://fonts.googleapis.com`,
     "font-src 'self' https://fonts.gstatic.com",
-    "img-src 'self' data: blob: https://*.e-ma.sk https://*.styrcon.sk https://picsum.photos https://i.imgur.com https://*.clerk.com",
+    "img-src 'self' data: blob: https://*.e-ma.sk https://*.styrcon.sk https://picsum.photos https://i.imgur.com https://www.google-analytics.com https://img.youtube.com",
     "media-src 'self' blob:",
-    "connect-src 'self' https://*.supabase.co https://*.clerk.com https://clerk.com https://va.vercel-scripts.com",
-    "frame-src 'self' https://*.clerk.com",
+    "connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://va.vercel-scripts.com",
+    "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
+    "child-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
     "worker-src 'self' blob:",
     "object-src 'none'",
     "base-uri 'self'",

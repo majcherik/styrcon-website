@@ -63,6 +63,9 @@ const clientEnvSchema = z.object({
 
   // Development
   NEXT_PUBLIC_ENABLE_DEVTOOLS: z.string().optional(),
+
+  // Feature Flags
+  NEXT_PUBLIC_ENABLE_AUTH_PAGES: z.string().optional(),
 })
 
 // Type definitions
@@ -91,6 +94,7 @@ function createEnv() {
     NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL,
     NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL,
     NEXT_PUBLIC_ENABLE_DEVTOOLS: process.env.NEXT_PUBLIC_ENABLE_DEVTOOLS,
+    NEXT_PUBLIC_ENABLE_AUTH_PAGES: process.env.NEXT_PUBLIC_ENABLE_AUTH_PAGES,
   })
 
   // Collect validation errors
@@ -153,6 +157,7 @@ export const features = {
   monitoring: env.isProd || env.ENABLE_INSTRUMENTATION === 'true',
   devtools: env.isDev || env.NEXT_PUBLIC_ENABLE_DEVTOOLS === 'true',
   auth: !!env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+  authPagesEnabled: env.NEXT_PUBLIC_ENABLE_AUTH_PAGES === 'true',
   database: !!env.DATABASE_URL || !!env.NEXT_PUBLIC_SUPABASE_URL,
   cms: !!env.STRAPI_API_URL,
   email: !!env.RESEND_API_KEY || !!env.EMAIL_API_KEY,

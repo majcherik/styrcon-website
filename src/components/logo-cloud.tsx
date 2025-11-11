@@ -35,7 +35,7 @@ export default function LogoCloud() {
   const isSmallScreen = useMediaQuery('(max-width: 640px)');
 
   return (
-    <section ref={ref} className="bg-background/95 backdrop-blur-sm py-4 sm:py-6 mt-2">
+    <section ref={ref} className="bg-background/95 backdrop-blur-sm py-2 sm:py-4">
       <div className="group relative m-auto max-w-7xl px-4 sm:px-6">
         <div className="flex flex-col items-center md:flex-row md:items-center">
           <div className="mb-2 md:mb-0 md:max-w-60 md:border-r md:border-border/30 md:pr-6">
@@ -68,7 +68,7 @@ export default function LogoCloud() {
                         aria-label={`Visit ${partner.name} website`}
                       >
                         <Image
-                          className="object-contain filter grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100"
+                          className="object-contain transition-all duration-300 opacity-90 hover:opacity-100"
                           src={partner.logo}
                           alt={`${partner.name} logo`}
                           fill

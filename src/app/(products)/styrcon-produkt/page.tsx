@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
+import { AnimatedButton } from '@/components/ui/animated-button';
 import { Card } from '@/components/ui/card';
 import { ProductSpecs } from '@/components/sections/product-specs';
 import { ContactCTA } from '@/components/sections/contact-cta';
@@ -148,17 +148,13 @@ export default async function ProductPage() {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button asChild size="lg">
-                  <Link href="#technicky-list">
-                    Stiahnuť technický list
-                  </Link>
-                </Button>
-                
-                <Button asChild variant="outline" size="lg">
-                  <Link href="/kontakt">
-                    Požiadať o cenovú ponuku
-                  </Link>
-                </Button>
+                <AnimatedButton href="#technicky-list" size="default" variant="primary" className="px-8">
+                  Stiahnuť technický list
+                </AnimatedButton>
+
+                <AnimatedButton href="/kontakt" variant="outline" size="default" className="px-8">
+                  Požiadať o cenovú ponuku
+                </AnimatedButton>
               </div>
             </div>
 

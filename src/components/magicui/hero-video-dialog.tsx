@@ -114,8 +114,9 @@ export function HeroVideoDialog({
               src={embedUrl}
               title="Video player"
               className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
+              loading="lazy"
             />
           ) : (
             <video

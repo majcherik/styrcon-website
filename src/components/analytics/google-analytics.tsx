@@ -4,18 +4,59 @@ import Script from 'next/script'
 import { useEffect, useState } from 'react'
 import { env } from '@/lib/config/env'
 
+const COOKIE_CONSENT_KEY = 'styrcon-cookie-consent'
+const COOKIE_PREFERENCES_KEY = 'styrcon-cookie-preferences'
+
 /**
  * Advanced Google Analytics integration for Slovak STYRCON website
  * Optimized script loading with conditional strategies and Slovak business tracking
+ * GDPR-compliant: Only loads if user accepts analytical cookies
  */
 export function GoogleAnalytics() {
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [loadingStrategy, setLoadingStrategy] = useState<'worker' | 'afterInteractive' | 'lazyOnIdle'>('afterInteractive')
-
   // Only load in production and if GA ID is configured
-  if (!env.analytics || !env.NEXT_PUBLIC_GA_ID) {
+  if (!env.NEXT_PUBLIC_GA_ID) {
     return null
   }
+
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [loadingStrategy, setLoadingStrategy] = useState<'afterInteractive' | 'lazyOnload'>('afterInteractive')
+  const [hasConsent, setHasConsent] = useState(false)
+
+  // Check for cookie consent
+  useEffect(() => {
+    const checkConsent = () => {
+      const consent = localStorage.getItem(COOKIE_CONSENT_KEY)
+      const preferences = localStorage.getItem(COOKIE_PREFERENCES_KEY)
+
+      if (consent === 'accepted') {
+        // User accepted all cookies
+        setHasConsent(true)
+      } else if (consent === 'customized' && preferences) {
+        // User customized preferences - check if analytical is enabled
+        try {
+          const prefs = JSON.parse(preferences)
+          setHasConsent(prefs.analytical === true)
+        } catch (e) {
+          setHasConsent(false)
+        }
+      } else {
+        // No consent or rejected
+        setHasConsent(false)
+      }
+    }
+
+    checkConsent()
+
+    // Listen for storage changes (when user updates preferences in another tab)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === COOKIE_CONSENT_KEY || e.key === COOKIE_PREFERENCES_KEY) {
+        checkConsent()
+      }
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    return () => window.removeEventListener('storage', handleStorageChange)
+  }, [])
 
   useEffect(() => {
     // Determine optimal loading strategy based on device and connection
@@ -26,9 +67,7 @@ export function GoogleAnalytics() {
       const isLowEndDevice = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2
 
       if (isSlowConnection || isLowEndDevice) {
-        setLoadingStrategy('lazyOnIdle')
-      } else if ('serviceWorker' in navigator) {
-        setLoadingStrategy('worker')
+        setLoadingStrategy('lazyOnload')
       } else {
         setLoadingStrategy('afterInteractive')
       }
@@ -66,11 +105,16 @@ export function GoogleAnalytics() {
     }
   }
 
+  // Only render GA scripts if user has given consent
+  if (!hasConsent) {
+    return null
+  }
+
   return (
     <>
       {/* Google Analytics gtag script with optimized loading */}
       <Script
-        strategy={loadingStrategy === 'lazyOnIdle' ? 'lazyOnIdle' : 'afterInteractive'}
+        strategy={loadingStrategy}
         src={`https://www.googletagmanager.com/gtag/js?id=${env.NEXT_PUBLIC_GA_ID}`}
         onLoad={handleScriptLoad}
         onError={handleScriptError}
@@ -79,7 +123,7 @@ export function GoogleAnalytics() {
       {/* Enhanced Google Analytics initialization for Slovak business */}
       <Script
         id="google-analytics-enhanced-init"
-        strategy={loadingStrategy === 'lazyOnIdle' ? 'lazyOnIdle' : 'afterInteractive'}
+        strategy={loadingStrategy}
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
@@ -192,7 +236,7 @@ export function GoogleAnalytics() {
       {isLoaded && (
         <Script
           id="slovak-business-analytics"
-          strategy="lazyOnIdle"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               // Advanced Slovak market insights

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { AnimatedButton } from '@/components/ui/animated-button';
 import { Card } from '@/components/ui/card';
 import { Shield, Heart, Droplets, CheckCircle, Sparkles, Beaker } from 'lucide-react';
 
@@ -147,11 +147,9 @@ export default function PolytexProductPage() {
             </p>
             
             <div className="flex justify-center">
-              <Button asChild size="lg">
-                <Link href="/polytex-galeria">
-                  Pozrieť galériu
-                </Link>
-              </Button>
+              <AnimatedButton href="/polytex-galeria" size="lg" variant="primary">
+                Pozrieť galériu
+              </AnimatedButton>
             </div>
           </div>
         </div>

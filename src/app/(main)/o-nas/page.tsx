@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
+import { AnimatedButton } from '@/components/ui/animated-button';
 import { Card } from '@/components/ui/card';
 import { ContactCTA } from '@/components/sections/contact-cta';
 import { Building2, Users, Award, MapPin, Phone, Mail } from 'lucide-react';
@@ -56,17 +56,13 @@ export default async function AboutPage() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button asChild size="lg">
-                  <Link href="/styrcon-produkt">
-                    Naše produkty
-                  </Link>
-                </Button>
+                <AnimatedButton href="/styrcon-produkt" size="lg" variant="primary">
+                  Naše produkty
+                </AnimatedButton>
 
-                <Button asChild variant="outline" size="lg">
-                  <Link href="/kontakt">
-                    Kontaktujte nás
-                  </Link>
-                </Button>
+                <AnimatedButton href="/kontakt" variant="outline" size="lg">
+                  Kontaktujte nás
+                </AnimatedButton>
               </div>
             </div>
 
@@ -227,11 +223,9 @@ export default async function AboutPage() {
               </div>
 
               <div className="mt-6 pt-6 border-t border-slate-200">
-                <Button asChild className="w-full">
-                  <Link href="/kontakt">
-                    Napíšte nám správu
-                  </Link>
-                </Button>
+                <AnimatedButton href="/kontakt" className="w-full" variant="primary">
+                  Napíšte nám správu
+                </AnimatedButton>
               </div>
             </Card>
           </div>

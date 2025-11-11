@@ -2,9 +2,8 @@
 
 import { useActionState, useState, useOptimistic, useCallback, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
+import { AnimatedButton } from '@/components/ui/animated-button'
 import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -29,9 +28,9 @@ interface OptimisticMessage {
 interface FormDraft {
   name: string
   email: string
+  phone?: string
   subject: string
   message: string
-  company?: string
   gdprConsent: boolean
   lastSaved: number
 }
@@ -45,9 +44,9 @@ export function EnhancedContactForm() {
   const [formDraft, setFormDraft, clearFormDraft] = useSessionStorage<FormDraft>('contact-form-draft', {
     name: '',
     email: '',
+    phone: '',
     subject: '',
     message: '',
-    company: '',
     gdprConsent: false,
     lastSaved: Date.now()
   })
@@ -56,9 +55,9 @@ export function EnhancedContactForm() {
   const [formData, setFormData] = useState({
     name: formDraft.name || '',
     email: formDraft.email || '',
+    phone: formDraft.phone || '',
     subject: formDraft.subject || '',
     message: formDraft.message || '',
-    company: formDraft.company || '',
     gdprConsent: formDraft.gdprConsent || false
   })
 
@@ -114,7 +113,7 @@ export function EnhancedContactForm() {
     }
 
     // Only save if there's some content to save
-    const hasContent = formData.name || formData.email || formData.subject || formData.message || formData.company
+    const hasContent = formData.name || formData.email || formData.phone || formData.subject || formData.message
     if (hasContent) {
       saveDraft()
     }
@@ -127,9 +126,9 @@ export function EnhancedContactForm() {
       setFormData({
         name: '',
         email: '',
+        phone: '',
         subject: '',
         message: '',
-        company: '',
         gdprConsent: false
       })
     }
@@ -237,25 +236,28 @@ export function EnhancedContactForm() {
           formAction(formData);
         }}
       >
-        <div className="space-y-4">
+        <div className="space-y-6">
           {/* Name Field */}
           <div>
-            <Label htmlFor="name" className="text-sm font-medium">
-              Meno *
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              type="text"
-              required
-              disabled={isPending || optimisticSubmitted}
-              className={cn(
-                "mt-1",
-                state?.fieldErrors?.name && "border-red-500 focus-visible:ring-red-500"
-              )}
-              placeholder="Vaše meno"
-              aria-describedby={state?.fieldErrors?.name ? "name-error" : undefined}
-            />
+            <label className="relative block">
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                disabled={isPending || optimisticSubmitted}
+                placeholder=" "
+                className={cn(
+                  "peer w-full border rounded-md outline-none px-4 py-3 transition-colors duration-300",
+                  "focus:border-primary",
+                  state?.fieldErrors?.name ? "border-red-500" : "border-[#e5eaf2]"
+                )}
+                aria-describedby={state?.fieldErrors?.name ? "name-error" : undefined}
+              />
+              <span className="absolute -top-3 left-2 bg-white px-1 text-primary text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:px-0 peer-focus:-top-3 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-primary peer-focus:px-1 transition-all duration-300 pointer-events-none">
+                Meno *
+              </span>
+            </label>
             {state?.fieldErrors?.name && (
               <p id="name-error" className="text-sm text-red-600 mt-1">
                 {state.fieldErrors.name[0]}
@@ -265,22 +267,25 @@ export function EnhancedContactForm() {
 
           {/* Email Field */}
           <div>
-            <Label htmlFor="email" className="text-sm font-medium">
-              Email *
-            </Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              required
-              disabled={isPending || optimisticSubmitted}
-              className={cn(
-                "mt-1",
-                state?.fieldErrors?.email && "border-red-500 focus-visible:ring-red-500"
-              )}
-              placeholder="vas.email@example.com"
-              aria-describedby={state?.fieldErrors?.email ? "email-error" : undefined}
-            />
+            <label className="relative block">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                disabled={isPending || optimisticSubmitted}
+                placeholder=" "
+                className={cn(
+                  "peer w-full border rounded-md outline-none px-4 py-3 transition-colors duration-300",
+                  "focus:border-primary",
+                  state?.fieldErrors?.email ? "border-red-500" : "border-[#e5eaf2]"
+                )}
+                aria-describedby={state?.fieldErrors?.email ? "email-error" : undefined}
+              />
+              <span className="absolute -top-3 left-2 bg-white px-1 text-primary text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:px-0 peer-focus:-top-3 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-primary peer-focus:px-1 transition-all duration-300 pointer-events-none">
+                Email *
+              </span>
+            </label>
             {state?.fieldErrors?.email && (
               <p id="email-error" className="text-sm text-red-600 mt-1">
                 {state.fieldErrors.email[0]}
@@ -290,52 +295,42 @@ export function EnhancedContactForm() {
 
           {/* Phone Field (Optional) */}
           <div>
-            <Label htmlFor="phone" className="text-sm font-medium">
-              Telefón
-            </Label>
-            <Input
-              id="phone"
-              name="phone"
-              type="tel"
-              disabled={isPending || optimisticSubmitted}
-              className="mt-1"
-              placeholder="+421 xxx xxx xxx"
-            />
-          </div>
-
-          {/* Company Field (Optional) */}
-          <div>
-            <Label htmlFor="company" className="text-sm font-medium">
-              Spoločnosť
-            </Label>
-            <Input
-              id="company"
-              name="company"
-              type="text"
-              disabled={isPending || optimisticSubmitted}
-              className="mt-1"
-              placeholder="Názov spoločnosti"
-            />
+            <label className="relative block">
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                disabled={isPending || optimisticSubmitted}
+                placeholder=" "
+                className="peer w-full border border-[#e5eaf2] rounded-md outline-none px-4 py-3 transition-colors duration-300 focus:border-primary"
+              />
+              <span className="absolute -top-3 left-2 bg-white px-1 text-primary text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:px-0 peer-focus:-top-3 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-primary peer-focus:px-1 transition-all duration-300 pointer-events-none">
+                Telefón
+              </span>
+            </label>
           </div>
 
           {/* Subject Field */}
           <div>
-            <Label htmlFor="subject" className="text-sm font-medium">
-              Predmet *
-            </Label>
-            <Input
-              id="subject"
-              name="subject"
-              type="text"
-              required
-              disabled={isPending || optimisticSubmitted}
-              className={cn(
-                "mt-1",
-                state?.fieldErrors?.subject && "border-red-500 focus-visible:ring-red-500"
-              )}
-              placeholder="Predmet vašej správy"
-              aria-describedby={state?.fieldErrors?.subject ? "subject-error" : undefined}
-            />
+            <label className="relative block">
+              <input
+                id="subject"
+                name="subject"
+                type="text"
+                required
+                disabled={isPending || optimisticSubmitted}
+                placeholder=" "
+                className={cn(
+                  "peer w-full border rounded-md outline-none px-4 py-3 transition-colors duration-300",
+                  "focus:border-primary",
+                  state?.fieldErrors?.subject ? "border-red-500" : "border-[#e5eaf2]"
+                )}
+                aria-describedby={state?.fieldErrors?.subject ? "subject-error" : undefined}
+              />
+              <span className="absolute -top-3 left-2 bg-white px-1 text-primary text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:px-0 peer-focus:-top-3 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-primary peer-focus:px-1 transition-all duration-300 pointer-events-none">
+                Predmet *
+              </span>
+            </label>
             {state?.fieldErrors?.subject && (
               <p id="subject-error" className="text-sm text-red-600 mt-1">
                 {state.fieldErrors.subject[0]}
@@ -345,21 +340,24 @@ export function EnhancedContactForm() {
 
           {/* Message Field */}
           <div>
-            <Label htmlFor="message" className="text-sm font-medium">
-              Správa *
-            </Label>
-            <Textarea
-              id="message"
-              name="message"
-              required
-              disabled={isPending || optimisticSubmitted}
-              className={cn(
-                "mt-1 min-h-[100px]",
-                state?.fieldErrors?.message && "border-red-500 focus-visible:ring-red-500"
-              )}
-              placeholder="Napíšte nám vašu správu..."
-              aria-describedby={state?.fieldErrors?.message ? "message-error" : undefined}
-            />
+            <label className="relative block">
+              <textarea
+                id="message"
+                name="message"
+                required
+                disabled={isPending || optimisticSubmitted}
+                placeholder=" "
+                className={cn(
+                  "peer w-full min-h-[200px] border rounded-md outline-none px-4 py-3 transition-colors duration-300 resize-y",
+                  "focus:border-primary",
+                  state?.fieldErrors?.message ? "border-red-500" : "border-[#e5eaf2]"
+                )}
+                aria-describedby={state?.fieldErrors?.message ? "message-error" : undefined}
+              />
+              <span className="absolute -top-3 left-2 bg-white px-1 text-primary text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:px-0 peer-focus:-top-3 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-primary peer-focus:px-1 transition-all duration-300 pointer-events-none">
+                Správa *
+              </span>
+            </label>
             {state?.fieldErrors?.message && (
               <p id="message-error" className="text-sm text-red-600 mt-1">
                 {state.fieldErrors.message[0]}
@@ -397,24 +395,27 @@ export function EnhancedContactForm() {
 
         {/* Submit Button */}
         <div className="mt-6">
-          <Button
-            type="submit"
-            disabled={isPending || optimisticSubmitted}
-            className="w-full"
-            size="lg"
-          >
-            {isPending || optimisticSubmitted ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Odosielam...
-              </>
-            ) : (
-              <>
-                <Send className="mr-2 h-4 w-4" />
-                Odoslať správu
-              </>
-            )}
-          </Button>
+          {isPending || optimisticSubmitted ? (
+            <Button
+              type="submit"
+              disabled={true}
+              className="w-full"
+              size="lg"
+            >
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Odosielam...
+            </Button>
+          ) : (
+            <AnimatedButton
+              type="submit"
+              variant="primary"
+              className="w-full"
+              size="lg"
+              icon={<Send className="w-5 h-5" />}
+            >
+              Odoslať správu
+            </AnimatedButton>
+          )}
         </div>
 
         <p className="text-xs text-gray-500 mt-3 text-center">
