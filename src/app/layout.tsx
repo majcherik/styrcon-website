@@ -6,11 +6,7 @@ import { StructuredData } from "@/components/structured-data";
 import { localBusinessStructuredData, websiteStructuredData } from "@/lib/structured-data";
 import { Providers } from "@/components/providers/providers";
 import { GlobalErrorBoundary } from "@/components/error/global-error-boundary";
-import { WebVitalsTracker } from "@/components/analytics/web-vitals";
-import { StyrconWebVitals } from "@/components/analytics/styrcon-web-vitals";
-import { GoogleAnalytics } from "@/components/analytics/google-analytics";
-import { ServiceWorkerWrapper } from "@/components/pwa/service-worker-wrapper";
-import { CookieConsent } from "@/components/ui/cookie-consent";
+import { MonitoringWrapper } from "@/components/monitoring-wrapper";
 import {
   inter,
   roboto,
@@ -181,14 +177,8 @@ export default function RootLayout({
           </GlobalErrorBoundary>
         </Providers>
 
-        {/* Analytics, Performance and PWA monitoring */}
-        <GoogleAnalytics />
-        <WebVitalsTracker />
-        <StyrconWebVitals />
-        <ServiceWorkerWrapper />
-
-        {/* Cookie Consent Banner */}
-        <CookieConsent />
+        {/* Analytics, Performance, PWA monitoring and Cookie Consent */}
+        <MonitoringWrapper />
 
       </body>
     </html>
