@@ -98,7 +98,7 @@ export default async function AboutPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="p-6 text-center hover:shadow-lg transition-all duration-200">
+            <Card className="p-6 text-center border-0 shadow-md">
               <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Users className="h-6 w-6" />
               </div>
@@ -110,7 +110,7 @@ export default async function AboutPage() {
               </p>
             </Card>
 
-            <Card className="p-6 text-center hover:shadow-lg transition-all duration-200">
+            <Card className="p-6 text-center border-0 shadow-md">
               <div className="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Award className="h-6 w-6" />
               </div>
@@ -122,7 +122,7 @@ export default async function AboutPage() {
               </p>
             </Card>
 
-            <Card className="p-6 text-center hover:shadow-lg transition-all duration-200">
+            <Card className="p-6 text-center border-0 shadow-md">
               <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <Building2 className="h-6 w-6" />
               </div>
@@ -169,7 +169,7 @@ export default async function AboutPage() {
               </div>
             </div>
 
-            <Card className="p-8">
+            <Card className="p-8 border-0 shadow-md">
               <h3 className="text-xl font-semibold text-slate-900 mb-6">
                 Kontaktné údaje
               </h3>

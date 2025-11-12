@@ -89,6 +89,14 @@ export function EnhancedContactForm() {
   // Check if form was successfully submitted
   const isSuccess = state?.success && !isPending
 
+  // Reset optimistic state when form submission completes (success or error)
+  useEffect(() => {
+    if (!isPending && optimisticSubmitted) {
+      // Form submission completed, reset optimistic state
+      setOptimisticSubmitted(false)
+    }
+  }, [isPending, optimisticSubmitted])
+
   // Auto-hide success message after 5 seconds
   useTimeout(() => {
     if (isSuccess && showSuccessMessage) {
@@ -144,7 +152,7 @@ export function EnhancedContactForm() {
 
   if (isSuccess && !optimisticSubmitted && showSuccessMessage) {
     return (
-      <Card className="p-8 text-center w-full max-w-lg">
+      <Card className="p-8 text-center w-full max-w-lg border-0 shadow-md">
         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <CheckCircle className="h-8 w-8 text-green-600" />
         </div>
@@ -179,7 +187,7 @@ export function EnhancedContactForm() {
       {optimisticMessages.length > 0 && (
         <div className="space-y-3">
           {optimisticMessages.map((msg) => (
-            <Card key={msg.id} className="p-4 bg-blue-50 border-blue-200">
+            <Card key={msg.id} className="p-4 bg-blue-50 border-0 shadow-sm">
               <div className="flex items-start gap-3">
                 {msg.status === 'sending' && (
                   <Loader2 className="h-5 w-5 text-blue-600 animate-spin mt-0.5" />
@@ -206,7 +214,7 @@ export function EnhancedContactForm() {
         </div>
       )}
 
-      <Card className="p-6 w-full">
+      <Card className="p-6 w-full border-0 shadow-md">
         <div className="mb-6">
           <h2 className="text-xl font-semibold mb-2">Kontaktujte nás</h2>
           <p className="text-gray-600 text-sm">
@@ -254,7 +262,7 @@ export function EnhancedContactForm() {
                 )}
                 aria-describedby={state?.fieldErrors?.name ? "name-error" : undefined}
               />
-              <span className="absolute -top-3 left-2 bg-white px-1 text-primary text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:px-0 peer-focus:-top-3 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-primary peer-focus:px-1 transition-all duration-300 pointer-events-none">
+              <span className="absolute -top-4 left-2 px-1 text-slate-900 font-semibold text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:font-normal peer-placeholder-shown:px-0 peer-focus:-top-4 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-slate-900 peer-focus:font-semibold peer-focus:px-1 transition-all duration-300 pointer-events-none">
                 Meno *
               </span>
             </label>
@@ -282,7 +290,7 @@ export function EnhancedContactForm() {
                 )}
                 aria-describedby={state?.fieldErrors?.email ? "email-error" : undefined}
               />
-              <span className="absolute -top-3 left-2 bg-white px-1 text-primary text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:px-0 peer-focus:-top-3 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-primary peer-focus:px-1 transition-all duration-300 pointer-events-none">
+              <span className="absolute -top-4 left-2 px-1 text-slate-900 font-semibold text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:font-normal peer-placeholder-shown:px-0 peer-focus:-top-4 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-slate-900 peer-focus:font-semibold peer-focus:px-1 transition-all duration-300 pointer-events-none">
                 Email *
               </span>
             </label>
@@ -304,7 +312,7 @@ export function EnhancedContactForm() {
                 placeholder=" "
                 className="peer w-full border border-[#e5eaf2] rounded-md outline-none px-4 py-3 transition-colors duration-300 focus:border-primary"
               />
-              <span className="absolute -top-3 left-2 bg-white px-1 text-primary text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:px-0 peer-focus:-top-3 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-primary peer-focus:px-1 transition-all duration-300 pointer-events-none">
+              <span className="absolute -top-4 left-2 px-1 text-slate-900 font-semibold text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:font-normal peer-placeholder-shown:px-0 peer-focus:-top-4 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-slate-900 peer-focus:font-semibold peer-focus:px-1 transition-all duration-300 pointer-events-none">
                 Telefón
               </span>
             </label>
@@ -327,7 +335,7 @@ export function EnhancedContactForm() {
                 )}
                 aria-describedby={state?.fieldErrors?.subject ? "subject-error" : undefined}
               />
-              <span className="absolute -top-3 left-2 bg-white px-1 text-primary text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:px-0 peer-focus:-top-3 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-primary peer-focus:px-1 transition-all duration-300 pointer-events-none">
+              <span className="absolute -top-4 left-2 px-1 text-slate-900 font-semibold text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:font-normal peer-placeholder-shown:px-0 peer-focus:-top-4 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-slate-900 peer-focus:font-semibold peer-focus:px-1 transition-all duration-300 pointer-events-none">
                 Predmet *
               </span>
             </label>
@@ -354,7 +362,7 @@ export function EnhancedContactForm() {
                 )}
                 aria-describedby={state?.fieldErrors?.message ? "message-error" : undefined}
               />
-              <span className="absolute -top-3 left-2 bg-white px-1 text-primary text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:px-0 peer-focus:-top-3 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-primary peer-focus:px-1 transition-all duration-300 pointer-events-none">
+              <span className="absolute -top-4 left-2 px-1 text-slate-900 font-semibold text-sm scale-[0.9] peer-placeholder-shown:top-3 peer-placeholder-shown:left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-[#777777] peer-placeholder-shown:font-normal peer-placeholder-shown:px-0 peer-focus:-top-4 peer-focus:left-2 peer-focus:scale-[0.9] peer-focus:text-slate-900 peer-focus:font-semibold peer-focus:px-1 transition-all duration-300 pointer-events-none">
                 Správa *
               </span>
             </label>

@@ -4,6 +4,7 @@ import { contactFormLimiter, getClientIdentifier } from '@/lib/rate-limiter';
 import { validateContactForm, validateRequestSize, validateContentType } from '@/lib/security/validation';
 import { verifyCSRFToken, withTimeout } from '@/lib/security/csrf';
 import { logger, PerformanceMonitor, sanitizeErrorForClient } from '@/lib/logging/logger';
+import { sendContactNotification } from '@/lib/email/brevo';
 
 export async function POST(request: NextRequest) {
   const performanceMonitor = new PerformanceMonitor();
@@ -123,18 +124,35 @@ export async function POST(request: NextRequest) {
 
     performanceMonitor.end('Contact form submission');
 
-    // TODO: Implement email notifications
-    // await sendNotificationEmail({
-    //   to: process.env.CONTACT_EMAIL!,
-    //   subject: `Nová správa z kontaktného formulára: ${subject}`,
-    //   data: { name, email, phone, company, subject, message }
-    // });
-    //
-    // await sendConfirmationEmail({
-    //   to: email,
-    //   subject: 'Potvrdenie prijatia vašej správy - STYRCON',
-    //   data: { name }
-    // });
+    // Send email notification to admin(s)
+    // Note: We don't block the response on email sending - if email fails, the form submission is still saved
+    try {
+      const emailResult = await sendContactNotification({
+        name,
+        email,
+        phone,
+        company,
+        subject,
+        message
+      });
+
+      if (emailResult.success) {
+        logger.apiInfo('Email notification sent successfully', request, {
+          inquiryId: contactData.id
+        });
+      } else {
+        // Log email error but don't fail the whole request
+        logger.apiError('Email notification failed', request, new Error(emailResult.error || 'Unknown error'), {
+          inquiryId: contactData.id,
+          willRetry: false
+        });
+      }
+    } catch (emailError) {
+      // Log email error but don't fail the whole request
+      logger.apiError('Email notification exception', request, emailError instanceof Error ? emailError : new Error(String(emailError)), {
+        inquiryId: contactData.id
+      });
+    }
 
     return NextResponse.json(
       { 
