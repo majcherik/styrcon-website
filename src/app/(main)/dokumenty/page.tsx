@@ -22,7 +22,7 @@ interface ProductDocumentsProps {
 
 function ProductDocuments({ productName, documents }: ProductDocumentsProps) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-8">
+    <div className="bg-background rounded-lg shadow-sm border border-slate-200 p-6 mb-8">
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-slate-900 mb-2">{productName}</h3>
         <p className="text-sm text-slate-600">Technické dokumenty a certifikáty</p>
@@ -242,7 +242,7 @@ export default function DocumentsPage() {
       </div>
 
       {/* Page Header */}
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-slate-900 mb-4">
@@ -307,7 +307,7 @@ export default function DocumentsPage() {
       </section>
 
       {/* Contact Section */}
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl font-bold text-slate-900 mb-4">
             Potrebujete ďalšie informácie?

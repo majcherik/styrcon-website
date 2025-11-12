@@ -29,7 +29,7 @@ export default function OchranaOsobnychUdajovPage() {
           </p>
 
           {/* Description */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
+          <div className="bg-background dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
             <p className="text-gray-700 dark:text-gray-300 mb-4">
               Pracujeme na detailnej stránke s informáciami o ochrane osobných údajov,
               spracovaní cookies a vašich právach podľa GDPR.

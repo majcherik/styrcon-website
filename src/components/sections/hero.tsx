@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 
 export function Hero() {
   return (
-    <section className="bg-white pt-16 pb-12 sm:pt-20 sm:pb-16 lg:pb-20">
+    <section className="bg-background pt-16 pb-12 sm:pt-20 sm:pb-16 lg:pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center min-h-[500px] md:min-h-[600px]">
           

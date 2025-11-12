@@ -194,7 +194,7 @@ export function AktualityClient() {
       </div>
 
       {/* Hero Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <h1 className="text-5xl font-bold text-slate-900 mb-6">
@@ -222,7 +222,7 @@ export function AktualityClient() {
       </section>
 
       {/* Filter Tabs */}
-      <section className="border-b border-slate-200 bg-white">
+      <section className="border-b border-slate-200 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-8 overflow-x-auto">
             {categories.map((category) => (
@@ -244,7 +244,7 @@ export function AktualityClient() {
       </section>
 
       {/* Resource Cards Grid */}
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Show loading state when search is deferred */}
           {searchTerm !== deferredSearchTerm && (

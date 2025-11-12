@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { EnhancedContactForm } from '@/components/forms/enhanced-contact-form';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
-import { StarsBackground } from '@/components/animate-ui/backgrounds/stars';
 
 // Route segment config for optimal performance according to Next.js best practices
 export const dynamic = 'force-static' // Static generation for contact info, form remains dynamic
@@ -34,24 +33,16 @@ export default function ContactPage() {
         </div>
       </div>
 
-      {/* Header with Animated Background */}
+      {/* Header */}
       <section className="py-8 relative overflow-hidden">
-        <StarsBackground
-          className="bg-white w-full"
-          starColor="#000000"
-          factor={0.03}
-          speed={60}
-          pointerEvents={true}
-        >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 py-6">
-            <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
-              Kontaktujte nás
-            </h1>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Po vyplnení kontaktného formulára sa Vám ozveme
-            </p>
-          </div>
-        </StarsBackground>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 py-6">
+          <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
+            Kontaktujte nás
+          </h1>
+          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+            Po vyplnení kontaktného formulára sa Vám ozveme
+          </p>
+        </div>
       </section>
 
       {/* Main Content */}

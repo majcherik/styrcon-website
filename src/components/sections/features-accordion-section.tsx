@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useDebounce } from '@/hooks/use-debounce';
-import { StarsBackground } from '@/components/animate-ui/backgrounds/stars';
 
 // STYRCON features data adapted for accordion
 const accordionData = [
@@ -276,33 +275,25 @@ export function FeaturesAccordionSection() {
     <div>
       {/* Section Header */}
       <section className="py-8 sm:py-10 lg:py-12 relative overflow-hidden">
-        <StarsBackground
-          className="bg-white min-h-[25vh] w-full"
-          starColor="#000000"
-          factor={0.03}
-          speed={60}
-          pointerEvents={true}
-        >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex items-center justify-start min-h-[25vh]">
-            <motion.div
-              className="text-left w-full"
-              initial={{ opacity: 0, y: 20 }}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex items-center justify-start min-h-[25vh]">
+          <motion.div
+            className="text-left w-full"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.4 }}
+          >
+            <motion.h2
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900"
+              initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.4, delay: 0.15 }}
             >
-              <motion.h2
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900"
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.4, delay: 0.15 }}
-              >
-                Objavte hlavné výhody STYRCONU
-              </motion.h2>
-            </motion.div>
-          </div>
-        </StarsBackground>
+              Objavte hlavné výhody STYRCONU
+            </motion.h2>
+          </motion.div>
+        </div>
       </section>
 
       {/* Horizontal Accordion */}

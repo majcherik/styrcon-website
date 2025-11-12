@@ -83,7 +83,7 @@ const content = [
 
 export function StyrexonSystemSection() {
   return (
-    <section className="bg-white">
+    <section className="bg-background">
       <div className="py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">

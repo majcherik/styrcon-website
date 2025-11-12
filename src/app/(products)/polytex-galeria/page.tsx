@@ -78,7 +78,7 @@ export default function PolytexGalleryPage() {
       </div>
 
       {/* Header */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 mb-6">
@@ -119,7 +119,7 @@ export default function PolytexGalleryPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {videos.map((video) => (
-                <Card key={video.id} className="p-6 bg-white hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
+                <Card key={video.id} className="p-6 bg-background hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
                   <div className="mb-4">
                     <HeroVideoDialog
                       videoSrc={video.youtubeUrl}
