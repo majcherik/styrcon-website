@@ -148,32 +148,6 @@ const nextConfig: NextConfig = {
 
     // Enhanced production optimizations for STYRCON thermal insulation content
     if (!dev) {
-      config.optimization = {
-        ...config.optimization,
-        sideEffects: false,
-        // Better chunk splitting for Slovak business content
-        splitChunks: {
-          chunks: 'all',
-          cacheGroups: {
-            // Separate vendor bundles for better caching
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              chunks: 'all',
-            },
-            // STYRCON-specific components bundle
-            styrcon: {
-              test: /[\\/]src[\\/](components|lib)[\\/]/,
-              name: 'styrcon-components',
-              chunks: 'all',
-              minSize: 10000,
-            },
-          },
-        },
-        // Remove unused code more aggressively
-        usedExports: true,
-      }
-
       // Additional optimizations for thermal insulation image assets
       config.resolve.fallback = {
         ...config.resolve.fallback,
