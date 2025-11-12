@@ -9,7 +9,13 @@ import { GlobalErrorBoundary } from "@/components/error/global-error-boundary";
 import { WebVitalsTracker } from "@/components/analytics/web-vitals";
 import { StyrconWebVitals } from "@/components/analytics/styrcon-web-vitals";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
-import { ServiceWorkerRegistration } from "@/components/pwa/service-worker";
+// Dynamic import for Service Worker to prevent SSR issues
+import dynamic from 'next/dynamic';
+
+const ServiceWorkerRegistration = dynamic(
+  () => import('@/components/pwa/service-worker').then(mod => ({ default: mod.ServiceWorkerRegistration })),
+  { ssr: false }
+);
 import { CookieConsent } from "@/components/ui/cookie-consent";
 import {
   inter,
