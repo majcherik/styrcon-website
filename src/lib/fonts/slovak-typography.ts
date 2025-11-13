@@ -2,83 +2,62 @@
  * Enhanced Font Configuration for Slovak STYRCON Website
  * Optimized typography for Slovak language with proper diacritics support
  * Focus on thermal insulation business professional appearance
+ *
+ * Using Manrope + Space Grotesk for modern, technical, professional feel
  */
 
-import { Inter, Roboto, Open_Sans, Source_Sans_3 } from 'next/font/google'
+import { Manrope, Space_Grotesk } from 'next/font/google'
 
 /**
- * Primary font - Inter with Slovak language optimization
+ * Primary font - Manrope with Slovak language optimization
+ * Warm, professional, geometric sans-serif perfect for body text
  * Excellent support for Slovak diacritics: ľščťžýáíéúňôäô
  */
-export const inter = Inter({
+export const manrope = Manrope({
   subsets: ['latin', 'latin-ext'], // latin-ext crucial for Slovak characters
-  variable: '--font-inter',
+  variable: '--font-manrope',
   display: 'swap',
   preload: true,
   weight: ['300', '400', '500', '600', '700', '800'],
-  style: ['normal', 'italic'],
-  fallback: ['system-ui', 'arial'],
+  fallback: ['system-ui', '-apple-system', 'Arial', 'sans-serif'],
   adjustFontFallback: true, // Reduces layout shift
 })
 
 /**
- * Professional font for business documents and technical specifications
- * Excellent readability for Slovak technical terminology
- */
-export const roboto = Roboto({
-  subsets: ['latin', 'latin-ext'],
-  variable: '--font-roboto',
-  display: 'swap',
-  weight: ['300', '400', '500', '700'],
-  style: ['normal', 'italic'],
-  fallback: ['Inter', 'system-ui', 'arial'],
-  adjustFontFallback: true,
-})
-
-/**
- * Alternative sans-serif for specific Slovak business sections
- * Great for technical documentation and certifications
- */
-export const openSans = Open_Sans({
-  subsets: ['latin', 'latin-ext'],
-  variable: '--font-open-sans',
-  display: 'swap',
-  weight: ['300', '400', '500', '600', '700'],
-  style: ['normal', 'italic'],
-  fallback: ['Inter', 'system-ui', 'arial'],
-  adjustFontFallback: true,
-})
-
-/**
- * Professional font for headings and Slovak business branding
+ * Headings font - Space Grotesk with Slovak language support
+ * Distinctive, technical, geometric feel perfect for industrial/technical sites
  * Excellent for STYRCON branding and Slovak market presentation
  */
-export const sourceSans3 = Source_Sans_3({
+export const spaceGrotesk = Space_Grotesk({
   subsets: ['latin', 'latin-ext'],
-  variable: '--font-source-sans-3',
+  variable: '--font-space-grotesk',
   display: 'swap',
-  weight: ['300', '400', '600', '700', '900'],
-  fallback: ['Inter', 'system-ui', 'arial'],
+  weight: ['300', '400', '500', '600', '700'],
+  fallback: ['Manrope', 'system-ui', '-apple-system', 'Arial', 'sans-serif'],
   adjustFontFallback: true,
 })
 
 /**
- * Note: Local brand fonts can be added here when available
- * For now, using Google Fonts for reliable Slovak diacritics support
+ * Legacy exports for backward compatibility
+ * Mapping old font names to new fonts
  */
+export const inter = manrope; // For compatibility
+export const roboto = manrope;
+export const openSans = manrope;
+export const sourceSans3 = spaceGrotesk;
 
 /**
  * Font loading optimization for Slovak market
  */
 export const fontLoadingOptimization = {
   // Critical fonts for above-the-fold Slovak content
-  critical: [inter],
+  critical: [manrope],
 
   // Important fonts for Slovak business sections
-  important: [roboto, sourceSans3],
+  important: [spaceGrotesk],
 
   // Secondary fonts for specific sections
-  secondary: [openSans],
+  secondary: [],
 }
 
 /**
@@ -133,17 +112,17 @@ export const slovakTypographyConfig = {
  */
 export const slovakTypographyCSS = `
   :root {
-    /* Primary font family with Slovak support */
-    --font-primary: ${inter.style.fontFamily}, system-ui, -apple-system, sans-serif;
+    /* Primary font family with Slovak support - Manrope */
+    --font-primary: ${manrope.style.fontFamily}, system-ui, -apple-system, sans-serif;
 
-    /* Professional font for business content */
-    --font-business: ${roboto.style.fontFamily}, var(--font-primary);
+    /* Headings font with Slovak character support - Space Grotesk */
+    --font-headings: ${spaceGrotesk.style.fontFamily}, var(--font-primary);
 
-    /* Headings font with Slovak character support */
-    --font-headings: ${sourceSans3.style.fontFamily}, var(--font-primary);
+    /* Business content uses primary font */
+    --font-business: var(--font-primary);
 
     /* Technical documentation font */
-    --font-technical: ${openSans.style.fontFamily}, var(--font-primary);
+    --font-technical: var(--font-primary);
 
     /* Brand font for STYRCON/E-MA branding */
     --font-brand: var(--font-headings);
@@ -187,7 +166,7 @@ export const slovakTypographyCSS = `
  */
 export const fontPreloadConfig = [
   {
-    href: inter.src,
+    href: manrope.src,
     as: 'font',
     type: 'font/woff2',
     crossOrigin: 'anonymous',
@@ -200,21 +179,21 @@ export const fontPreloadConfig = [
 export const slovakFontLoadingStrategy = {
   // Phase 1: Critical path fonts
   critical: {
-    fonts: [inter],
+    fonts: [manrope],
     strategy: 'preload',
     priority: 'high',
   },
 
   // Phase 2: Important business fonts
   important: {
-    fonts: [roboto, sourceSans3],
+    fonts: [spaceGrotesk],
     strategy: 'prefetch',
     priority: 'medium',
   },
 
   // Phase 3: Secondary fonts
   secondary: {
-    fonts: [openSans],
+    fonts: [],
     strategy: 'lazy',
     priority: 'low',
   },

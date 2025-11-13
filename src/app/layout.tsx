@@ -8,10 +8,8 @@ import { Providers } from "@/components/providers/providers";
 import { GlobalErrorBoundary } from "@/components/error/global-error-boundary";
 import { MonitoringWrapper } from "@/components/monitoring-wrapper";
 import {
-  inter,
-  roboto,
-  sourceSans3,
-  openSans,
+  manrope,
+  spaceGrotesk,
   fontLoadingOptimization
 } from "@/lib/fonts/slovak-typography";
 
@@ -114,7 +112,7 @@ export default function RootLayout({
   return (
     <html
       lang="sk"
-      className={`${inter.variable} ${roboto.variable} ${sourceSans3.variable} ${openSans.variable}`}
+      className={`${manrope.variable} ${spaceGrotesk.variable}`}
       suppressHydrationWarning={true}
     >
       <head>
@@ -146,10 +144,10 @@ export default function RootLayout({
         <style dangerouslySetInnerHTML={{
           __html: `
             :root {
-              --font-primary: ${inter.style.fontFamily}, system-ui, -apple-system, sans-serif;
-              --font-business: ${roboto.style.fontFamily}, var(--font-primary);
-              --font-headings: ${sourceSans3.style.fontFamily}, var(--font-primary);
-              --font-technical: ${openSans.style.fontFamily}, var(--font-primary);
+              --font-primary: ${manrope.style.fontFamily}, system-ui, -apple-system, sans-serif;
+              --font-business: var(--font-primary);
+              --font-headings: ${spaceGrotesk.style.fontFamily}, var(--font-primary);
+              --font-technical: var(--font-primary);
             }
             body {
               font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
