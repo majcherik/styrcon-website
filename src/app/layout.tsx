@@ -8,8 +8,8 @@ import { Providers } from "@/components/providers/providers";
 import { GlobalErrorBoundary } from "@/components/error/global-error-boundary";
 import { MonitoringWrapper } from "@/components/monitoring-wrapper";
 import {
-  manrope,
-  spaceGrotesk,
+  inter,
+  outfit,
   fontLoadingOptimization
 } from "@/lib/fonts/slovak-typography";
 
@@ -112,7 +112,7 @@ export default function RootLayout({
   return (
     <html
       lang="sk"
-      className={`${manrope.variable} ${spaceGrotesk.variable}`}
+      className={`${inter.variable} ${outfit.variable}`}
       suppressHydrationWarning={true}
     >
       <head>
@@ -144,9 +144,9 @@ export default function RootLayout({
         <style dangerouslySetInnerHTML={{
           __html: `
             :root {
-              --font-primary: ${manrope.style.fontFamily}, system-ui, -apple-system, sans-serif;
+              --font-primary: ${inter.style.fontFamily}, system-ui, -apple-system, sans-serif;
               --font-business: var(--font-primary);
-              --font-headings: ${spaceGrotesk.style.fontFamily}, var(--font-primary);
+              --font-headings: ${outfit.style.fontFamily}, var(--font-primary);
               --font-technical: var(--font-primary);
             }
             body {

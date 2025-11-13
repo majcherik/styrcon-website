@@ -3,19 +3,19 @@
  * Optimized typography for Slovak language with proper diacritics support
  * Focus on thermal insulation business professional appearance
  *
- * Using Manrope + Space Grotesk for modern, technical, professional feel
+ * Using Inter + Outfit for clean, modern, readable typography
  */
 
-import { Manrope, Space_Grotesk } from 'next/font/google'
+import { Inter, Outfit } from 'next/font/google'
 
 /**
- * Primary font - Manrope with Slovak language optimization
- * Warm, professional, geometric sans-serif perfect for body text
+ * Primary font - Inter with Slovak language optimization
+ * Industry-standard sans-serif with exceptional readability
  * Excellent support for Slovak diacritics: ľščťžýáíéúňôäô
  */
-export const manrope = Manrope({
+export const inter = Inter({
   subsets: ['latin', 'latin-ext'], // latin-ext crucial for Slovak characters
-  variable: '--font-manrope',
+  variable: '--font-inter',
   display: 'swap',
   preload: true,
   weight: ['300', '400', '500', '600', '700', '800'],
@@ -24,16 +24,16 @@ export const manrope = Manrope({
 })
 
 /**
- * Headings font - Space Grotesk with Slovak language support
- * Distinctive, technical, geometric feel perfect for industrial/technical sites
+ * Headings font - Outfit with Slovak language support
+ * Modern, rounded, geometric sans-serif perfect for headings
  * Excellent for STYRCON branding and Slovak market presentation
  */
-export const spaceGrotesk = Space_Grotesk({
+export const outfit = Outfit({
   subsets: ['latin', 'latin-ext'],
-  variable: '--font-space-grotesk',
+  variable: '--font-outfit',
   display: 'swap',
-  weight: ['300', '400', '500', '600', '700'],
-  fallback: ['Manrope', 'system-ui', '-apple-system', 'Arial', 'sans-serif'],
+  weight: ['300', '400', '500', '600', '700', '800'],
+  fallback: ['Inter', 'system-ui', '-apple-system', 'Arial', 'sans-serif'],
   adjustFontFallback: true,
 })
 
@@ -41,20 +41,21 @@ export const spaceGrotesk = Space_Grotesk({
  * Legacy exports for backward compatibility
  * Mapping old font names to new fonts
  */
-export const inter = manrope; // For compatibility
-export const roboto = manrope;
-export const openSans = manrope;
-export const sourceSans3 = spaceGrotesk;
+export const manrope = inter; // For compatibility
+export const spaceGrotesk = outfit;
+export const roboto = inter;
+export const openSans = inter;
+export const sourceSans3 = outfit;
 
 /**
  * Font loading optimization for Slovak market
  */
 export const fontLoadingOptimization = {
   // Critical fonts for above-the-fold Slovak content
-  critical: [manrope],
+  critical: [inter],
 
   // Important fonts for Slovak business sections
-  important: [spaceGrotesk],
+  important: [outfit],
 
   // Secondary fonts for specific sections
   secondary: [],
@@ -112,11 +113,11 @@ export const slovakTypographyConfig = {
  */
 export const slovakTypographyCSS = `
   :root {
-    /* Primary font family with Slovak support - Manrope */
-    --font-primary: ${manrope.style.fontFamily}, system-ui, -apple-system, sans-serif;
+    /* Primary font family with Slovak support - Inter */
+    --font-primary: ${inter.style.fontFamily}, system-ui, -apple-system, sans-serif;
 
-    /* Headings font with Slovak character support - Space Grotesk */
-    --font-headings: ${spaceGrotesk.style.fontFamily}, var(--font-primary);
+    /* Headings font with Slovak character support - Outfit */
+    --font-headings: ${outfit.style.fontFamily}, var(--font-primary);
 
     /* Business content uses primary font */
     --font-business: var(--font-primary);
@@ -166,7 +167,7 @@ export const slovakTypographyCSS = `
  */
 export const fontPreloadConfig = [
   {
-    href: manrope.src,
+    href: inter.src,
     as: 'font',
     type: 'font/woff2',
     crossOrigin: 'anonymous',
@@ -179,14 +180,14 @@ export const fontPreloadConfig = [
 export const slovakFontLoadingStrategy = {
   // Phase 1: Critical path fonts
   critical: {
-    fonts: [manrope],
+    fonts: [inter],
     strategy: 'preload',
     priority: 'high',
   },
 
   // Phase 2: Important business fonts
   important: {
-    fonts: [spaceGrotesk],
+    fonts: [outfit],
     strategy: 'prefetch',
     priority: 'medium',
   },
