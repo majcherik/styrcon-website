@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useHover } from '@/hooks/use-hover';
+import { blogPosts } from './[slug]/page';
 
 interface ResourceCard {
   id: string;
@@ -13,6 +14,7 @@ interface ResourceCard {
   category: string;
   image: string;
   link: string;
+  content: string; // Full article content for search
 }
 
 const categories = [
@@ -23,64 +25,16 @@ const categories = [
   { id: 'prakticke', label: 'Praktické rady' }
 ];
 
-const resourceCards: ResourceCard[] = [
-  {
-    id: 'ako-sa-da-zateplit-vlhka-stavba',
-    title: 'Ako sa dá zatepliť vlhká stavba?',
-    description: 'Praktický návod na zatepľovanie vlhkých budov s STYRCON riešeniami. Význam paropriepustnosti a správnych postupov.',
-    category: 'technicke',
-    image: 'https://www.e-ma.sk/imgcache/e-img-449.jpg?v=1632883952',
-    link: '/aktuality/ako-sa-da-zateplit-vlhka-stavba'
-  },
-  {
-    id: 'styrcon-200-info',
-    title: 'STYRCON 200 INFO',
-    description: 'Dosky STYRCON 200 v kontakte s vlhkým murivom ostávajú na povrchu suché. Nehorľavé a sanačné zateplenie s výnimočnými vlastnosťami.',
-    category: 'technicke',
-    image: 'https://www.e-ma.sk/imgcache/styrcon-200-info-e-news-83-5-400-300-0-ffffff.jpg?v=1633090175',
-    link: '/aktuality/styrcon-200-info'
-  },
-  {
-    id: 'blizi-sa-zdrazovanie-klucoveho-materialu',
-    title: 'Blíži sa zdražovanie kľúčového materiálu',
-    description: 'Ceny cementu porastú výrazne. Styrcon zabezpečil cement v predstihu, aby sa vyhol výpadkom vo výrobe. Naše dodávky stále v starých cenách.',
-    category: 'prakticke',
-    image: 'https://www.e-ma.sk/imgcache/blizi-sa-zdrazovanie-klucoveho-materialu-e-news-85-5-400-300-0-ffffff.jpg?v=1633344609',
-    link: '/aktuality/blizi-sa-zdrazovanie-klucoveho-materialu'
-  },
-  {
-    id: 'ako-sa-vyznat-v-omietkach',
-    title: 'Ako sa vyznať v omietkach',
-    description: 'Komplexný prehľad minerálnych a pastovitých omietok. Porovnanie akrylátových a silikónových omietok s ich výhodami a nevýhodami.',
-    category: 'technicke',
-    image: 'https://www.e-ma.sk/imgcache/ako-sa-vyznat-v-omietkach-e-news-86-5-400-300-0-ffffff.jpg?v=1633613713',
-    link: '/aktuality/ako-sa-vyznat-v-omietkach'
-  },
-  {
-    id: 'zateplena-tvarnica-styrcon',
-    title: 'Zateplená tvarnica STYRCON',
-    description: 'Prototyp zateplenej tvarnice Styrcon, ktorá obsahuje zateplenie už v sebe. Inovatívne riešenie pre moderné stavebníctvo.',
-    category: 'zateplovanie',
-    image: 'https://www.e-ma.sk/imgcache/zateplena-tvarnica-styrcon-e-news-87-5-400-300-0-ffffff.jpg?v=1634199762',
-    link: '/aktuality/zateplena-tvarnica-styrcon'
-  },
-  {
-    id: 'ceny-komodit',
-    title: 'Ceny komodít',
-    description: 'Stavebné materiály zdraželi výrazně. Analýza súčasného trhu, príčiny nárastu cien a ako sa to týka našich dodávok STYRCON.',
-    category: 'prakticke',
-    image: 'https://www.e-ma.sk/imgcache/ceny-komodit-e-news-88-5-400-300-0-ffffff.jpg?v=1635100609',
-    link: '/aktuality/ceny-komodit'
-  },
-  {
-    id: 'vyvoj-cien-styrcon-u',
-    title: 'Vývoj cien Styrcon-u / Styrcon price development',
-    description: 'Cenová stabilita STYRCON oproti konkurencii. Dlhodobá stratégia a prínos kvalitných zatepľovacích systémov pre zákazníkov.',
-    category: 'prakticke',
-    image: 'https://www.e-ma.sk/imgcache/vyvoj-cien-styrcon-u---styrcon-price-development-e-news-89-5-400-300-0-ffffff.jpg?v=1635349264',
-    link: '/aktuality/vyvoj-cien-styrcon-u'
-  }
-];
+// Generate resource cards from blogPosts with full content for search
+const resourceCards: ResourceCard[] = Object.values(blogPosts).map(post => ({
+  id: post.id,
+  title: post.title,
+  description: post.excerpt,
+  category: post.category,
+  image: post.image,
+  link: `/aktuality/${post.id}`,
+  content: post.content // Include full article content for search
+}));
 
 // Resource Card Component with hover effects
 function ResourceCardComponent({ card }: { card: ResourceCard }) {
@@ -168,8 +122,14 @@ export function AktualityClient() {
   const filteredCards = useMemo(() => {
     return resourceCards.filter(card => {
       const matchesCategory = activeCategory === 'all' || card.category === activeCategory;
-      const matchesSearch = card.title.toLowerCase().includes(deferredSearchTerm.toLowerCase()) ||
-                           card.description.toLowerCase().includes(deferredSearchTerm.toLowerCase());
+      const searchLower = deferredSearchTerm.toLowerCase();
+
+      // Search in title, description (excerpt), AND full article content
+      const matchesSearch =
+        card.title.toLowerCase().includes(searchLower) ||
+        card.description.toLowerCase().includes(searchLower) ||
+        card.content.toLowerCase().includes(searchLower);
+
       return matchesCategory && matchesSearch;
     });
   }, [activeCategory, deferredSearchTerm]);

@@ -23,7 +23,7 @@ export async function generateStaticParams() {
   }))
 }
 
-interface BlogPost {
+export interface BlogPost {
   id: string;
   title: string;
   content: string;
@@ -35,7 +35,7 @@ interface BlogPost {
   tags: string[];
 }
 
-const blogPosts: Record<string, BlogPost> = {
+export const blogPosts: Record<string, BlogPost> = {
   'ako-sa-da-zateplit-vlhka-stavba': {
     id: 'ako-sa-da-zateplit-vlhka-stavba',
     title: 'Ako sa dá zatepliť vlhká stavba?',
