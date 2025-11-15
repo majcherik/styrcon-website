@@ -22,7 +22,7 @@ interface ProductDocumentsProps {
 
 function ProductDocuments({ productName, documents }: ProductDocumentsProps) {
   return (
-    <div className="bg-background rounded-lg shadow-sm border border-slate-200 p-6 mb-8">
+    <div className="bg-background rounded-lg shadow-sm border border-slate-200 p-6 h-full hover:shadow-md transition-shadow">
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-slate-900 mb-2">{productName}</h3>
         <p className="text-sm text-slate-600">Technické dokumenty a certifikáty</p>
@@ -258,47 +258,56 @@ export default function DocumentsPage() {
 
       {/* Documents Section */}
       <section className="py-12 bg-slate-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ProductDocuments 
-            productName="STYRCON - Paropriepustné tepelnoizolačné dosky"
-            documents={styrconDocuments}
-          />
-          
-          <ProductDocuments 
-            productName="Penestyr - Tepelnoizolačné dosky z expandovaného polystyrénu"
-            documents={penestyrDocuments}
-          />
-          
-          <ProductDocuments 
-            productName="LepStyr - Lepidlo na polystyrénové dosky"
-            documents={lepStyrDocuments}
-          />
-          
-          <ProductDocuments 
-            productName="STYREXON - Zatepľovací systém"
-            documents={styrexonDocuments}
-          />
-          
-          <ProductDocuments 
-            productName="Lepidlá - Lepiacie materiály"
-            documents={lepidlaDocuments}
-          />
-          
-          <ProductDocuments 
-            productName="Vertex R117 - Silikónová omietka"
-            documents={vertexR117Documents}
-          />
-          
-          <ProductDocuments 
-            productName="Jansa PTP - Kotvy a upevňovacie prvky"
-            documents={jansaPTPDocuments}
-          />
-          
-          <ProductDocuments 
-            productName="Styrcomix - Stavebná zmes"
-            documents={styrcomixDocuments}
-          />
-          
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Grid layout with alternating left-right pattern */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <ProductDocuments
+              productName="STYRCON - Paropriepustné tepelnoizolačné dosky"
+              documents={styrconDocuments}
+            />
+
+            <ProductDocuments
+              productName="Penestyr - Tepelnoizolačné dosky z expandovaného polystyrénu"
+              documents={penestyrDocuments}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <ProductDocuments
+              productName="LepStyr - Lepidlo na polystyrénové dosky"
+              documents={lepStyrDocuments}
+            />
+
+            <ProductDocuments
+              productName="STYREXON - Zatepľovací systém"
+              documents={styrexonDocuments}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <ProductDocuments
+              productName="Lepidlá - Lepiacie materiály"
+              documents={lepidlaDocuments}
+            />
+
+            <ProductDocuments
+              productName="Vertex R117 - Silikónová omietka"
+              documents={vertexR117Documents}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <ProductDocuments
+              productName="Jansa PTP - Kotvy a upevňovacie prvky"
+              documents={jansaPTPDocuments}
+            />
+
+            <ProductDocuments
+              productName="Styrcomix - Stavebná zmes"
+              documents={styrcomixDocuments}
+            />
+          </div>
+
           {/* Placeholder for future products */}
           <div className="text-center py-8 text-slate-500">
             <p>Ďalšie produktové dokumenty budú dostupné čoskoro...</p>
