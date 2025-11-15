@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useDeferredValue, useMemo, useTransition, useRef } from 'react';
+import { useState, useDeferredValue, useMemo, useTransition, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -156,7 +156,10 @@ function ResourceCardComponent({ card }: { card: ResourceCard }) {
 export function AktualityClient() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const [isPending, startTransition] = useTransition();
+
+  const ITEMS_PER_PAGE = 6; // Show 6 articles per page
 
   // Defer search term for better performance during typing
   const deferredSearchTerm = useDeferredValue(searchTerm);
@@ -171,11 +174,29 @@ export function AktualityClient() {
     });
   }, [activeCategory, deferredSearchTerm]);
 
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredCards.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentPageCards = filteredCards.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory, deferredSearchTerm]);
+
   // Smooth category transitions
   const handleCategoryChange = (categoryId: string) => {
     startTransition(() => {
       setActiveCategory(categoryId);
     });
+  };
+
+  // Handle page navigation
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll to top of results
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -258,12 +279,12 @@ export function AktualityClient() {
           <div className={`grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 transition-opacity duration-200 ${
             searchTerm !== deferredSearchTerm ? 'opacity-70' : 'opacity-100'
           }`}>
-            {filteredCards.map((card) => (
+            {currentPageCards.map((card) => (
               <ResourceCardComponent key={card.id} card={card} />
             ))}
           </div>
 
-          {/* Load More Section */}
+          {/* No Results Message */}
           {filteredCards.length === 0 && (
             <div className="text-center py-12">
               <p className="text-slate-500 text-lg">
@@ -271,26 +292,51 @@ export function AktualityClient() {
               </p>
             </div>
           )}
-          
-          {filteredCards.length > 0 && (
+
+          {/* Pagination - Only show if there are multiple pages */}
+          {totalPages > 1 && (
             <div className="flex justify-center mt-12">
               <div className="flex items-center gap-2">
+                {/* Previous Page Button */}
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="p-2 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  aria-label="Predchádzajúca stránka"
+                >
+                  <svg className="h-5 w-5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+
                 <span className="text-slate-500">Stránka</span>
+
+                {/* Page Number Buttons */}
                 <div className="flex gap-1">
-                  {[1, 2, 3, 4, 5].map((page) => (
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <button
                       key={page}
+                      onClick={() => handlePageChange(page)}
                       className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
-                        page === 1 
-                          ? 'bg-primary text-white' 
+                        page === currentPage
+                          ? 'bg-primary text-white'
                           : 'text-slate-600 hover:bg-slate-100'
                       }`}
+                      aria-label={`Stránka ${page}`}
+                      aria-current={page === currentPage ? 'page' : undefined}
                     >
                       {page}
                     </button>
                   ))}
                 </div>
-                <button className="p-2 text-slate-400 hover:text-slate-600 transition-colors">
+
+                {/* Next Page Button */}
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="p-2 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  aria-label="Ďalšia stránka"
+                >
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
