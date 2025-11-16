@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useHover } from '@/hooks/use-hover';
-import { blogPosts } from './[slug]/page';
+import { blogPosts } from '@/data/blog-posts';
 
 interface ResourceCard {
   id: string;
