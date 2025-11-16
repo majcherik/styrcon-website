@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useState, useOptimistic, useCallback, useEffect } from 'react'
+import { useActionState, useState, useOptimistic, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { AnimatedButton } from '@/components/ui/animated-button'
 import { Card } from '@/components/ui/card'
@@ -12,6 +12,8 @@ import { submitContactForm, type FormState } from '@/lib/actions/contact'
 import { cn } from '@/lib/utils'
 import { useTimeout } from '@/hooks/use-timeout'
 import { useSessionStorage } from '@/hooks/use-session-storage'
+import { useEventCallback } from '@/hooks/use-event-callback'
+import { toast } from 'sonner'
 
 const initialState: FormState = {}
 
@@ -39,6 +41,7 @@ export function EnhancedContactForm() {
   const [state, formAction, isPending] = useActionState(submitContactForm, initialState)
   const [optimisticSubmitted, setOptimisticSubmitted] = useState(false)
   const [showSuccessMessage, setShowSuccessMessage] = useState(true)
+  const formRef = useRef<HTMLFormElement>(null)
 
   // Session storage for form draft
   const [formDraft, setFormDraft, clearFormDraft] = useSessionStorage<FormDraft>('contact-form-draft', {
@@ -68,7 +71,7 @@ export function EnhancedContactForm() {
   )
 
   // Enhanced submit handler with optimistic updates
-  const handleSubmit = useCallback(async (formData: FormData) => {
+  const handleSubmit = useEventCallback(async (formData: FormData) => {
     const messageData: OptimisticMessage = {
       id: Date.now().toString(),
       name: formData.get('name') as string || '',
@@ -84,7 +87,7 @@ export function EnhancedContactForm() {
     setOptimisticSubmitted(true)
 
     // The form action will be called automatically by useActionState
-  }, [addOptimisticMessage])
+  })
 
   // Check if form was successfully submitted
   const isSuccess = state?.success && !isPending
@@ -103,13 +106,6 @@ export function EnhancedContactForm() {
       setShowSuccessMessage(false)
     }
   }, isSuccess && showSuccessMessage ? 5000 : null)
-
-  // Reset success message visibility when form is successfully submitted
-  useEffect(() => {
-    if (isSuccess && !showSuccessMessage) {
-      setShowSuccessMessage(true)
-    }
-  }, [isSuccess, showSuccessMessage])
 
   // Save form draft when data changes
   useEffect(() => {
@@ -142,17 +138,42 @@ export function EnhancedContactForm() {
     }
   }, [isSuccess, clearFormDraft])
 
+  // Show toast notifications for success/error
+  useEffect(() => {
+    if (!isPending && state) {
+      if (state.success) {
+        toast.success('Správa bola úspešne odoslaná!', {
+          description: 'Ďakujeme za váš záujem. Ozveme sa vám v najbližšom čase.',
+          duration: 5000,
+        })
+      } else if (state.error) {
+        if (state.rateLimited) {
+          const waitMinutes = Math.ceil((state.retryAfter || 900000) / 60000)
+          toast.error('Príliš veľa pokusov', {
+            description: `Skúste znova za ${waitMinutes} minút.`,
+            duration: 7000,
+          })
+        } else {
+          toast.error('Odoslanie zlyhalo', {
+            description: state.error || 'Skúste to prosím znova alebo nás kontaktujte telefonicky.',
+            duration: 6000,
+          })
+        }
+      }
+    }
+  }, [isPending, state])
+
   // Handle form field changes
-  const handleFieldChange = useCallback((field: keyof typeof formData, value: string | boolean) => {
+  const handleFieldChange = useEventCallback((field: keyof typeof formData, value: string | boolean) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }))
-  }, [])
+  })
 
   if (isSuccess && !optimisticSubmitted && showSuccessMessage) {
     return (
-      <Card className="p-8 text-center w-full max-w-lg border-0 shadow-md">
+      <Card className="p-8 text-center w-full min-w-[300px] border-0 shadow-md">
         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <CheckCircle className="h-8 w-8 text-green-600" />
         </div>
@@ -163,9 +184,18 @@ export function EnhancedContactForm() {
         <div className="space-y-3">
           <Button
             onClick={() => {
+              setShowSuccessMessage(false)
               setOptimisticSubmitted(false)
-              setShowSuccessMessage(true)
-              // Reset form could be implemented here
+              formRef.current?.reset()
+              clearFormDraft()
+              setFormData({
+                name: '',
+                email: '',
+                phone: '',
+                subject: '',
+                message: '',
+                gdprConsent: false
+              })
             }}
             variant="outline"
             size="sm"
@@ -239,6 +269,7 @@ export function EnhancedContactForm() {
 
       {/* Progressive Enhancement Form */}
       <form
+        ref={formRef}
         action={(formData: FormData) => {
           handleSubmit(formData);
           formAction(formData);

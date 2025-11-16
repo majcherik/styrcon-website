@@ -3,6 +3,7 @@
 import Script from 'next/script'
 import { useEffect, useState } from 'react'
 import { env } from '@/lib/config/env'
+import { useIsClient } from '@/hooks/use-is-client'
 
 const COOKIE_CONSENT_KEY = 'styrcon-cookie-consent'
 const COOKIE_PREFERENCES_KEY = 'styrcon-cookie-preferences'
@@ -21,9 +22,12 @@ export function GoogleAnalytics() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [loadingStrategy, setLoadingStrategy] = useState<'afterInteractive' | 'lazyOnload'>('afterInteractive')
   const [hasConsent, setHasConsent] = useState(false)
+  const isClient = useIsClient()
 
   // Check for cookie consent
   useEffect(() => {
+    if (!isClient) return // SSR-safe guard
+
     const checkConsent = () => {
       const consent = localStorage.getItem(COOKIE_CONSENT_KEY)
       const preferences = localStorage.getItem(COOKIE_PREFERENCES_KEY)
@@ -56,7 +60,7 @@ export function GoogleAnalytics() {
 
     window.addEventListener('storage', handleStorageChange)
     return () => window.removeEventListener('storage', handleStorageChange)
-  }, [])
+  }, [isClient])
 
   useEffect(() => {
     // Determine optimal loading strategy based on device and connection

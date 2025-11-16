@@ -2,6 +2,7 @@ import { Calendar, UserCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export function Newsletter() {
+
   return (
     <div className="relative isolate overflow-hidden bg-white py-16 sm:py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -11,7 +12,7 @@ export function Newsletter() {
               Prihláste sa na novinky
             </h2>
             <p className="mt-4 text-lg text-slate-600">
-              Získajte najnovšie informácie o STYRCON produktoch, technické články 
+              Získajte najnovšie informácie o STYRCON produktoch, technické články
               a odborné poradenstvo priamo do vašej emailovej schránky.
             </p>
             <div className="mt-6 flex max-w-md gap-x-4">

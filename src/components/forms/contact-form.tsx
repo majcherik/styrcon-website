@@ -24,6 +24,7 @@ import {
   PhoneInputComponent,
   TextareaNoResize
 } from '@/components/ui/origin-inputs/index';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Meno musí obsahovať aspoň 2 znaky'),
@@ -73,12 +74,26 @@ export function ContactForm() {
       if (response.ok) {
         setSubmitSuccess(true);
         form.reset();
+        toast.success('Správa bola úspešne odoslaná!', {
+          description: 'Ďakujeme za váš záujem. Ozveme sa vám v najbližšom čase.',
+          duration: 5000,
+        });
       } else {
         const errorData = await response.json();
-        setSubmitError(errorData.error || 'Odoslanie zlyhalo. Skúste to prosím znova.');
+        const errorMessage = errorData.error || 'Odoslanie zlyhalo. Skúste to prosím znova.';
+        setSubmitError(errorMessage);
+        toast.error('Odoslanie zlyhalo', {
+          description: errorMessage,
+          duration: 6000,
+        });
       }
     } catch {
-      setSubmitError('Nastala chyba pri odosielaní správy. Skúste to prosím znova.');
+      const errorMessage = 'Nastala chyba pri odosielaní správy. Skúste to prosím znova.';
+      setSubmitError(errorMessage);
+      toast.error('Chyba pri odosielaní', {
+        description: errorMessage,
+        duration: 6000,
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -86,7 +101,7 @@ export function ContactForm() {
 
   if (submitSuccess) {
     return (
-      <Card className="p-8 text-center">
+      <Card className="p-8 text-center w-full max-w-2xl mx-auto">
         <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
         <h3 className="text-xl font-semibold text-slate-900 mb-2">
           Správa bola úspešne odoslaná
@@ -94,7 +109,7 @@ export function ContactForm() {
         <p className="text-slate-600 mb-6">
           Ďakujeme za Váš záujem.
         </p>
-        <Button 
+        <Button
           onClick={() => {
             setSubmitSuccess(false);
             form.reset();

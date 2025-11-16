@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Share2, Facebook, Linkedin, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useIsClient } from '@/hooks/use-is-client';
 
 interface SocialShareProps {
   title: string;
@@ -12,9 +13,10 @@ interface SocialShareProps {
 
 export function SocialShare({ title, url, excerpt }: SocialShareProps) {
   const [copied, setCopied] = useState(false);
+  const isClient = useIsClient();
 
   // Use production site URL when available, fallback to current location or provided URL
-  const shareUrl = typeof window !== 'undefined'
+  const shareUrl = isClient
     ? (process.env.NEXT_PUBLIC_SITE_URL
         ? `${process.env.NEXT_PUBLIC_SITE_URL}${url}`
         : window.location.href)

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Paperclip } from 'lucide-react';
+import { DownloadLink } from '@/components/documents/download-link';
 
 export const metadata: Metadata = {
   title: 'Dokumenty a technické listy | STYRCON - E-MA SK',
@@ -44,13 +45,7 @@ function ProductDocuments({ productName, documents }: ProductDocumentsProps) {
                       </div>
                     </div>
                     <div className="ml-4 flex-shrink-0">
-                      <a 
-                        href={doc.downloadUrl} 
-                        className="font-medium text-primary hover:text-primary/80 transition-colors"
-                        download
-                      >
-                        Stiahnuť
-                      </a>
+                      <DownloadLink fileName={doc.fileName} downloadUrl={doc.downloadUrl} />
                     </div>
                   </li>
                 ))}

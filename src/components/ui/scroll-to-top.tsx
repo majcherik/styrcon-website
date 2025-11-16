@@ -28,7 +28,7 @@ export function ScrollToTop({ showAfter = 400, className = '' }: ScrollToTopProp
     const currentUrl = window.location.href;
     const success = await copy(currentUrl);
     if (success) {
-      // Could add a toast notification here
+      // URL copied successfully
       console.log('URL copied to clipboard');
     }
   };

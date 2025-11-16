@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useDebounce } from '@/hooks/use-debounce';
+import { useIsClient } from '@/hooks/use-is-client';
+import { useScreen } from '@/hooks/use-screen';
 
 // STYRCON features data adapted for accordion
 const accordionData = [
@@ -64,28 +66,46 @@ const HorizontalAccordion = () => {
   // Use state for expanded index to avoid hydration mismatch
   const [expandedIndex, setExpandedIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const isClient = useIsClient();
+  const screen = useScreen({ debounceDelay: 200 });
+
+  // Detect high-DPI displays for video quality optimization
+  // TODO: Use isHighDPI to load higher quality videos on Retina displays
+  const isHighDPI = screen && screen.pixelDepth > 24;
+
+  // Log screen info for debugging (can be removed in production)
+  React.useEffect(() => {
+    if (screen && isHighDPI) {
+      console.log('📱 High-DPI display detected:', {
+        pixelDepth: screen.pixelDepth,
+        width: screen.width,
+        height: screen.height,
+        orientation: screen.orientation?.type
+      });
+    }
+  }, [screen, isHighDPI]);
 
   // Load from localStorage after mount (client-side only)
   React.useEffect(() => {
+    if (!isClient) return; // SSR-safe guard
+
     setMounted(true);
-    if (typeof window !== 'undefined') {
-      const stored = window.localStorage.getItem('styrcon-accordion-expanded');
-      if (stored !== null) {
-        try {
-          setExpandedIndex(JSON.parse(stored));
-        } catch (error) {
-          console.log('Error reading localStorage:', error);
-        }
+    const stored = window.localStorage.getItem('styrcon-accordion-expanded');
+    if (stored !== null) {
+      try {
+        setExpandedIndex(JSON.parse(stored));
+      } catch (error) {
+        console.log('Error reading localStorage:', error);
       }
     }
-  }, []);
+  }, [isClient]);
 
   // Save to localStorage when expandedIndex changes (only after mount)
   React.useEffect(() => {
-    if (mounted && typeof window !== 'undefined') {
-      window.localStorage.setItem('styrcon-accordion-expanded', JSON.stringify(expandedIndex));
-    }
-  }, [expandedIndex, mounted]);
+    if (!mounted || !isClient) return; // SSR-safe guard
+
+    window.localStorage.setItem('styrcon-accordion-expanded', JSON.stringify(expandedIndex));
+  }, [expandedIndex, mounted, isClient]);
 
   // Use intersection observer to optimize video loading
   const [ref, isVisible] = useIntersectionObserver({

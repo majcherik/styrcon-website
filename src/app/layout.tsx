@@ -12,6 +12,7 @@ import {
   outfit,
   fontLoadingOptimization
 } from "@/lib/fonts/slovak-typography";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: {
@@ -173,6 +174,7 @@ export default function RootLayout({
             </main>
             <Footer />
           </GlobalErrorBoundary>
+          <Toaster position="top-right" richColors />
         </Providers>
 
         {/* Analytics, Performance, PWA monitoring and Cookie Consent */}

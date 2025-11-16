@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { useEventListener } from '@/hooks/use-event-listener';
 
 interface BeforeAfterProps {
   beforeImage: string;
@@ -16,65 +17,54 @@ function BeforeAfterSlider({ beforeImage, afterImage, beforeLabel = "PRED", afte
   const containerRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const container = containerRef.current;
-    const handle = handleRef.current;
+  // Mouse event handlers
+  const onMouseDown = () => {
+    setIsDragging(true);
+  };
 
-    if (!container || !handle) return;
+  const onMouseMove = (e: MouseEvent) => {
+    if (!isDragging || !containerRef.current) return;
 
-    const onMouseDown = () => {
-      setIsDragging(true);
-    };
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const newPosition = ((e.clientX - containerRect.left) / containerRect.width) * 100;
+    setPosition(Math.max(0, Math.min(100, newPosition)));
+  };
 
-    const onTouchStart = () => {
-      setIsDragging(true);
-    };
+  const onMouseUp = () => {
+    setIsDragging(false);
+  };
 
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDragging) return;
-      
-      const containerRect = container.getBoundingClientRect();
-      const newPosition = ((e.clientX - containerRect.left) / containerRect.width) * 100;
-      setPosition(Math.max(0, Math.min(100, newPosition)));
-    };
+  // Touch event handlers
+  const onTouchStart = () => {
+    setIsDragging(true);
+  };
 
-    const onTouchMove = (e: TouchEvent) => {
-      if (!isDragging) return;
-      e.preventDefault();
-      
-      const containerRect = container.getBoundingClientRect();
-      const touch = e.touches[0];
-      const newPosition = ((touch.clientX - containerRect.left) / containerRect.width) * 100;
-      setPosition(Math.max(0, Math.min(100, newPosition)));
-    };
+  const onTouchMove = (e: TouchEvent) => {
+    if (!isDragging || !containerRef.current) return;
+    e.preventDefault();
 
-    const onMouseUp = () => {
-      setIsDragging(false);
-    };
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const touch = e.touches[0];
+    if (!touch) return;
 
-    const onTouchEnd = () => {
-      setIsDragging(false);
-    };
+    const newPosition = ((touch.clientX - containerRect.left) / containerRect.width) * 100;
+    setPosition(Math.max(0, Math.min(100, newPosition)));
+  };
 
-    // Mouse events
-    handle.addEventListener('mousedown', onMouseDown);
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-    
-    // Touch events
-    handle.addEventListener('touchstart', onTouchStart, { passive: false });
-    document.addEventListener('touchmove', onTouchMove, { passive: false });
-    document.addEventListener('touchend', onTouchEnd);
+  const onTouchEnd = () => {
+    setIsDragging(false);
+  };
 
-    return () => {
-      handle.removeEventListener('mousedown', onMouseDown);
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-      handle.removeEventListener('touchstart', onTouchStart);
-      document.removeEventListener('touchmove', onTouchMove);
-      document.removeEventListener('touchend', onTouchEnd);
-    };
-  }, [isDragging]);
+  // Attach event listeners using useEventListener hook
+  // Mouse events
+  useEventListener('mousedown', onMouseDown, handleRef as React.RefObject<HTMLDivElement>);
+  useEventListener('mousemove', onMouseMove);
+  useEventListener('mouseup', onMouseUp);
+
+  // Touch events
+  useEventListener('touchstart', onTouchStart, handleRef as React.RefObject<HTMLDivElement>, { passive: false });
+  useEventListener('touchmove', onTouchMove, undefined, { passive: false });
+  useEventListener('touchend', onTouchEnd);
 
   return (
     <div className="relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh] overflow-hidden select-none rounded-xl" ref={containerRef}>

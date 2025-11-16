@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { toast } from 'sonner';
+import { useIsClient } from '@/hooks/use-is-client';
 
 const COOKIE_CONSENT_KEY = 'styrcon-cookie-consent';
 const COOKIE_PREFERENCES_KEY = 'styrcon-cookie-preferences';
@@ -15,6 +17,7 @@ interface CookiePreferences {
 }
 
 export function CookieConsent() {
+  const isClient = useIsClient();
   const [showBanner, setShowBanner] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [showCustomize, setShowCustomize] = useState(false);
@@ -25,6 +28,8 @@ export function CookieConsent() {
   });
 
   useEffect(() => {
+    if (!isClient) return;
+
     // Check if user has already made a choice
     const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
     if (!consent) {
@@ -34,7 +39,7 @@ export function CookieConsent() {
         setTimeout(() => setIsVisible(true), 100);
       }, 1000);
     }
-  }, []);
+  }, [isClient]);
 
   const savePreferences = (prefs: CookiePreferences) => {
     localStorage.setItem(COOKIE_CONSENT_KEY, 'customized');
@@ -56,6 +61,10 @@ export function CookieConsent() {
       functional: true,
     };
     savePreferences(allAccepted);
+    toast.success('Nastavenia uložené', {
+      description: 'Všetky cookies boli povolené.',
+      duration: 4000,
+    });
     closeBanner();
   };
 
@@ -66,11 +75,20 @@ export function CookieConsent() {
       functional: false,
     };
     savePreferences(onlyRequired);
+    toast.info('Nastavenia uložené', {
+      description: 'Povolené sú iba nevyhnutné cookies.',
+      duration: 4000,
+    });
     closeBanner();
   };
 
   const handleSavePreferences = () => {
     savePreferences(preferences);
+    const enabledCount = Object.values(preferences).filter(Boolean).length;
+    toast.success('Nastavenia uložené', {
+      description: `Povolené typy cookies: ${enabledCount} z 3`,
+      duration: 4000,
+    });
     closeBanner();
   };
 
